@@ -37,6 +37,7 @@ class _WeatherViewState extends State<WeatherView> {
                 final city =
                     await Navigator.of(context).push(SearchPage.route());
                 if (!mounted) return;
+                // ignore: use_build_context_synchronously
                 await context.read<WeatherCubit>().fetchWeather(city);
               },
             ),

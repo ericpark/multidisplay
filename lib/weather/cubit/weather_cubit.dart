@@ -23,15 +23,26 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         await _weatherRepository.getWeather(city),
       );
       final forecast = await _weatherRepository.getWeatherForecast(city);
-      List<Weather> dailyForecast = [];
-      for (var w in forecast) {
-        dailyForecast.add(Weather.fromRepository(w));
-      }
 
       final units = state.temperatureUnits;
       final value = units.isFahrenheit
           ? weather.temperature.value.toFahrenheit()
           : weather.temperature.value;
+
+      List<Weather> dailyForecast = [];
+      for (var w in forecast) {
+        Weather forecastWeather = Weather.fromRepository(w);
+        double forecastWeatherTempHigh = units.isFahrenheit
+            ? forecastWeather.temperatureHigh.value
+            : forecastWeather.temperatureHigh.value.toCelsius();
+        double forecastWeatherTempLow = units.isFahrenheit
+            ? forecastWeather.temperatureLow.value
+            : forecastWeather.temperatureLow.value.toCelsius();
+        dailyForecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
 
       emit(state.copyWith(
           status: WeatherStatus.success,

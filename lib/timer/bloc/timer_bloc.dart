@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 part 'timer_event.dart';
 part 'timer_state.dart';
 
-const int defaultDuration = 180;
+const int defaultDuration = 300;
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   TimerBloc({required Ticker ticker})

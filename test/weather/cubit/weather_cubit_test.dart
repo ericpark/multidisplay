@@ -31,9 +31,15 @@ void main() {
       when(() => weather.condition).thenReturn(weatherCondition);
       when(() => weather.location).thenReturn(weatherLocation);
       when(() => weather.temperature).thenReturn(weatherTemperature);
+      when(() => weather.date).thenReturn(DateTime(2024));
+      when(() => weather.temperatureHigh).thenReturn(weatherTemperature);
+      when(() => weather.temperatureLow).thenReturn(weatherTemperature);
       when(
         () => weatherRepository.getWeather(any()),
       ).thenAnswer((_) async => weather);
+      when(
+        () => weatherRepository.getWeatherForecast(any()),
+      ).thenAnswer((_) async => [weather]);
       weatherCubit = WeatherCubit(weatherRepository);
     });
 
@@ -172,8 +178,11 @@ void main() {
         seed: () => WeatherState(
           status: WeatherStatus.success,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: weatherTemperature),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: weatherCondition,
           ),
@@ -195,8 +204,11 @@ void main() {
         seed: () => WeatherState(
           status: WeatherStatus.success,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: weatherTemperature),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: weatherCondition,
           ),
@@ -211,8 +223,11 @@ void main() {
         seed: () => WeatherState(
           status: WeatherStatus.success,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: 0),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: weatherCondition,
           ),
@@ -244,8 +259,11 @@ void main() {
           temperatureUnits: TemperatureUnits.fahrenheit,
           status: WeatherStatus.success,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: 0),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: weatherCondition,
           ),
@@ -289,8 +307,11 @@ void main() {
           status: WeatherStatus.success,
           temperatureUnits: TemperatureUnits.fahrenheit,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: weatherTemperature),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: WeatherCondition.rainy,
           ),
@@ -300,8 +321,11 @@ void main() {
           WeatherState(
             status: WeatherStatus.success,
             weather: Weather(
-              location: weatherLocation,
               temperature: Temperature(value: weatherTemperature.toCelsius()),
+              date: DateTime(2024),
+              location: weatherLocation,
+              temperatureHigh: Temperature(value: weatherTemperature),
+              temperatureLow: Temperature(value: weatherTemperature),
               lastUpdated: DateTime(2020),
               condition: WeatherCondition.rainy,
             ),
@@ -316,8 +340,11 @@ void main() {
         seed: () => WeatherState(
           status: WeatherStatus.success,
           weather: Weather(
+            date: DateTime(2024),
             location: weatherLocation,
             temperature: Temperature(value: weatherTemperature),
+            temperatureHigh: Temperature(value: weatherTemperature),
+            temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: WeatherCondition.rainy,
           ),
@@ -332,6 +359,9 @@ void main() {
               temperature: Temperature(
                 value: weatherTemperature.toFahrenheit(),
               ),
+              date: DateTime(2024),
+              temperatureHigh: Temperature(value: weatherTemperature),
+              temperatureLow: Temperature(value: weatherTemperature),
               lastUpdated: DateTime(2020),
               condition: WeatherCondition.rainy,
             ),

@@ -52,14 +52,27 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       );
       final forecast =
           await _weatherRepository.getWeatherForecast(state.weather.location);
-      List<Weather> dailyForecast = [];
-      for (var w in forecast) {
-        dailyForecast.add(Weather.fromRepository(w));
-      }
+
       final units = state.temperatureUnits;
       final value = units.isFahrenheit
           ? weather.temperature.value.toFahrenheit()
           : weather.temperature.value;
+
+      List<Weather> dailyForecast = [];
+      for (var w in forecast) {
+        Weather forecastWeather = Weather.fromRepository(w);
+        double forecastWeatherTempHigh = units.isFahrenheit
+            ? forecastWeather.temperatureHigh.value
+            : forecastWeather.temperatureHigh.value.toCelsius();
+        double forecastWeatherTempLow = units.isFahrenheit
+            ? forecastWeather.temperatureLow.value
+            : forecastWeather.temperatureLow.value.toCelsius();
+        dailyForecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
+
       emit(
         state.copyWith(
           status: WeatherStatus.success,
@@ -89,10 +102,25 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       final value = units.isCelsius
           ? temperature.value.toCelsius()
           : temperature.value.toFahrenheit();
+      List<Weather> dailyForecast = [];
+      for (var i = 0; i < state.forecast.length; i++) {
+        Weather forecastWeather = state.forecast[i];
+        double forecastWeatherTempHigh = units.isCelsius
+            ? forecastWeather.temperatureHigh.value.toCelsius()
+            : forecastWeather.temperatureHigh.value.toFahrenheit();
+        double forecastWeatherTempLow = units.isCelsius
+            ? forecastWeather.temperatureLow.value.toCelsius()
+            : forecastWeather.temperatureLow.value.toFahrenheit();
+        dailyForecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
       emit(
         state.copyWith(
           temperatureUnits: units,
           weather: weather.copyWith(temperature: Temperature(value: value)),
+          forecast: dailyForecast,
         ),
       );
     }

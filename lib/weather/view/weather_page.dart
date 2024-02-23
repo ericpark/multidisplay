@@ -37,6 +37,7 @@ class _WeatherViewState extends State<WeatherView> {
                 final city =
                     await Navigator.of(context).push(SearchPage.route());
                 if (!mounted) return;
+                // ignore: use_build_context_synchronously
                 await context.read<WeatherCubit>().fetchWeather(city);
               },
             ),
@@ -60,7 +61,7 @@ class _WeatherViewState extends State<WeatherView> {
                     direction: Axis.vertical,
                     children: [
                       Expanded(
-                        flex: 60,
+                        flex: 50,
                         child: WeatherPopulated(
                           weather: state.weather,
                           units: state.temperatureUnits,
@@ -72,7 +73,7 @@ class _WeatherViewState extends State<WeatherView> {
                         ),
                       ),
                       Expanded(
-                        flex: 40,
+                        flex: 50,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
                           child: WeatherForecastPopulated(

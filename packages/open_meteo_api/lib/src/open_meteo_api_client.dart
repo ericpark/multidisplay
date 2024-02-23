@@ -94,7 +94,6 @@ class OpenMeteoApiClient {
       'daily':
           'weather_code,precipitation_sum,temperature_2m_max,temperature_2m_min'
     });
-    print('$latitude, $longitude');
     final weatherResponse = await _httpClient.get(weatherRequest);
 
     if (weatherResponse.statusCode != 200) {

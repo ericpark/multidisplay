@@ -55,7 +55,7 @@ class ForecastWidget extends StatelessWidget {
             child: Column(
               children: [
                 // SPACING
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 // DAY OF WEEK
                 Text(
                   DateFormat('EEEE').format(weather.date),
@@ -103,7 +103,7 @@ class ForecastWidget extends StatelessWidget {
                       ]),
                 ),
                 // SPACING
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -152,6 +152,6 @@ extension on Weather {
       return '''${temperatureLow.value.toStringAsPrecision(3)}°${units.isCelsius ? 'C' : 'F'}''';
     }
 
-    return '''${temperature.value.toStringAsPrecision(3)}°${units.isCelsius ? 'C' : 'F'}''';
+    return '''${temperatureHigh.value.toStringAsPrecision(3)}°${units.isCelsius ? 'C' : 'F'}''';
   }
 }

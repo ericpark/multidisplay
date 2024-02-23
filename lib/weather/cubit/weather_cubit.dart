@@ -89,10 +89,25 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       final value = units.isCelsius
           ? temperature.value.toCelsius()
           : temperature.value.toFahrenheit();
+      List<Weather> forecast = [];
+      for (var i = 0; i < state.forecast.length; i++) {
+        Weather forecastWeather = state.forecast[i];
+        double forecastWeatherTempHigh = units.isCelsius
+            ? forecastWeather.temperatureHigh.value.toCelsius()
+            : forecastWeather.temperatureHigh.value.toFahrenheit();
+        double forecastWeatherTempLow = units.isCelsius
+            ? forecastWeather.temperatureLow.value.toCelsius()
+            : forecastWeather.temperatureLow.value.toFahrenheit();
+        forecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
       emit(
         state.copyWith(
           temperatureUnits: units,
           weather: weather.copyWith(temperature: Temperature(value: value)),
+          forecast: forecast,
         ),
       );
     }

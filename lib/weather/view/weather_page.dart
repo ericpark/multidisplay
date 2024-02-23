@@ -61,7 +61,7 @@ class _WeatherViewState extends State<WeatherView> {
                     direction: Axis.vertical,
                     children: [
                       Expanded(
-                        flex: 60,
+                        flex: 50,
                         child: WeatherPopulated(
                           weather: state.weather,
                           units: state.temperatureUnits,
@@ -73,7 +73,7 @@ class _WeatherViewState extends State<WeatherView> {
                         ),
                       ),
                       Expanded(
-                        flex: 40,
+                        flex: 50,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
                           child: WeatherForecastPopulated(

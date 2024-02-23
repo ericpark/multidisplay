@@ -11,6 +11,7 @@ import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/expenses/expenses_page.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/settings/settings.dart';
+import 'package:multidisplay/timer/timer.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -31,6 +32,10 @@ class App extends StatelessWidget {
             ),
             BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
+            ),
+            BlocProvider<TimerBloc>(
+              create: (BuildContext context) =>
+                  TimerBloc(ticker: const Ticker()),
             ),
             BlocProvider(
               create: (context) =>

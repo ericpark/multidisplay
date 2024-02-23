@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multidisplay/calendar/repository/meeting.dart';
+import 'package:multidisplay/calendar/models/meeting.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarMonthWidget extends StatelessWidget {

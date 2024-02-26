@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
@@ -10,7 +11,19 @@ class CalendarPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.filter_list, semanticLabel: 'Filters'),
-          onPressed: () async {},
+          onPressed: () async {
+            showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) {
+                  return CupertinoPopupSurface(
+                      child: Container(
+                          color: CupertinoColors.white,
+                          alignment: Alignment.topCenter,
+                          width: double.infinity,
+                          height: 800,
+                          child: CalendarNewEvent()));
+                });
+          },
         ),
         actions: [
           IconButton(
@@ -19,7 +32,19 @@ class CalendarPage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-            onPressed: () async {},
+            onPressed: () async {
+              showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoPopupSurface(
+                        child: Container(
+                            color: CupertinoColors.white,
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            height: 400,
+                            child: Center()));
+                  });
+            },
           ),
         ],
       ),

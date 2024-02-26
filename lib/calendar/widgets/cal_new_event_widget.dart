@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class CalendarScheduleWidget extends StatelessWidget {
-  const CalendarScheduleWidget({super.key});
+class CalendarNewEvent extends StatelessWidget {
+  const CalendarNewEvent({super.key});
 
   @override
   Widget build(BuildContext context) {

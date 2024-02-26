@@ -1,65 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarNewEvent extends StatelessWidget {
   const CalendarNewEvent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SfCalendar(
-      view: CalendarView.schedule,
-      headerHeight: 0,
-      scheduleViewSettings: const ScheduleViewSettings(
-          hideEmptyScheduleWeek: true,
-          monthHeaderSettings: MonthHeaderSettings(height: 70),
-          weekHeaderSettings: WeekHeaderSettings(height: 10)),
-      dataSource: MeetingDataSource(_getDataSource()),
-      onTap: (calendarTapDetails) {
-        Meeting meeting = calendarTapDetails.appointments?.first;
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Basic dialog title'),
-                content: Text(meeting.eventName),
-                actions: <Widget>[
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    child: const Text('Disable'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    child: const Text('Enable'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
 
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
-    //final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(2023, 11, 3, 13, 0, 0);
-    final DateTime endTime = startTime.add(const Duration(days: 2));
-    meetings.add(Meeting(
-        'Ke Mary Otis', startTime, endTime, const Color(0xFF0F8644), false));
-    final DateTime startTime2 = DateTime(2024, 2, 13, 13, 0, 0);
-    final DateTime endTime2 = startTime2.add(const Duration(days: 10));
-    meetings.add(
-        Meeting('Milo', startTime2, endTime2, const Color(0xFF0F8644), false));
-    return meetings;
+    return BlocBuilder<CalendarCubit, CalendarState>(builder: (context, state) {
+      return Center(
+          child: Flex(direction: Axis.vertical, children: [
+        Expanded(
+            flex: 10,
+            child: ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  key: const Key('filterWidget_close_iconButton'),
+                  icon:
+                      const Icon(Icons.close_outlined, semanticLabel: 'Close'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                IconButton(
+                  key: const Key('filterWidget_save_iconButton'),
+                  icon: const Icon(Icons.check, semanticLabel: 'Save'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            )),
+        Expanded(
+          flex: 90,
+          child: Material(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0),
+              child: Form(
+                // Implement your form key and validation logic
+                child: Column(
+                  children: [
+                    const Text('New Event'),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Event Name'),
+                    ),
+                    Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        Expanded(
+                          flex: 50,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
+                            child: InkWell(
+                              onTap: () {
+                                showDatePicker(
+                                    context: context,
+                                    firstDate: DateTime(2024),
+                                    lastDate: DateTime(2024, 12,
+                                        31)); // Call Function that has showDatePicker()
+                              },
+                              child: IgnorePointer(
+                                child: TextFormField(
+                                  decoration:
+                                      InputDecoration(hintText: 'Start Date'),
+                                  // validator: validateDob,
+                                  onSaved: (val) {},
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 50,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
+                            child: TextFormField(
+                              decoration:
+                                  InputDecoration(labelText: 'End Date'),
+                              // Implement date picker logic
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    DropdownButtonFormField<String>(
+                      onChanged: (value) {
+                        //calendarCubit(value!);
+                      },
+                      value: 'Calendar 1',
+                      items: [
+                        DropdownMenuItem(
+                          value: 'Calendar 1',
+                          child: Text('Calendar 1'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Calendar 2',
+                          child: Text('Calendar 2'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'New',
+                          child: Text('New Calendar'),
+                        ),
+                        // Add more calendars as needed
+                      ],
+                      decoration: InputDecoration(labelText: 'Select Calendar'),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Container(child: () {
+                      if (false) {
+                        return Text('tis true');
+                      }
+                      return TextFormField(
+                        decoration:
+                            InputDecoration(labelText: 'New Calendar Name'),
+                      );
+                    }()),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Description'),
+                      maxLines: 5,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]));
+    });
   }
 }

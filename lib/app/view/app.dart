@@ -33,6 +33,9 @@ class App extends StatelessWidget {
             BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
             ),
+            BlocProvider<CalendarCubit>(
+              create: (BuildContext context) => CalendarCubit(),
+            ),
             BlocProvider<TimerBloc>(
               create: (BuildContext context) =>
                   TimerBloc(ticker: const Ticker()),

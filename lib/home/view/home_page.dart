@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multidisplay/home/home.dart';
-import 'package:multidisplay/home/view/weather_widget.dart';
+import 'package:multidisplay/home/widgets/weather_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

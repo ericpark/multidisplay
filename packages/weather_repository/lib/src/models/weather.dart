@@ -46,17 +46,25 @@ enum WeatherCondition {
   unknown,
 }
 
+enum SoilCondition {
+  dry,
+  muddy,
+  unknown,
+}
+
 @JsonSerializable()
 class Weather extends Equatable {
   Weather({
     required this.date,
     required this.location,
+    required this.condition,
     required this.temperature,
     double? temperatureHigh,
     double? temperatureLow,
-    required this.condition,
+    double? soilMoisture,
   })  : temperatureHigh = temperatureHigh ?? temperature,
-        temperatureLow = temperatureLow ?? temperature;
+        temperatureLow = temperatureLow ?? temperature,
+        soilMoisture = soilMoisture ?? 0.0;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
@@ -66,14 +74,22 @@ class Weather extends Equatable {
   @DateTimeConverter()
   final DateTime date;
   final String location;
+  final WeatherCondition condition;
   final double temperature;
   final double temperatureHigh;
   final double temperatureLow;
-  final WeatherCondition condition;
+  final double soilMoisture;
 
   @override
-  List<Object> get props =>
-      [date, location, temperature, temperatureHigh, temperatureLow, condition];
+  List<Object> get props => [
+        date,
+        location,
+        condition,
+        temperature,
+        temperatureHigh,
+        temperatureLow,
+        soilMoisture,
+      ];
 }
 
 class DateTimeConverter implements JsonConverter<DateTime, String> {

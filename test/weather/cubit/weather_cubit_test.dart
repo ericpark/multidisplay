@@ -38,7 +38,7 @@ void main() {
         () => weatherRepository.getWeather(any()),
       ).thenAnswer((_) async => weather);
       when(
-        () => weatherRepository.getWeatherForecast(any()),
+        () => weatherRepository.getDailyWeatherForecast(any()),
       ).thenAnswer((_) async => [weather]);
       weatherCubit = WeatherCubit(weatherRepository);
     });

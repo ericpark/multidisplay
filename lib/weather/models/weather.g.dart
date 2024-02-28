@@ -35,17 +35,31 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
           location: $checkedConvert('location', (v) => v as String),
           temperature: $checkedConvert('temperature',
               (v) => Temperature.fromJson(v as Map<String, dynamic>)),
-          temperatureHigh: $checkedConvert('temperature_high',
-              (v) => Temperature.fromJson(v as Map<String, dynamic>)),
-          temperatureLow: $checkedConvert('temperature_low',
-              (v) => Temperature.fromJson(v as Map<String, dynamic>)),
+          temperatureHigh: $checkedConvert(
+              'temperature_high',
+              (v) => v == null
+                  ? null
+                  : Temperature.fromJson(v as Map<String, dynamic>)),
+          temperatureLow: $checkedConvert(
+              'temperature_low',
+              (v) => v == null
+                  ? null
+                  : Temperature.fromJson(v as Map<String, dynamic>)),
+          precipitation:
+              $checkedConvert('precipitation', (v) => (v as num?)?.toDouble()),
+          soilMoisture:
+              $checkedConvert('soil_moisture', (v) => (v as num?)?.toDouble()),
+          soilCondition: $checkedConvert('soil_condition',
+              (v) => $enumDecodeNullable(_$SoilConditionEnumMap, v)),
         );
         return val;
       },
       fieldKeyMap: const {
         'lastUpdated': 'last_updated',
         'temperatureHigh': 'temperature_high',
-        'temperatureLow': 'temperature_low'
+        'temperatureLow': 'temperature_low',
+        'soilMoisture': 'soil_moisture',
+        'soilCondition': 'soil_condition'
       },
     );
 
@@ -57,6 +71,9 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'temperature': instance.temperature.toJson(),
       'temperature_high': instance.temperatureHigh.toJson(),
       'temperature_low': instance.temperatureLow.toJson(),
+      'precipitation': instance.precipitation,
+      'soil_moisture': instance.soilMoisture,
+      'soil_condition': _$SoilConditionEnumMap[instance.soilCondition]!,
     };
 
 const _$WeatherConditionEnumMap = {
@@ -65,4 +82,10 @@ const _$WeatherConditionEnumMap = {
   WeatherCondition.cloudy: 'cloudy',
   WeatherCondition.snowy: 'snowy',
   WeatherCondition.unknown: 'unknown',
+};
+
+const _$SoilConditionEnumMap = {
+  SoilCondition.dry: 'dry',
+  SoilCondition.muddy: 'muddy',
+  SoilCondition.unknown: 'unknown',
 };

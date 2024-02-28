@@ -57,12 +57,20 @@ class WeatherRepository {
 
     List<Weather> weather_forecast = [];
     for (var weather in forecast) {
+      SoilCondition predictedSoilCondition = SoilCondition.dry;
+      if ((weather.precipitation > 0.02) ||
+          (weather.soil_moisture_0_to_1cm > 0.33)) {
+        predictedSoilCondition = SoilCondition.muddy;
+      }
+
       weather_forecast.add(Weather(
         temperature: weather.temperature_2m,
         date: weather.time,
         location: location.name,
         condition: weather.weather_code.toInt().toCondition,
         soilMoisture: weather.soil_moisture_0_to_1cm,
+        precipitation: weather.precipitation,
+        soilCondition: predictedSoilCondition,
       ));
     }
     return weather_forecast;

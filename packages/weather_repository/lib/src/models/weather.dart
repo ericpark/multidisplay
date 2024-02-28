@@ -61,10 +61,14 @@ class Weather extends Equatable {
     required this.temperature,
     double? temperatureHigh,
     double? temperatureLow,
+    double? precipitation,
     double? soilMoisture,
-  })  : temperatureHigh = temperatureHigh ?? temperature,
+    SoilCondition? soilCondition,
+  })  : precipitation = precipitation ?? 0.0,
+        temperatureHigh = temperatureHigh ?? temperature,
         temperatureLow = temperatureLow ?? temperature,
-        soilMoisture = soilMoisture ?? 0.0;
+        soilMoisture = soilMoisture ?? 0.0,
+        soilCondition = soilCondition ?? SoilCondition.unknown;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
@@ -78,7 +82,9 @@ class Weather extends Equatable {
   final double temperature;
   final double temperatureHigh;
   final double temperatureLow;
+  final double precipitation;
   final double soilMoisture;
+  final SoilCondition soilCondition;
 
   @override
   List<Object> get props => [
@@ -88,7 +94,9 @@ class Weather extends Equatable {
         temperature,
         temperatureHigh,
         temperatureLow,
+        precipitation,
         soilMoisture,
+        soilCondition,
       ];
 }
 

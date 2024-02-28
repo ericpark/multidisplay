@@ -129,7 +129,7 @@ class OpenMeteoApiClient {
       'forecast_days': '7',
       'precipitation_unit': 'inch',
       'hourly':
-          'weather_code,precipitation,temperature_2m,soil_moisture_0_to_1cm'
+          'weather_code,precipitation,temperature_2m,soil_moisture_0_to_1cm,precipitation_probability,apparent_temperature'
     });
     final weatherResponse = await _httpClient.get(weatherRequest);
 

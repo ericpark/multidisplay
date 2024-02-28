@@ -4,3 +4,4 @@ export 'cubit/weather_cubit.dart';
 export 'models/models.dart';
 export 'view/weather_page.dart';
 export 'widgets/widgets.dart';
+export 'helpers/helpers.dart';

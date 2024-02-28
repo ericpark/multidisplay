@@ -22,15 +22,21 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       final weather = Weather.fromRepository(
         await _weatherRepository.getWeather(city),
       );
-      final forecast = await _weatherRepository.getDailyWeatherForecast(city);
+      final fetchedDailyForecasts =
+          await _weatherRepository.getDailyWeatherForecast(city);
+      final fetchedHourlyForecasts =
+          await _weatherRepository.getHourlyWeatherForecast(city);
 
       final units = state.temperatureUnits;
-      final value = units.isFahrenheit
-          ? weather.temperature.value.toFahrenheit()
-          : weather.temperature.value;
 
+      // Convert temperatures from F to C if needed.
+      final value = units.isFahrenheit
+          ? weather.temperature.value
+          : weather.temperature.value.toCelsius();
+
+      // Convert temperatures from F to C if needed.
       List<Weather> dailyForecast = [];
-      for (var w in forecast) {
+      for (var w in fetchedDailyForecasts) {
         Weather forecastWeather = Weather.fromRepository(w);
         double forecastWeatherTempHigh = units.isFahrenheit
             ? forecastWeather.temperatureHigh.value
@@ -44,11 +50,29 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         ));
       }
 
+      // Convert temperatures from F to C if needed.
+      List<Weather> hourlyForecast = [];
+      for (var w in fetchedHourlyForecasts) {
+        Weather forecastWeather = Weather.fromRepository(w);
+        double forecastWeatherTempHigh = units.isFahrenheit
+            ? forecastWeather.temperatureHigh.value
+            : forecastWeather.temperatureHigh.value.toCelsius();
+        double forecastWeatherTempLow = units.isFahrenheit
+            ? forecastWeather.temperatureLow.value
+            : forecastWeather.temperatureLow.value.toCelsius();
+        hourlyForecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
+
       emit(state.copyWith(
-          status: WeatherStatus.success,
-          temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
-          forecast: dailyForecast));
+        status: WeatherStatus.success,
+        temperatureUnits: units,
+        weather: weather.copyWith(temperature: Temperature(value: value)),
+        dailyForecast: dailyForecast,
+        hourlyForecast: hourlyForecast,
+      ));
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
@@ -61,16 +85,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       final weather = Weather.fromRepository(
         await _weatherRepository.getWeather(state.weather.location),
       );
-      final forecast = await _weatherRepository
+
+      final fetchedDailyForecasts = await _weatherRepository
           .getDailyWeatherForecast(state.weather.location);
+      final fetchedHourlyForecasts = await _weatherRepository
+          .getHourlyWeatherForecast(state.weather.location);
 
       final units = state.temperatureUnits;
       final value = units.isFahrenheit
-          ? weather.temperature.value.toFahrenheit()
-          : weather.temperature.value;
+          ? weather.temperature.value
+          : weather.temperature.value.toCelsius();
 
       List<Weather> dailyForecast = [];
-      for (var w in forecast) {
+      for (var w in fetchedDailyForecasts) {
         Weather forecastWeather = Weather.fromRepository(w);
         double forecastWeatherTempHigh = units.isFahrenheit
             ? forecastWeather.temperatureHigh.value
@@ -84,17 +111,40 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         ));
       }
 
+      // Convert temperatures from F to C if needed.
+      List<Weather> hourlyForecast = [];
+      for (var w in fetchedHourlyForecasts) {
+        Weather forecastWeather = Weather.fromRepository(w);
+        double forecastWeatherTempHigh = units.isFahrenheit
+            ? forecastWeather.temperatureHigh.value
+            : forecastWeather.temperatureHigh.value.toCelsius();
+        double forecastWeatherTempLow = units.isFahrenheit
+            ? forecastWeather.temperatureLow.value
+            : forecastWeather.temperatureLow.value.toCelsius();
+        hourlyForecast.add(forecastWeather.copyWith(
+          temperatureHigh: Temperature(value: forecastWeatherTempHigh),
+          temperatureLow: Temperature(value: forecastWeatherTempLow),
+        ));
+      }
       emit(
         state.copyWith(
           status: WeatherStatus.success,
           temperatureUnits: units,
           weather: weather.copyWith(temperature: Temperature(value: value)),
-          forecast: dailyForecast,
+          dailyForecast: dailyForecast,
+          hourlyForecast: hourlyForecast,
         ),
       );
     } on Exception {
       emit(state);
     }
+  }
+
+  void toggleAutoRefresh() {
+    final autoRefresh = state.autoRefresh;
+    emit(
+      state.copyWith(autoRefresh: !autoRefresh),
+    );
   }
 
   void toggleUnits() {
@@ -131,7 +181,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         state.copyWith(
           temperatureUnits: units,
           weather: weather.copyWith(temperature: Temperature(value: value)),
-          forecast: dailyForecast,
+          dailyForecast: dailyForecast,
         ),
       );
     }

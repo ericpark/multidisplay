@@ -44,7 +44,7 @@ Map<String, dynamic> _$WeatherStateToJson(WeatherState instance) =>
       'weather': instance.weather.toJson(),
       'temperature_units':
           _$TemperatureUnitsEnumMap[instance.temperatureUnits]!,
-      'forecast': instance.forecast.map((e) => e.toJson()).toList(),
+      'forecast': instance.dailyForecast.map((e) => e.toJson()).toList(),
     };
 
 const _$WeatherStatusEnumMap = {

@@ -48,14 +48,15 @@ enum WeatherCondition {
 
 @JsonSerializable()
 class Weather extends Equatable {
-  const Weather({
+  Weather({
     required this.date,
     required this.location,
     required this.temperature,
-    required this.temperatureHigh,
-    required this.temperatureLow,
+    double? temperatureHigh,
+    double? temperatureLow,
     required this.condition,
-  });
+  })  : temperatureHigh = temperatureHigh ?? temperature,
+        temperatureLow = temperatureLow ?? temperature;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);

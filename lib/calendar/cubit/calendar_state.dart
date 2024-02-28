@@ -11,7 +11,7 @@ extension CalendarStatusX on CalendarStatus {
 
 @JsonSerializable()
 class CalendarState extends Equatable {
-  CalendarState({this.status = CalendarStatus.initial});
+  const CalendarState({this.status = CalendarStatus.initial});
 
   factory CalendarState.fromJson(Map<String, dynamic> json) =>
       _$CalendarStateFromJson(json);

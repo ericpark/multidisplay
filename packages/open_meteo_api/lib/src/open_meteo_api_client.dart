@@ -61,6 +61,9 @@ class OpenMeteoApiClient {
       'latitude': '$latitude',
       'longitude': '$longitude',
       'current_weather': 'true',
+      'temperature_unit': 'fahrenheit',
+      'timezone': 'America/New_York',
+      'precipitation_unit': 'inch',
     });
 
     final weatherResponse = await _httpClient.get(weatherRequest);
@@ -81,7 +84,7 @@ class OpenMeteoApiClient {
   }
 
   /// Fetches List[Weather] for a given [latitude] and [longitude].
-  Future<List<DailyWeather>> getWeatherForecast(
+  Future<List<DailyWeather>> getDailyWeatherForecast(
       {required double latitude,
       required double longitude,
       int forecast_days = 7}) async {
@@ -91,6 +94,7 @@ class OpenMeteoApiClient {
       'temperature_unit': 'fahrenheit',
       'timezone': 'America/New_York',
       'forecast_days': '7',
+      'precipitation_unit': 'inch',
       'daily':
           'weather_code,precipitation_sum,temperature_2m_max,temperature_2m_min'
     });
@@ -107,11 +111,48 @@ class OpenMeteoApiClient {
     }
 
     final weatherJson = bodyJson['daily'] as Map<String, dynamic>;
-    return zipMaps(weatherJson);
+    return zipMaps(weatherJson).map<DailyWeather>((json) {
+      return new DailyWeather.fromJson(json);
+    }).toList();
   }
 
-  List<DailyWeather> zipMaps(Map<String, dynamic> bodyJson) {
-    List<DailyWeather> zippedList = [];
+  /// Fetches List[Weather] for a given [latitude] and [longitude].
+  Future<List<HourlyWeather>> getHourlyWeatherForecast(
+      {required double latitude,
+      required double longitude,
+      int forecast_days = 7}) async {
+    final weatherRequest = Uri.https(_baseUrlWeather, 'v1/forecast', {
+      'latitude': '$latitude',
+      'longitude': '$longitude',
+      'temperature_unit': 'fahrenheit',
+      'timezone': 'America/New_York',
+      'forecast_days': '7',
+      'precipitation_unit': 'inch',
+      'hourly':
+          'weather_code,precipitation,temperature_2m,soil_moisture_0_to_1cm'
+    });
+    final weatherResponse = await _httpClient.get(weatherRequest);
+
+    if (weatherResponse.statusCode != 200) {
+      throw WeatherRequestFailure();
+    }
+
+    final bodyJson = jsonDecode(weatherResponse.body) as Map<String, dynamic>;
+
+    if (!bodyJson.containsKey('hourly')) {
+      throw WeatherNotFoundFailure();
+    }
+
+    final weatherJson = bodyJson['hourly'] as Map<String, dynamic>;
+    return zipMaps(weatherJson).map<HourlyWeather>((json) {
+      return new HourlyWeather.fromJson(json);
+    }).toList();
+  }
+
+  /// Fetches List[dynamic] json objects for a given [bodyjson]
+
+  List<dynamic> zipMaps(Map<String, dynamic> bodyJson) {
+    List<dynamic> zippedList = [];
 
     if (bodyJson.isNotEmpty) {
       // Assuming all lists have the same length
@@ -122,10 +163,8 @@ class OpenMeteoApiClient {
         bodyJson.forEach((key, value) {
           zippedMap[key] = value[i];
         });
-        //zippedMap["temperature"] = bodyJson['temperature_2m_max'][i];
-        //zippedMap["weathercode"] = bodyJson['weather_code'][i];
 
-        zippedList.add(DailyWeather.fromJson(zippedMap));
+        zippedList.add(zippedMap);
       }
     }
 

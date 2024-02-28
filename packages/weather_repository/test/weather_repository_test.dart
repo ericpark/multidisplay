@@ -287,7 +287,7 @@ void main() {
           (_) async => location,
         );
         when(
-          () => weatherApiClient.getWeatherForecast(
+          () => weatherApiClient.getDailyWeatherForecast(
             latitude: any(named: 'latitude'),
             longitude: any(named: 'longitude'),
           ),

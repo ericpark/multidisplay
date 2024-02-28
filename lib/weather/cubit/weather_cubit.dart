@@ -114,8 +114,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
           ? temperature.value.toCelsius()
           : temperature.value.toFahrenheit();
       List<Weather> dailyForecast = [];
-      for (var i = 0; i < state.forecast.length; i++) {
-        Weather forecastWeather = state.forecast[i];
+      for (var i = 0; i < state.dailyForecast.length; i++) {
+        Weather forecastWeather = state.dailyForecast[i];
         double forecastWeatherTempHigh = units.isCelsius
             ? forecastWeather.temperatureHigh.value.toCelsius()
             : forecastWeather.temperatureHigh.value.toFahrenheit();

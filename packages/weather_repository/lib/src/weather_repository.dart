@@ -29,7 +29,7 @@ class WeatherRepository {
 
   Future<List<Weather>> getWeatherForecast(String city) async {
     final location = await _weatherApiClient.locationSearch(city);
-    final forecast = await _weatherApiClient.getWeatherForecast(
+    final forecast = await _weatherApiClient.getDailyWeatherForecast(
       latitude: location.latitude,
       longitude: location.longitude,
     );

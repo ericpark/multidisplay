@@ -107,7 +107,7 @@ class _WeatherViewState extends State<WeatherView> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
                               child: WeatherForecastPopulated(
-                                forecast: state.forecast,
+                                forecast: state.dailyForecast,
                                 units: state.temperatureUnits,
                               ),
                             ),

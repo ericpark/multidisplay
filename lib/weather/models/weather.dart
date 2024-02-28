@@ -36,9 +36,10 @@ class Weather extends Equatable {
     required this.date,
     required this.location,
     required this.temperature,
-    required this.temperatureHigh,
-    required this.temperatureLow,
-  });
+    Temperature? temperatureHigh,
+    Temperature? temperatureLow,
+  })  : temperatureHigh = temperatureHigh ?? temperature,
+        temperatureLow = temperatureLow ?? temperature;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);

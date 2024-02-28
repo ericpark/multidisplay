@@ -72,9 +72,12 @@ class SettingsPage extends StatelessWidget {
               // ignore: use_build_context_synchronously
               await context.read<WeatherCubit>().fetchWeather(city);
             },
-            trailing: const Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
-              child: Icon(Icons.search, semanticLabel: 'Search'),
+            trailing: const SizedBox(
+              height: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                child: Icon(Icons.search, semanticLabel: 'Search'),
+              ),
             ),
           ),
           BlocBuilder<WeatherCubit, WeatherState>(

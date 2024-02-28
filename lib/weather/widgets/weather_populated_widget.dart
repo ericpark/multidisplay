@@ -45,13 +45,19 @@ class WeatherPopulated extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: onRefresh,
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        iconSize: 20,
+                        onPressed: onRefresh,
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

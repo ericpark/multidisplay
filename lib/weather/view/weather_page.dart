@@ -53,7 +53,7 @@ class _WeatherViewState extends State<WeatherView> {
             listener: (context, state) {
               if (state.status.isSuccess) {
                 context.read<ThemeCubit>().updateTheme(state.weather);
-                timerBloc.add(const TimerStarted(duration: defaultDuration));
+                //timerBloc.add(const TimerStarted(duration: defaultDuration));
               }
             },
             builder: (context, state) {
@@ -66,14 +66,69 @@ class _WeatherViewState extends State<WeatherView> {
                   return BlocConsumer<TimerBloc, TimerState>(
                     listener: (timerContext, timerState) {
                       switch (timerState) {
-                        case const TimerRunComplete():
-                          if (state.autoRefresh) {
-                            context.read<WeatherCubit>().refreshWeather();
-                            timerBloc.add(
-                                const TimerStarted(duration: defaultDuration));
+                        case TimerInitial _:
+                          context
+                              .read<WeatherCubit>()
+                              .refreshWeather(current: true);
+                          timerBloc.add(
+                              const TimerStarted(duration: defaultDuration));
+
+                        case TimerRunComplete _:
+                          if (!state.autoRefresh) {
+                            break; // Break if autoRefresh is disabled.
+                          }
+
+                          context
+                              .read<WeatherCubit>()
+                              .refreshWeather(all: true);
+                          timerBloc.add(
+                              const TimerStarted(duration: defaultDuration));
+
+                        case TimerRunInProgress _:
+                          DateTime current = DateTime.now();
+
+                          if (!state.autoRefresh) {
+                            break; // Break if autoRefresh is disabled.
+                          }
+
+                          if ((current.hour == 0) && (current.minute == 1)) {
+                            context.read<WeatherCubit>().refreshWeather(
+                                all: true); // At 12:01 AM, fetch all
+                            break;
+                          }
+
+                          if ((current.hour == 0) && (current.minute < 15)) {
+                            break; // Break if first 15 minutes after midnight
+                          }
+
+                          // (60 * mins - 1) is used so the refresh times do not overlap.
+
+                          // Runs every 120 minutes. First time is delayed
+                          // by 3999 seconds. This means if it is manually refreshed,
+                          // the data isn't refreshed multiple times in a short time span
+                          if ((timerState.duration + 3999) % 7199 == 0) {
+                            context
+                                .read<WeatherCubit>()
+                                .refreshWeather(daily: true, current: true);
+                            break;
+                          }
+
+                          // Runs every 30 minutes
+                          if (timerState.duration % 1799 == 0) {
+                            context
+                                .read<WeatherCubit>()
+                                .refreshWeather(hourly: true, current: true);
+                            break;
+                          }
+                          // Runs every 5 minutes
+                          if (timerState.duration % 299 == 0) {
+                            context
+                                .read<WeatherCubit>()
+                                .refreshWeather(current: true);
+                            break;
                           }
                         default:
-                        //print(timerState);
+                          break;
                       }
                     },
                     builder: (timerContext, timerState) {
@@ -92,9 +147,11 @@ class _WeatherViewState extends State<WeatherView> {
                                     weather: state.weather,
                                     units: state.temperatureUnits,
                                     onRefresh: () {
+                                      timerBloc.add(const TimerStarted(
+                                          duration: defaultDuration));
                                       return context
                                           .read<WeatherCubit>()
-                                          .refreshWeather();
+                                          .refreshWeather(all: true);
                                     },
                                   ),
                                 ),

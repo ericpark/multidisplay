@@ -18,7 +18,6 @@ class HourlyForecastPopulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(units);
     List<Widget> forecastWidgets = [];
     DateTime now = DateTime.now();
     DateTime currentHour = DateTime.now().subtract(Duration(

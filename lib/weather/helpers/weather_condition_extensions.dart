@@ -29,7 +29,7 @@ extension WeatherConditionExtensions on WeatherCondition {
       case WeatherCondition.snowy:
         return WeatherIcons.snow;
       case WeatherCondition.unknown:
-        return WeatherIcons.refresh;
+        return Icons.error;
     }
   }
 }

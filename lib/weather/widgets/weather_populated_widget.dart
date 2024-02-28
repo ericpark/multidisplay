@@ -21,33 +21,43 @@ class WeatherPopulated extends StatelessWidget {
         RefreshIndicator(
           onRefresh: onRefresh,
           child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             clipBehavior: Clip.none,
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 48),
-                  _WeatherIcon(condition: weather.condition),
                   Text(
                     weather.location,
-                    style: theme.textTheme.displayMedium?.copyWith(
+                    style: theme.textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.w200,
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: _WeatherIcon(condition: weather.condition),
+                  ),
                   Text(
                     weather.formattedTemperature(units),
-                    style: theme.textTheme.displaySmall?.copyWith(
+                    style: theme.textTheme.displayMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: onRefresh,
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        iconSize: 20,
+                        onPressed: onRefresh,
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -61,33 +71,21 @@ class WeatherPopulated extends StatelessWidget {
 class _WeatherIcon extends StatelessWidget {
   const _WeatherIcon({required this.condition});
 
-  static const _iconSize = 75.0;
+  static const _iconSize = 100.0;
 
   final WeatherCondition condition;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      condition.toEmoji,
-      style: const TextStyle(fontSize: _iconSize),
+    return SizedBox(
+      width: _iconSize,
+      height: _iconSize,
+      child: Icon(
+        condition.toWeatherIcon,
+        size: _iconSize,
+        applyTextScaling: true,
+      ),
     );
-  }
-}
-
-extension on WeatherCondition {
-  String get toEmoji {
-    switch (this) {
-      case WeatherCondition.clear:
-        return '☀️';
-      case WeatherCondition.rainy:
-        return '🌧️';
-      case WeatherCondition.cloudy:
-        return '☁️';
-      case WeatherCondition.snowy:
-        return '🌨️';
-      case WeatherCondition.unknown:
-        return '❓';
-    }
   }
 }
 
@@ -132,8 +130,3 @@ extension on Color {
   }
 }
 */
-extension on Weather {
-  String formattedTemperature(TemperatureUnits units) {
-    return '''${temperature.value.toStringAsPrecision(2)}°${units.isCelsius ? 'C' : 'F'}''';
-  }
-}

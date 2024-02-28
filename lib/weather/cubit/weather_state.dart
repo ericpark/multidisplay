@@ -13,38 +13,55 @@ extension WeatherStatusX on WeatherStatus {
 class WeatherState extends Equatable {
   WeatherState(
       {this.status = WeatherStatus.initial,
-      this.temperatureUnits = TemperatureUnits.celsius,
+      this.temperatureUnits = TemperatureUnits.fahrenheit,
+      this.autoRefresh = true,
       Weather? weather,
-      List<Weather>? forecast})
+      List<Weather>? dailyForecast,
+      List<Weather>? hourlyForecast})
       : weather = weather ?? Weather.empty,
-        forecast = forecast ?? [Weather.empty];
+        dailyForecast = dailyForecast ?? [Weather.empty],
+        hourlyForecast = hourlyForecast ?? [Weather.empty];
 
   factory WeatherState.fromJson(Map<String, dynamic> json) =>
       _$WeatherStateFromJson(json);
 
   final WeatherStatus status;
-  final Weather weather;
   final TemperatureUnits temperatureUnits;
-  final List<Weather> forecast;
+  final Weather weather; // Current Weather
+
+  final bool autoRefresh;
+  final List<Weather> dailyForecast; // Daily Forecast
+  final List<Weather> hourlyForecast; // Daily Forecast
 
   WeatherState copyWith({
     WeatherStatus? status,
     TemperatureUnits? temperatureUnits,
+    bool? autoRefresh,
     Weather? weather,
-    List<Weather>? forecast,
+    List<Weather>? dailyForecast,
+    List<Weather>? hourlyForecast,
   }) {
     return WeatherState(
       status: status ?? this.status,
       temperatureUnits: temperatureUnits ?? this.temperatureUnits,
+      autoRefresh: autoRefresh ?? this.autoRefresh,
       weather: weather ?? this.weather,
-      forecast: forecast ?? this.forecast,
+      dailyForecast: dailyForecast ?? this.dailyForecast,
+      hourlyForecast: hourlyForecast ?? this.hourlyForecast,
     );
   }
 
   Map<String, dynamic> toJson() => _$WeatherStateToJson(this);
 
   @override
-  List<Object?> get props => [status, temperatureUnits, weather, forecast];
+  List<Object?> get props => [
+        status,
+        temperatureUnits,
+        autoRefresh,
+        weather,
+        dailyForecast,
+        hourlyForecast
+      ];
 }
 
 final class WeatherInitial extends WeatherState {}

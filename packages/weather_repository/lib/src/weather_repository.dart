@@ -27,9 +27,9 @@ class WeatherRepository {
     );
   }
 
-  Future<List<Weather>> getWeatherForecast(String city) async {
+  Future<List<Weather>> getDailyWeatherForecast(String city) async {
     final location = await _weatherApiClient.locationSearch(city);
-    final forecast = await _weatherApiClient.getWeatherForecast(
+    final forecast = await _weatherApiClient.getDailyWeatherForecast(
       latitude: location.latitude,
       longitude: location.longitude,
     );
@@ -43,6 +43,34 @@ class WeatherRepository {
         temperatureLow: weather.temperature_2m_min,
         location: location.name,
         condition: weather.weather_code.toInt().toCondition,
+      ));
+    }
+    return weather_forecast;
+  }
+
+  Future<List<Weather>> getHourlyWeatherForecast(String city) async {
+    final location = await _weatherApiClient.locationSearch(city);
+    final forecast = await _weatherApiClient.getHourlyWeatherForecast(
+      latitude: location.latitude,
+      longitude: location.longitude,
+    );
+
+    List<Weather> weather_forecast = [];
+    for (var weather in forecast) {
+      SoilCondition predictedSoilCondition = SoilCondition.dry;
+      if ((weather.precipitation > 0.02) ||
+          (weather.soil_moisture_0_to_1cm > 0.33)) {
+        predictedSoilCondition = SoilCondition.muddy;
+      }
+
+      weather_forecast.add(Weather(
+        temperature: weather.temperature_2m,
+        date: weather.time,
+        location: location.name,
+        condition: weather.weather_code.toInt().toCondition,
+        soilMoisture: weather.soil_moisture_0_to_1cm,
+        precipitation: weather.precipitation,
+        soilCondition: predictedSoilCondition,
       ));
     }
     return weather_forecast;

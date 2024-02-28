@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:open_meteo_api/open_meteo_api.dart';
 import 'package:test/test.dart';
+import 'dart:io';
 
 class MockHttpClient extends Mock implements http.Client {}
 
@@ -88,16 +89,16 @@ void main() {
         when(() => response.statusCode).thenReturn(200);
         when(() => response.body).thenReturn(
           '''
-{
-  "results": [
-    {
-      "id": 4887398,
-      "name": "Chicago",
-      "latitude": 41.85003,
-      "longitude": -87.65005
-    }
-  ]
-}''',
+          {
+            "results": [
+              {
+                "id": 4887398,
+                "name": "Chicago",
+                "latitude": 41.85003,
+                "longitude": -87.65005
+              }
+            ]
+          }''',
         );
         when(() => httpClient.get(any())).thenAnswer((_) async => response);
         final actual = await apiClient.locationSearch(query);
@@ -131,6 +132,9 @@ void main() {
               'latitude': '$latitude',
               'longitude': '$longitude',
               'current_weather': 'true',
+              'temperature_unit': 'fahrenheit',
+              'timezone': 'America/New_York',
+              'precipitation_unit': 'inch'
             }),
           ),
         ).called(1);
@@ -164,28 +168,11 @@ void main() {
       });
 
       test('returns weather on valid response', () async {
+        String sampleCurrentResult =
+            File('test/json/current_forecast.json').readAsStringSync();
         final response = MockResponse();
         when(() => response.statusCode).thenReturn(200);
-        when(() => response.body).thenReturn(
-          '''
-{
-"latitude": 43,
-"longitude": -87.875,
-"generationtime_ms": 0.2510547637939453,
-"utc_offset_seconds": 0,
-"timezone": "GMT",
-"timezone_abbreviation": "GMT",
-"elevation": 189,
-"current_weather": {
-"temperature": 15.3,
-"windspeed": 25.8,
-"winddirection": 310,
-"weathercode": 63,
-"time": "2022-09-12T01:00"
-}
-}
-        ''',
-        );
+        when(() => response.body).thenReturn(sampleCurrentResult);
         when(() => httpClient.get(any())).thenAnswer((_) async => response);
         final actual = await apiClient.getCurrentWeather(
           latitude: latitude,
@@ -196,6 +183,105 @@ void main() {
           isA<Weather>()
               .having((w) => w.temperature, 'temperature', 15.3)
               .having((w) => w.weatherCode, 'weatherCode', 63.0),
+        );
+      });
+    });
+    group('getDailyWeatherForecasts', () {
+      const latitude = 41.85003;
+      const longitude = -87.6500;
+      test('returns daily forecast on valid response', () async {
+        String sampleDailyForecastResult =
+            File('test/json/daily_forecast.json').readAsStringSync();
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(200);
+        when(() => response.body).thenReturn(sampleDailyForecastResult);
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        final actual = await apiClient.getDailyWeatherForecast(
+          latitude: latitude,
+          longitude: longitude,
+        );
+        expect(
+          actual,
+          isA<List<DailyWeather>>()
+              .having((f) => f.length, 'length', 7)
+              .having((f) => f[0].weather_code, 'weatherCode', 63.0),
+        );
+      });
+
+      test('throws WeatherRequestFailure on non-200 daily response', () async {
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(400);
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        expect(
+          () async => apiClient.getDailyWeatherForecast(
+            latitude: latitude,
+            longitude: longitude,
+          ),
+          throwsA(isA<WeatherRequestFailure>()),
+        );
+      });
+
+      test('throws WeatherNotFoundFailure on empty  response', () async {
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(200);
+        when(() => response.body).thenReturn('{}');
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        expect(
+          () async => apiClient.getDailyWeatherForecast(
+            latitude: latitude,
+            longitude: longitude,
+          ),
+          throwsA(isA<WeatherNotFoundFailure>()),
+        );
+      });
+    });
+
+    group('getHourlyWeatherForecasts', () {
+      const latitude = 41.85003;
+      const longitude = -87.6500;
+      test('returns hourly forecast on valid response', () async {
+        String sampleHourlyForecastResult =
+            File('test/json/hourly_forecast.json').readAsStringSync();
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(200);
+        when(() => response.body).thenReturn(sampleHourlyForecastResult);
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        final actual = await apiClient.getHourlyWeatherForecast(
+          latitude: latitude,
+          longitude: longitude,
+        );
+        expect(
+          actual,
+          isA<List<HourlyWeather>>()
+              .having((f) => f.length, 'length', 7 * 24)
+              .having((f) => f[0].weather_code, 'weatherCode', 51.0),
+        );
+      });
+
+      test('throws WeatherRequestFailure on non-200 daily response', () async {
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(400);
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        expect(
+          () async => apiClient.getHourlyWeatherForecast(
+            latitude: latitude,
+            longitude: longitude,
+          ),
+          throwsA(isA<WeatherRequestFailure>()),
+        );
+      });
+
+      test('throws WeatherNotFoundFailure on empty  response', () async {
+        final response = MockResponse();
+        when(() => response.statusCode).thenReturn(200);
+        when(() => response.body).thenReturn('{}');
+        when(() => httpClient.get(any())).thenAnswer((_) async => response);
+        expect(
+          () async => apiClient.getHourlyWeatherForecast(
+            latitude: latitude,
+            longitude: longitude,
+          ),
+          throwsA(isA<WeatherNotFoundFailure>()),
         );
       });
     });

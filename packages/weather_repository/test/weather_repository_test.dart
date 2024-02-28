@@ -13,6 +13,8 @@ class MockWeather extends Mock implements open_meteo_api.Weather {}
 
 class MockDailyWeather extends Mock implements open_meteo_api.DailyWeather {}
 
+class MockHourlyWeather extends Mock implements open_meteo_api.HourlyWeather {}
+
 void main() {
   group('WeatherRepository', () {
     late open_meteo_api.OpenMeteoApiClient weatherApiClient;
@@ -271,7 +273,7 @@ void main() {
         );
       });
 
-      test('returns forecast', () async {
+      test('returns daily forecast', () async {
         final location = MockLocation();
         final weather = MockWeather();
         final dailyWeather = MockDailyWeather();
@@ -287,12 +289,12 @@ void main() {
           (_) async => location,
         );
         when(
-          () => weatherApiClient.getWeatherForecast(
+          () => weatherApiClient.getDailyWeatherForecast(
             latitude: any(named: 'latitude'),
             longitude: any(named: 'longitude'),
           ),
         ).thenAnswer((_) async => [dailyWeather]);
-        final actual = await weatherRepository.getWeatherForecast(city);
+        final actual = await weatherRepository.getDailyWeatherForecast(city);
         expect(
           actual,
           [
@@ -302,6 +304,42 @@ void main() {
               temperatureHigh: 45,
               temperatureLow: 42,
               location: city,
+              condition: WeatherCondition.unknown,
+            )
+          ],
+        );
+      });
+
+      test('returns hourly forecast', () async {
+        final location = MockLocation();
+        final weather = MockWeather();
+        final hourlyWeather = MockHourlyWeather();
+        when(() => location.name).thenReturn(city);
+        when(() => location.latitude).thenReturn(latitude);
+        when(() => location.longitude).thenReturn(longitude);
+        when(() => weather.temperature).thenReturn(42.42);
+        when(() => hourlyWeather.time).thenReturn(DateTime.parse("2024-01-01"));
+        when(() => hourlyWeather.temperature_2m).thenReturn(45);
+        when(() => hourlyWeather.soil_moisture_0_to_1cm).thenReturn(0.313);
+        when(() => hourlyWeather.weather_code).thenReturn(-1);
+        when(() => weatherApiClient.locationSearch(any())).thenAnswer(
+          (_) async => location,
+        );
+        when(
+          () => weatherApiClient.getHourlyWeatherForecast(
+            latitude: any(named: 'latitude'),
+            longitude: any(named: 'longitude'),
+          ),
+        ).thenAnswer((_) async => [hourlyWeather]);
+        final actual = await weatherRepository.getHourlyWeatherForecast(city);
+        expect(
+          actual,
+          [
+            Weather(
+              date: DateTime.parse('2024-01-01'),
+              temperature: 45,
+              location: city,
+              soilMoisture: 0.313,
               condition: WeatherCondition.unknown,
             )
           ],

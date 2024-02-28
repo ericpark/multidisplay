@@ -21,30 +21,45 @@ WeatherState _$WeatherStateFromJson(Map<String, dynamic> json) =>
               'temperature_units',
               (v) =>
                   $enumDecodeNullable(_$TemperatureUnitsEnumMap, v) ??
-                  TemperatureUnits.celsius),
+                  TemperatureUnits.fahrenheit),
+          autoRefresh:
+              $checkedConvert('auto_refresh', (v) => v as bool? ?? true),
           weather: $checkedConvert(
               'weather',
               (v) => v == null
                   ? null
                   : Weather.fromJson(v as Map<String, dynamic>)),
-          forecast: $checkedConvert(
-              'forecast',
+          dailyForecast: $checkedConvert(
+              'daily_forecast',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) => Weather.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+          hourlyForecast: $checkedConvert(
+              'hourly_forecast',
               (v) => (v as List<dynamic>?)
                   ?.map((e) => Weather.fromJson(e as Map<String, dynamic>))
                   .toList()),
         );
         return val;
       },
-      fieldKeyMap: const {'temperatureUnits': 'temperature_units'},
+      fieldKeyMap: const {
+        'temperatureUnits': 'temperature_units',
+        'autoRefresh': 'auto_refresh',
+        'dailyForecast': 'daily_forecast',
+        'hourlyForecast': 'hourly_forecast'
+      },
     );
 
 Map<String, dynamic> _$WeatherStateToJson(WeatherState instance) =>
     <String, dynamic>{
       'status': _$WeatherStatusEnumMap[instance.status]!,
-      'weather': instance.weather.toJson(),
       'temperature_units':
           _$TemperatureUnitsEnumMap[instance.temperatureUnits]!,
-      'forecast': instance.forecast.map((e) => e.toJson()).toList(),
+      'weather': instance.weather.toJson(),
+      'auto_refresh': instance.autoRefresh,
+      'daily_forecast': instance.dailyForecast.map((e) => e.toJson()).toList(),
+      'hourly_forecast':
+          instance.hourlyForecast.map((e) => e.toJson()).toList(),
     };
 
 const _$WeatherStatusEnumMap = {

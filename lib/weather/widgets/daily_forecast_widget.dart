@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multidisplay/weather/weather.dart';
 
-class WeatherForecastPopulated extends StatelessWidget {
-  const WeatherForecastPopulated({
+class DailyForecastPopulated extends StatelessWidget {
+  const DailyForecastPopulated({
     required this.forecast,
     required this.units,
     super.key,
@@ -18,23 +18,23 @@ class WeatherForecastPopulated extends StatelessWidget {
 
     for (var i = 0; i < forecast.length; i++) {
       forecastWidgets.add(
-        SizedBox(
-            width: 140, // TODO: Update width
-            child: ForecastWidget(weather: forecast[i], units: units)),
+        Expanded(
+            flex: 1,
+            child: DailyForecastCell(weather: forecast[i], units: units)),
       );
     }
 
     return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Flex(
+        direction: Axis.horizontal,
         children: forecastWidgets,
       ),
     );
   }
 }
 
-class ForecastWidget extends StatelessWidget {
-  const ForecastWidget({
+class DailyForecastCell extends StatelessWidget {
+  const DailyForecastCell({
     required this.weather,
     required this.units,
     super.key,
@@ -53,9 +53,8 @@ class ForecastWidget extends StatelessWidget {
           //_WeatherBackground(),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // SPACING
-                const SizedBox(height: 20),
                 // DAY OF WEEK
                 Text(
                   DateFormat('EEEE').format(weather.date),
@@ -81,7 +80,8 @@ class ForecastWidget extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                            text: weather.formattedTemperature("high", units),
+                            text: weather.formattedTemperature(units,
+                                temperatureType: "high"),
                             style: theme.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             )),
@@ -96,14 +96,13 @@ class ForecastWidget extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                            text: weather.formattedTemperature("low", units),
+                            text: weather.formattedTemperature(units,
+                                temperatureType: "low"),
                             style: theme.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             )),
                       ]),
                 ),
-                // SPACING
-                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -122,36 +121,14 @@ class _WeatherIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      condition.toEmoji,
-      style: const TextStyle(fontSize: _iconSize),
+    return SizedBox(
+      width: _iconSize,
+      height: _iconSize,
+      child: Icon(
+        condition.toWeatherIcon,
+        size: _iconSize,
+        applyTextScaling: true,
+      ),
     );
-  }
-}
-
-extension on WeatherCondition {
-  String get toEmoji {
-    switch (this) {
-      case WeatherCondition.clear:
-        return '☀️';
-      case WeatherCondition.rainy:
-        return '🌧️';
-      case WeatherCondition.cloudy:
-        return '☁️';
-      case WeatherCondition.snowy:
-        return '🌨️';
-      case WeatherCondition.unknown:
-        return '❓';
-    }
-  }
-}
-
-extension on Weather {
-  String formattedTemperature(String temperatureType, TemperatureUnits units) {
-    if (temperatureType == "low") {
-      return '''${temperatureLow.value.toStringAsPrecision(3)}°${units.isCelsius ? 'C' : 'F'}''';
-    }
-
-    return '''${temperatureHigh.value.toStringAsPrecision(3)}°${units.isCelsius ? 'C' : 'F'}''';
   }
 }

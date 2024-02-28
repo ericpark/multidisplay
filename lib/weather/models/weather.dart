@@ -36,9 +36,16 @@ class Weather extends Equatable {
     required this.date,
     required this.location,
     required this.temperature,
-    required this.temperatureHigh,
-    required this.temperatureLow,
-  });
+    Temperature? temperatureHigh,
+    Temperature? temperatureLow,
+    double? precipitation,
+    double? soilMoisture,
+    SoilCondition? soilCondition,
+  })  : temperatureHigh = temperatureHigh ?? temperature,
+        temperatureLow = temperatureLow ?? temperature,
+        precipitation = precipitation ?? 0.0,
+        soilMoisture = soilMoisture ?? 0.0,
+        soilCondition = soilCondition ?? SoilCondition.unknown;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
@@ -52,6 +59,9 @@ class Weather extends Equatable {
       temperature: Temperature(value: weather.temperature),
       temperatureHigh: Temperature(value: weather.temperatureHigh),
       temperatureLow: Temperature(value: weather.temperatureLow),
+      precipitation: weather.precipitation,
+      soilMoisture: weather.soilMoisture,
+      soilCondition: weather.soilCondition,
     );
   }
 
@@ -63,6 +73,9 @@ class Weather extends Equatable {
     temperatureHigh: const Temperature(value: 0),
     temperatureLow: const Temperature(value: 0),
     location: '--',
+    precipitation: 0,
+    soilMoisture: 0,
+    soilCondition: SoilCondition.unknown,
   );
 
   final WeatherCondition condition;
@@ -72,6 +85,9 @@ class Weather extends Equatable {
   final Temperature temperature;
   final Temperature temperatureHigh;
   final Temperature temperatureLow;
+  final double precipitation;
+  final double soilMoisture;
+  final SoilCondition soilCondition;
 
   @override
   List<Object> get props => [
@@ -81,7 +97,10 @@ class Weather extends Equatable {
         location,
         temperature,
         temperatureHigh,
-        temperatureLow
+        temperatureLow,
+        precipitation,
+        soilMoisture,
+        soilCondition
       ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
@@ -94,6 +113,9 @@ class Weather extends Equatable {
     Temperature? temperature,
     Temperature? temperatureHigh,
     Temperature? temperatureLow,
+    double? precipitation,
+    double? soilMoisture,
+    SoilCondition? soilCondition,
   }) {
     return Weather(
       condition: condition ?? this.condition,
@@ -103,6 +125,9 @@ class Weather extends Equatable {
       temperature: temperature ?? this.temperature,
       temperatureHigh: temperatureHigh ?? this.temperatureHigh,
       temperatureLow: temperatureLow ?? this.temperatureLow,
+      precipitation: precipitation ?? this.precipitation,
+      soilMoisture: soilMoisture ?? this.soilMoisture,
+      soilCondition: soilCondition ?? this.soilCondition,
     );
   }
 }

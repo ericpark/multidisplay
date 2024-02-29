@@ -40,7 +40,7 @@ class CalendarFilterWidget extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Calendars',
+                        child: Text(state.events[0].eventName,
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
                       CalendarFilterListTile(),

@@ -9,5 +9,8 @@
         "syncfusion",
         "tabbar",
         "weathercode"
-    ]
+    ],
+    "[dart]": {
+        "editor.tabCompletion": "on"
+    }
 }

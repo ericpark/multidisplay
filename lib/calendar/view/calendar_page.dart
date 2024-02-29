@@ -16,6 +16,8 @@ class CalendarPage extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
               onPressed: () async {
+                await context.read<CalendarCubit>().fetchEvents("guestcal");
+
                 showPopupModal(context, const CalendarFilterWidget());
               },
             ),

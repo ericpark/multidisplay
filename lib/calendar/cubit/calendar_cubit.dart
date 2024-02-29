@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
+import 'package:calendar_repository/calendar_repository.dart'
+    show CalendarRepository;
+
 part 'calendar_state.dart';
 
 part 'calendar_cubit.g.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
-  CalendarCubit() : super(CalendarInitial());
+  CalendarCubit(this._calendarRepository) : super(CalendarInitial());
+  final CalendarRepository _calendarRepository;
 
   Future<void> refreshCalendar() async {
     return;
@@ -21,6 +25,27 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   Future<void> updateCalendarEvent() async {
     return;
+  }
+
+  Future<void> fetchEvents(String? calendarID) async {
+    if (calendarID == null || calendarID.isEmpty) return;
+
+    emit(state.copyWith(status: CalendarStatus.loading));
+
+    try {
+      List<Meeting> calendarEvents = getEvents();
+      final test =
+          await _calendarRepository.getAllEvents(calendarID: "guestcal");
+
+      calendarEvents.insert(
+          0,
+          Meeting(test[0].eventName, test[0].startDate, test[0].endDate,
+              Color.fromARGB(255, 134, 72, 15), false));
+      emit(state.copyWith(
+          status: CalendarStatus.success, events: calendarEvents));
+    } on Exception {
+      emit(state.copyWith(status: CalendarStatus.failure));
+    }
   }
 
   List<Meeting> getEvents() {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-class CalendarFilterWidget extends StatelessWidget {
-  const CalendarFilterWidget({super.key});
+class CalendarFilter extends StatelessWidget {
+  const CalendarFilter({super.key});
 
   @override
   Widget build(BuildContext context) {

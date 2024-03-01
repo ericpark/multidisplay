@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class CalendarScheduleWidget extends StatelessWidget {
-  const CalendarScheduleWidget({super.key});
+class CalendarSchedule extends StatelessWidget {
+  const CalendarSchedule({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,6 @@ class CalendarScheduleWidget extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-        CalendarCubit calendarCubit = context.read<CalendarCubit>();
         return SfCalendar(
           view: CalendarView.schedule,
           headerHeight: 0,
@@ -21,7 +20,7 @@ class CalendarScheduleWidget extends StatelessWidget {
               hideEmptyScheduleWeek: true,
               monthHeaderSettings: MonthHeaderSettings(height: 70),
               weekHeaderSettings: WeekHeaderSettings(height: 10)),
-          dataSource: CalendarEventDataSource(calendarCubit.getEvents()),
+          dataSource: CalendarEventDataSource(state.events),
           onTap: (calendarTapDetails) {
             CalendarEvent meeting = calendarTapDetails.appointments?.first;
             showDialog(

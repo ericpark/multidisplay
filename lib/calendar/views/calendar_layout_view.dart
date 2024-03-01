@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-class CalendarPopulatedWidget extends StatelessWidget {
-  const CalendarPopulatedWidget({super.key});
+class CalendarLayout extends StatelessWidget {
+  const CalendarLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +22,10 @@ class CalendarPopulatedWidget extends StatelessWidget {
               return const CalendarLoading();
             case CalendarStatus.success:
               return const Flex(
-                direction: Axis.vertical,
+                direction: Axis.horizontal,
                 children: [
                   Expanded(flex: 60, child: CalendarMonthWidget()),
-                  Expanded(flex: 40, child: CalendarScheduleWidget()),
+                  Expanded(flex: 40, child: CalendarSchedule()),
                 ],
               );
             case CalendarStatus.failure:

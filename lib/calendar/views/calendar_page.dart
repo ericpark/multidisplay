@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
-import 'package:multidisplay/calendar/widgets/cal_filter_widget.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
@@ -17,71 +16,52 @@ class CalendarPage extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarState>(builder: (context, state) {
       return BlocProvider.value(
         value: calCubit,
-        child: const CalendarCombinedView(),
+        child: const CalendarViewContainer(),
       );
     });
   }
 }
 
-class CalendarCombinedView extends StatelessWidget {
-  const CalendarCombinedView({super.key});
+class CalendarViewContainer extends StatelessWidget {
+  const CalendarViewContainer({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CalendarCubit, CalendarState>(
-      listener: (context, state) {
-        if (state.status.isInitial) {}
-        if (state.status.isSuccess) {}
-      },
-      builder: (context, state) {
-        switch (state.status) {
-          case CalendarStatus.loading:
-            return const CalendarLoading();
-          case CalendarStatus.success:
-            return Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
-                  onPressed: () async {
-                    await context
-                        .read<CalendarCubit>()
-                        .fetchEvents(state.calendars);
+        listener: (context, state) {
+      if (state.status.isInitial) {}
+      if (state.status.isSuccess) {}
+    }, builder: (context, state) {
+      return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
+              onPressed: () async {
+                await context
+                    .read<CalendarCubit>()
+                    .fetchEvents(state.calendars);
 
-                    if (context.mounted) {
-                      showPopupModal(context, const CalendarFilterWidget());
-                    }
-                  },
-                ),
-                actions: [
-                  IconButton(
-                    icon:
-                        const Icon(Icons.search, semanticLabel: 'Search Event'),
-                    onPressed: () async {
-                      showPopupModal(context, Container());
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-                    onPressed: () async {
-                      showPopupModal(context, const CalendarNewEvent());
-                    },
-                  ),
-                ],
+                if (context.mounted) {
+                  showPopupModal(context, const CalendarFilter());
+                }
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
+                onPressed: () async {
+                  showPopupModal(context, Container());
+                },
               ),
-              body: Flex(
-                direction: Axis.horizontal,
-                children: [
-                  Expanded(
-                      flex: 60,
-                      child: CalendarMonthWidget(events: state.events)),
-                  const Expanded(flex: 40, child: CalendarScheduleWidget()),
-                ],
+              IconButton(
+                icon: const Icon(Icons.add, semanticLabel: 'New Event'),
+                onPressed: () async {
+                  showPopupModal(context, const CalendarNewEventView());
+                },
               ),
-            );
-          default:
-            return const CalendarEmpty();
-        }
-      },
-    );
+            ],
+          ),
+          body: const CalendarLayout());
+    });
   }
 
   void showPopupModal(BuildContext buildContext, Widget widget) {

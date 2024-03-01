@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
@@ -8,7 +7,6 @@ import 'package:calendar_repository/calendar_repository.dart'
     show CalendarRepository;
 
 part 'calendar_state.dart';
-
 part 'calendar_cubit.g.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
@@ -16,17 +14,19 @@ class CalendarCubit extends Cubit<CalendarState> {
   final CalendarRepository _calendarRepository;
 
   Future<void> init() async {
-    // Get calendars list
     emit(state.copyWith(status: CalendarStatus.loading));
 
-    // Stub
+    await getCalendarsList();
+    fetchEvents(state.calendars);
+  }
+
+  Future<void> getCalendarsList() async {
+    // Commented out this emit so it doesn't change from loading to success to loading
+    // emit(state.copyWith(status: CalendarStatus.loading));
     List<String> calendars =
-        await Future.delayed(const Duration(seconds: 1)).then((val) {
-      return ["guestcal"];
-    });
+        await _calendarRepository.getAllCalendars(userId: "default");
 
     emit(state.copyWith(calendars: calendars));
-    fetchEvents(calendars);
   }
 
   Future<void> refreshCalendar() async {
@@ -64,27 +64,5 @@ class CalendarCubit extends Cubit<CalendarState> {
     } on Exception {
       emit(state.copyWith(status: CalendarStatus.failure));
     }
-  }
-
-  List<CalendarEvent> getEvents() {
-    final List<CalendarEvent> events = <CalendarEvent>[];
-    //final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(2023, 11, 3, 13, 0, 0);
-    final DateTime endTime = startTime.add(const Duration(days: 2));
-    events.add(CalendarEvent(
-        eventName: 'Ke Mary Otis',
-        start: startTime,
-        end: endTime,
-        background: const Color(0xFF0F8644),
-        isAllDay: false));
-    final DateTime startTime2 = DateTime(2024, 2, 13, 13, 0, 0);
-    final DateTime endTime2 = startTime2.add(const Duration(days: 10));
-    events.add(CalendarEvent(
-        eventName: 'Milo',
-        start: startTime2,
-        end: endTime2,
-        background: const Color(0xFF0F8644),
-        isAllDay: false));
-    return events;
   }
 }

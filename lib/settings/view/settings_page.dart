@@ -66,8 +66,7 @@ class SettingsPage extends StatelessWidget {
             ),
             onTap: () async {
               final city = await Navigator.of(context).push(SearchPage.route());
-              //if (!mounted) return;
-              // ignore: use_build_context_synchronously
+              if (!context.mounted) return;
               await context.read<WeatherCubit>().fetchWeather(city);
             },
             trailing: const SizedBox(

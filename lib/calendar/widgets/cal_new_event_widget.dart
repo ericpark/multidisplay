@@ -27,10 +27,12 @@ class CalendarNewEvent extends StatelessWidget {
                   key: const Key('filterWidget_save_iconButton'),
                   icon: const Icon(Icons.check, semanticLabel: 'Save'),
                   onPressed: () async {
-                    await calendarCubit.addCalendarEvent(state.events[0]);
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
+                    CalendarEvent newEventData =
+                        state.events[0].copyWith(eventName: "New Event Name");
+
+                    await calendarCubit.addCalendarEvent(newEventData);
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -114,6 +116,7 @@ class CalendarNewEvent extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
+                    /*
                     Container(child: () {
                       if (false) {
                         return const Text('tis true');
@@ -122,7 +125,7 @@ class CalendarNewEvent extends StatelessWidget {
                         decoration: const InputDecoration(
                             labelText: 'New Calendar Name'),
                       );
-                    }()),
+                    }()),*/
                     TextFormField(
                       decoration:
                           const InputDecoration(labelText: 'Description'),

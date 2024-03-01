@@ -42,7 +42,10 @@ class CalendarEvent extends Equatable {
       eventName: eventName,
       startDate: start,
       endDate: end,
-      calendarId: "",
+      calendarId: "guestcal",
+      active: true,
+      color: background,
+      recurring: false,
     );
   }
 

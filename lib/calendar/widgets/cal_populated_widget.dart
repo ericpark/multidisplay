@@ -15,7 +15,6 @@ class CalendarPopulatedWidget extends StatelessWidget {
           if (state.status.isInitial) {}
         },
         builder: (context, state) {
-          print('Populated widget $state');
           switch (state.status) {
             case CalendarStatus.initial:
               return const CalendarEmpty();

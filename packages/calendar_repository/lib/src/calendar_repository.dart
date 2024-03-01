@@ -14,14 +14,15 @@ class CalendarRepository {
     if (calendarIDs.length == 0) {
       return [];
     } else {
-      final eventsRef = _firebaseDB.collection("events").withConverter(
+      final eventsRef = calendarEventCollection("events");
+      /*final eventsRef = _firebaseDB.collection("events").withConverter(
             fromFirestore: CalendarEvent.fromFirestore,
             toFirestore: (CalendarEvent event, _) => event.toFirestore(),
-          );
-      ;
+          );*/
+
       final query = eventsRef
           //.where("active", isEqualTo: true)
-          .where("calendarID", whereIn: calendarIDs);
+          .where("calendar_id", whereIn: calendarIDs);
       List<CalendarEvent> allEvents = [];
       try {
         allEvents = await query.get().then(
@@ -42,15 +43,20 @@ class CalendarRepository {
     }
   }
 
-  Future<void> addNewEvent({required CalendarEvent eventData}) async {
-    final eventRef = _firebaseDB.collection("events").withConverter(
+  Future<CalendarEvent> addNewEvent({required CalendarEvent eventData}) async {
+    final eventsRef = calendarEventCollection("events");
+
+    /*final eventsRef = _firebaseDB.collection("events").withConverter(
           fromFirestore: CalendarEvent.fromFirestore,
           toFirestore: (CalendarEvent calEvent, options) =>
               calEvent.toFirestore(),
-        );
+        );*/
 
-    await eventRef.add(eventData).then((documentSnapshot) =>
-        print("Added Data with ID: ${documentSnapshot.id}"));
+    final eventId = await eventsRef
+        .add(eventData)
+        .then((documentSnapshot) => documentSnapshot.id);
+
+    return eventData.copyWith(id: eventId);
   }
 /*
   Future<void> updateEvent({required CalendarEvent eventData} );

@@ -8,29 +8,36 @@ part of 'calendar_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
+_$CalendarEventImpl _$$CalendarEventImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      'CalendarEvent',
+      r'_$CalendarEventImpl',
       json,
       ($checkedConvert) {
-        final val = CalendarEvent(
-          startDate: $checkedConvert('start_date',
-              (v) => const DateTimeConverter().fromJson(v as String)),
-          endDate: $checkedConvert('end_date',
-              (v) => const DateTimeConverter().fromJson(v as String)),
+        final val = _$CalendarEventImpl(
+          startDate: $checkedConvert(
+              'start_date', (v) => const DateTimeConverter().fromJson(v)),
+          endDate: $checkedConvert(
+              'end_date', (v) => const DateTimeConverter().fromJson(v)),
           eventName: $checkedConvert('event_name', (v) => v as String),
           calendarId: $checkedConvert('calendar_id', (v) => v as String),
-          description: $checkedConvert('description', (v) => v as String?),
+          description:
+              $checkedConvert('description', (v) => v as String? ?? ''),
           color: $checkedConvert(
               'color',
-              (v) => _$JsonConverterFromJson<String, Color>(
-                  v, const ColorConverter().fromJson)),
-          allDay: $checkedConvert('all_day', (v) => v as bool?),
-          active: $checkedConvert('active', (v) => v as bool?),
+              (v) => v == null
+                  ? Colors.transparent
+                  : const ColorConverter().fromJson(v as String)),
+          allDay: $checkedConvert('all_day', (v) => v as bool? ?? true),
+          active: $checkedConvert('active', (v) => v as bool? ?? true),
           createdAt: $checkedConvert('created_at',
-              (v) => v == null ? null : DateTime.parse(v as String)),
+              (v) => const DateTimeNullableConverter().fromJson(v)),
           id: $checkedConvert('id', (v) => v as String?),
-          recurring: $checkedConvert('recurring', (v) => v as bool?),
+          recurring: $checkedConvert('recurring', (v) => v as bool? ?? false),
+          tags: $checkedConvert(
+              'tags',
+              (v) =>
+                  (v as List<dynamic>?)?.map((e) => e as String).toList() ??
+                  const []),
         );
         return val;
       },
@@ -44,7 +51,7 @@ CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) =>
+Map<String, dynamic> _$$CalendarEventImplToJson(_$CalendarEventImpl instance) =>
     <String, dynamic>{
       'start_date': const DateTimeConverter().toJson(instance.startDate),
       'end_date': const DateTimeConverter().toJson(instance.endDate),
@@ -54,13 +61,9 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) =>
       'color': const ColorConverter().toJson(instance.color),
       'all_day': instance.allDay,
       'active': instance.active,
-      'created_at': instance.createdAt.toIso8601String(),
+      'created_at':
+          const DateTimeNullableConverter().toJson(instance.createdAt),
       'id': instance.id,
       'recurring': instance.recurring,
+      'tags': instance.tags,
     };
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);

@@ -17,6 +17,17 @@ CalendarState _$CalendarStateFromJson(Map<String, dynamic> json) =>
               (v) =>
                   $enumDecodeNullable(_$CalendarStatusEnumMap, v) ??
                   CalendarStatus.initial),
+          calendars: $checkedConvert(
+              'calendars',
+              (v) =>
+                  (v as List<dynamic>?)?.map((e) => e as String).toList() ??
+                  const []),
+          events: $checkedConvert(
+              'events',
+              (v) => (v as List<dynamic>?)
+                  ?.map(
+                      (e) => CalendarEvent.fromJson(e as Map<String, dynamic>))
+                  .toList()),
         );
         return val;
       },
@@ -25,6 +36,8 @@ CalendarState _$CalendarStateFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CalendarStateToJson(CalendarState instance) =>
     <String, dynamic>{
       'status': _$CalendarStatusEnumMap[instance.status]!,
+      'calendars': instance.calendars,
+      'events': instance.events.map((e) => e.toJson()).toList(),
     };
 
 const _$CalendarStatusEnumMap = {

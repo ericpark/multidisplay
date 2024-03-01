@@ -21,9 +21,9 @@ class CalendarScheduleWidget extends StatelessWidget {
               hideEmptyScheduleWeek: true,
               monthHeaderSettings: MonthHeaderSettings(height: 70),
               weekHeaderSettings: WeekHeaderSettings(height: 10)),
-          dataSource: MeetingDataSource(calendarCubit.getEvents()),
+          dataSource: CalendarEventDataSource(calendarCubit.getEvents()),
           onTap: (calendarTapDetails) {
-            Meeting meeting = calendarTapDetails.appointments?.first;
+            CalendarEvent meeting = calendarTapDetails.appointments?.first;
             showDialog(
                 context: context,
                 builder: (BuildContext context) {

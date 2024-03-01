@@ -43,15 +43,15 @@ class CalendarFilterWidget extends StatelessWidget {
                         child: Text(state.events[0].eventName,
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
-                      CalendarFilterListTile(),
-                      CalendarFilterListTile(),
-                      CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
                       const SizedBox(
                         height: 50,
                       ),
                       ElevatedButton(
                         onPressed: () => {},
-                        child: Text('Add New'),
+                        child: const Text('Add New'),
                       ),
                     ],
                   )),
@@ -64,7 +64,7 @@ class CalendarFilterWidget extends StatelessWidget {
 }
 
 class CalendarFilterListTile extends StatefulWidget {
-  CalendarFilterListTile({super.key});
+  const CalendarFilterListTile({super.key});
 
   @override
   State<CalendarFilterListTile> createState() => _CalendarFilterListTileState();

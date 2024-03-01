@@ -12,8 +12,10 @@ class CalendarPopulatedWidget extends StatelessWidget {
       child: BlocConsumer<CalendarCubit, CalendarState>(
         listener: (context, state) {
           if (state.status.isSuccess) {}
+          if (state.status.isInitial) {}
         },
         builder: (context, state) {
+          print('Populated widget $state');
           switch (state.status) {
             case CalendarStatus.initial:
               return const CalendarEmpty();

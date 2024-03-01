@@ -15,32 +15,48 @@ class CalendarCubit extends Cubit<CalendarState> {
   CalendarCubit(this._calendarRepository) : super(CalendarInitial());
   final CalendarRepository _calendarRepository;
 
+  Future<void> init() async {
+    // Get calendars list
+    emit(state.copyWith(status: CalendarStatus.loading));
+
+    // Stub
+    List<String> calendars =
+        await Future.delayed(const Duration(seconds: 1)).then((val) {
+      return ["guestcal"];
+    });
+
+    emit(state.copyWith(calendars: calendars));
+    fetchEvents(calendars);
+  }
+
   Future<void> refreshCalendar() async {
     return;
   }
 
-  Future<void> addCalendarEvent() async {
-    return;
+  Future<void> addCalendarEvent(CalendarEvent event) async {
+    final eventData = event.toRepository();
+    await _calendarRepository.addNewEvent(eventData: eventData);
   }
 
   Future<void> updateCalendarEvent() async {
     return;
   }
 
-  Future<void> fetchEvents(String? calendarID) async {
-    if (calendarID == null || calendarID.isEmpty) return;
-
+  Future<void> fetchEvents(List<String> calendarIDs) async {
+    if (calendarIDs.isEmpty) return;
     emit(state.copyWith(status: CalendarStatus.loading));
-
     try {
-      List<Meeting> calendarEvents = getEvents();
-      final test =
-          await _calendarRepository.getAllEvents(calendarID: "guestcal");
-
+      List<CalendarEvent> calendarEvents = [];
+      final test = await _calendarRepository.getAllEventsFromCalendars(
+          calendarIDs: calendarIDs);
       calendarEvents.insert(
           0,
-          Meeting(test[0].eventName, test[0].startDate, test[0].endDate,
-              Color.fromARGB(255, 134, 72, 15), false));
+          CalendarEvent(
+              eventName: test[0].eventName,
+              start: test[0].startDate,
+              end: test[0].endDate,
+              background: test[0].color,
+              isAllDay: false));
       emit(state.copyWith(
           status: CalendarStatus.success, events: calendarEvents));
     } on Exception {
@@ -48,24 +64,25 @@ class CalendarCubit extends Cubit<CalendarState> {
     }
   }
 
-  List<Meeting> getEvents() {
-    final List<Meeting> meetings = <Meeting>[];
+  List<CalendarEvent> getEvents() {
+    final List<CalendarEvent> events = <CalendarEvent>[];
     //final DateTime today = DateTime.now();
     final DateTime startTime = DateTime(2023, 11, 3, 13, 0, 0);
     final DateTime endTime = startTime.add(const Duration(days: 2));
-    meetings.add(Meeting(
-        'Ke Mary Otis', startTime, endTime, const Color(0xFF0F8644), false));
+    events.add(CalendarEvent(
+        eventName: 'Ke Mary Otis',
+        start: startTime,
+        end: endTime,
+        background: const Color(0xFF0F8644),
+        isAllDay: false));
     final DateTime startTime2 = DateTime(2024, 2, 13, 13, 0, 0);
     final DateTime endTime2 = startTime2.add(const Duration(days: 10));
-    meetings.add(
-        Meeting('Milo', startTime2, endTime2, const Color(0xFF0F8644), false));
-    return meetings;
+    events.add(CalendarEvent(
+        eventName: 'Milo',
+        start: startTime2,
+        end: endTime2,
+        background: const Color(0xFF0F8644),
+        isAllDay: false));
+    return events;
   }
-
-  @override
-  CalendarState fromJson(Map<String, dynamic> json) =>
-      CalendarState.fromJson(json);
-
-  /*@override
-  Map<String, dynamic> toJson(CalendarState state) => state.toJson();*/
 }

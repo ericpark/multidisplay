@@ -44,7 +44,7 @@ class App extends StatelessWidget {
             ),
             BlocProvider<CalendarCubit>(
               create: (BuildContext context) =>
-                  CalendarCubit(context.read<CalendarRepository>()),
+                  CalendarCubit(context.read<CalendarRepository>())..init(),
             ),
             BlocProvider<TimerBloc>(
               create: (BuildContext context) =>

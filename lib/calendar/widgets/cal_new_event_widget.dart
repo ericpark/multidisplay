@@ -26,7 +26,12 @@ class CalendarNewEvent extends StatelessWidget {
                 IconButton(
                   key: const Key('filterWidget_save_iconButton'),
                   icon: const Icon(Icons.check, semanticLabel: 'Save'),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () async {
+                    await calendarCubit.addCalendarEvent(state.events[0]);
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
                 ),
               ],
             )),
@@ -41,7 +46,8 @@ class CalendarNewEvent extends StatelessWidget {
                   children: [
                     const Text('New Event'),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Event Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Event Name'),
                     ),
                     Flex(
                       direction: Axis.horizontal,
@@ -60,8 +66,8 @@ class CalendarNewEvent extends StatelessWidget {
                               },
                               child: IgnorePointer(
                                 child: TextFormField(
-                                  decoration:
-                                      InputDecoration(hintText: 'Start Date'),
+                                  decoration: const InputDecoration(
+                                      hintText: 'Start Date'),
                                   // validator: validateDob,
                                   onSaved: (val) {},
                                 ),
@@ -75,7 +81,7 @@ class CalendarNewEvent extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
                             child: TextFormField(
                               decoration:
-                                  InputDecoration(labelText: 'End Date'),
+                                  const InputDecoration(labelText: 'End Date'),
                               // Implement date picker logic
                             ),
                           ),
@@ -87,7 +93,7 @@ class CalendarNewEvent extends StatelessWidget {
                         //calendarCubit(value!);
                       },
                       value: 'Calendar 1',
-                      items: [
+                      items: const [
                         DropdownMenuItem(
                           value: 'Calendar 1',
                           child: Text('Calendar 1'),
@@ -102,22 +108,24 @@ class CalendarNewEvent extends StatelessWidget {
                         ),
                         // Add more calendars as needed
                       ],
-                      decoration: InputDecoration(labelText: 'Select Calendar'),
+                      decoration:
+                          const InputDecoration(labelText: 'Select Calendar'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Container(child: () {
                       if (false) {
-                        return Text('tis true');
+                        return const Text('tis true');
                       }
                       return TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'New Calendar Name'),
+                        decoration: const InputDecoration(
+                            labelText: 'New Calendar Name'),
                       );
                     }()),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Description'),
+                      decoration:
+                          const InputDecoration(labelText: 'Description'),
                       maxLines: 5,
                     ),
                   ],

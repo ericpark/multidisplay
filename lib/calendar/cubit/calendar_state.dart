@@ -11,29 +11,35 @@ extension CalendarStatusX on CalendarStatus {
 
 @JsonSerializable()
 class CalendarState extends Equatable {
-  CalendarState({this.status = CalendarStatus.initial, List<Meeting>? events})
-      : events = events ?? [];
+  CalendarState({
+    this.status = CalendarStatus.initial,
+    this.calendars = const [],
+    List<CalendarEvent>? events,
+  }) : events = events ?? [];
 
   factory CalendarState.fromJson(Map<String, dynamic> json) =>
       _$CalendarStateFromJson(json);
 
   final CalendarStatus status;
-  final List<Meeting> events;
+  final List<String> calendars;
+  final List<CalendarEvent> events;
 
   CalendarState copyWith({
     CalendarStatus? status,
-    List<Meeting>? events,
+    List<String>? calendars,
+    List<CalendarEvent>? events,
   }) {
     return CalendarState(
       status: status ?? this.status,
+      calendars: calendars ?? this.calendars,
       events: events ?? this.events,
     );
   }
 
-  //Map<String, dynamic> toJson() => _$CalendarStateFromJson(this);
+  Map<String, dynamic> toJson() => _$CalendarStateToJson(this);
 
   @override
-  List<Object> get props => [status, events];
+  List<Object> get props => [status, events, calendars];
 }
 
 final class CalendarInitial extends CalendarState {}

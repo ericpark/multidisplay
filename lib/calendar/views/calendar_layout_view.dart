@@ -8,12 +8,13 @@ class CalendarLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("REBUILT CAL LAYOUT");
+
     return Center(
-      child: BlocConsumer<CalendarCubit, CalendarState>(
-        listener: (context, state) {
-          if (state.status.isSuccess) {}
-          if (state.status.isInitial) {}
-        },
+      child: BlocBuilder<CalendarCubit, CalendarState>(
+        buildWhen: (previous, current) =>
+            (previous.events != current.events) ||
+            (previous.status != current.status),
         builder: (context, state) {
           switch (state.status) {
             case CalendarStatus.initial:
@@ -21,10 +22,12 @@ class CalendarLayout extends StatelessWidget {
             case CalendarStatus.loading:
               return const CalendarLoading();
             case CalendarStatus.success:
-              return const Flex(
+              return Flex(
                 direction: Axis.horizontal,
                 children: [
-                  Expanded(flex: 60, child: CalendarMonthWidget()),
+                  Expanded(
+                      flex: 60,
+                      child: CalendarMonthWidget(events: state.events)),
                   Expanded(flex: 40, child: CalendarSchedule()),
                 ],
               );

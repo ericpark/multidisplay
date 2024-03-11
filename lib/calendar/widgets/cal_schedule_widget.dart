@@ -8,11 +8,11 @@ class CalendarSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CalendarCubit, CalendarState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    return BlocBuilder<CalendarCubit, CalendarState>(
       builder: (context, state) {
+        print(state);
+
         return SfCalendar(
           view: CalendarView.schedule,
           headerHeight: 0,
@@ -20,7 +20,7 @@ class CalendarSchedule extends StatelessWidget {
               hideEmptyScheduleWeek: true,
               monthHeaderSettings: MonthHeaderSettings(height: 70),
               weekHeaderSettings: WeekHeaderSettings(height: 10)),
-          dataSource: CalendarEventDataSource(state.events),
+          dataSource: CalendarEventDataSource(calendarCubit.state.events),
           onTap: (calendarTapDetails) {
             CalendarEvent meeting = calendarTapDetails.appointments?.first;
             showDialog(

@@ -35,14 +35,15 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   Future<void> addCalendarEvent(CalendarEvent event) async {
     final eventData = event.toRepository();
-    emit(state.copyWith(status: CalendarStatus.loading));
+    //emit(state.copyWith(status: CalendarStatus.loading));
     final newEvent =
         await _calendarRepository.addNewEvent(eventData: eventData);
 
     List<CalendarEvent> updatedListOfEvents = state.events;
     updatedListOfEvents.add(CalendarEvent.fromRepository(newEvent));
-    emit(state.copyWith(
-        status: CalendarStatus.success, events: updatedListOfEvents));
+
+    /*emit(state.copyWith(
+        status: CalendarStatus.success, events: updatedListOfEvents));*/
   }
 
   Future<void> updateCalendarEvent() async {

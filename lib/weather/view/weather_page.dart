@@ -102,7 +102,7 @@ class _WeatherViewState extends State<WeatherView> {
                           * by 3999 seconds. This means if it is manually refreshed,
                           * the data isn't refreshed multiple times in a short time span
                           */
-                          if ((timerState.duration + 3999) % 7199 == 0) {
+                          if ((timerState.duration + 0) % 7199 == 0) {
                             context
                                 .read<WeatherCubit>()
                                 .refreshWeather(daily: true, current: true);

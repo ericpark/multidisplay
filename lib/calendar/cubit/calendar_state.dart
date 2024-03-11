@@ -15,7 +15,6 @@ class CalendarState extends Equatable {
     this.status = CalendarStatus.initial,
     this.calendars = const [],
     List<CalendarEvent>? events,
-    CalendarEvent? newEvent,
   }) : events = events ?? [];
 
   factory CalendarState.fromJson(Map<String, dynamic> json) =>
@@ -25,19 +24,15 @@ class CalendarState extends Equatable {
   final List<String> calendars;
   final List<CalendarEvent> events;
 
-  CalendarEvent? newEvent;
-
   CalendarState copyWith({
     CalendarStatus? status,
     List<String>? calendars,
     List<CalendarEvent>? events,
-    CalendarEvent? newEvent,
   }) {
     return CalendarState(
       status: status ?? this.status,
       calendars: calendars ?? this.calendars,
       events: events ?? this.events,
-      newEvent: newEvent ?? this.newEvent,
     );
   }
 

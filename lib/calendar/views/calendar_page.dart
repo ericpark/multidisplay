@@ -26,6 +26,7 @@ class CalendarViewContainer extends StatelessWidget {
   const CalendarViewContainer({super.key});
   @override
   Widget build(BuildContext context) {
+    print("REBUILT CAL CONTAINER");
     return BlocConsumer<CalendarCubit, CalendarState>(
         listener: (context, state) {
       if (state.status.isInitial) {}

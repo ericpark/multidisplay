@@ -8,8 +8,6 @@ class CalendarLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("REBUILT CAL LAYOUT");
-
     return Center(
       child: BlocBuilder<CalendarCubit, CalendarState>(
         buildWhen: (previous, current) =>
@@ -28,7 +26,7 @@ class CalendarLayout extends StatelessWidget {
                   Expanded(
                       flex: 60,
                       child: CalendarMonthWidget(events: state.events)),
-                  Expanded(flex: 40, child: CalendarSchedule()),
+                  const Expanded(flex: 40, child: CalendarSchedule()),
                 ],
               );
             case CalendarStatus.failure:

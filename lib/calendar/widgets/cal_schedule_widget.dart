@@ -11,8 +11,6 @@ class CalendarSchedule extends StatelessWidget {
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     return BlocBuilder<CalendarCubit, CalendarState>(
       builder: (context, state) {
-        print(state);
-
         return SfCalendar(
           view: CalendarView.schedule,
           headerHeight: 0,

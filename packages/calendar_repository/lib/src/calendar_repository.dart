@@ -36,6 +36,36 @@ class CalendarRepository {
     }
   }
 
+  Future<List<CalendarDetails>> getAllCalendarDetails({
+    required List<String> calendarIDs,
+  }) async {
+    if (calendarIDs.length == 0) {
+      return [];
+    } else {
+      final calendarDetailsRef = calendarDetailsCollection("calendars");
+      final query = calendarDetailsRef
+          .where("active", isEqualTo: true)
+          .where("id", whereIn: calendarIDs);
+      List<CalendarDetails> allCalendarDetails = [];
+      try {
+        allCalendarDetails = await query.get().then(
+          (querySnapshot) {
+            List<CalendarDetails> calDetails = [];
+            for (var docSnapshot in querySnapshot.docs) {
+              calDetails.add(docSnapshot.data());
+            }
+            return calDetails;
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
+        return allCalendarDetails;
+      } catch (err) {
+        print("Error while retrieving calendar details: $err");
+        return [];
+      }
+    }
+  }
+
   Future<List<CalendarEvent>> getAllEventsFromCalendars({
     required List<String> calendarIDs,
   }) async {

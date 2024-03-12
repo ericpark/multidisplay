@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/theme/theme.dart';
+//import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/timer/timer.dart';
 import 'package:multidisplay/weather/weather.dart';
 
@@ -48,7 +48,7 @@ class _WeatherViewState extends State<WeatherView> {
           child: BlocConsumer<WeatherCubit, WeatherState>(
             listener: (context, state) {
               if (state.status.isSuccess) {
-                context.read<ThemeCubit>().updateTheme(state.weather);
+                //context.read<ThemeCubit>().updateTheme(state.weather);
               }
             },
             builder: (context, state) {

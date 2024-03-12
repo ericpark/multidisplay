@@ -26,7 +26,6 @@ class CalendarViewContainer extends StatelessWidget {
   const CalendarViewContainer({super.key});
   @override
   Widget build(BuildContext context) {
-    print("REBUILT CAL CONTAINER");
     return BlocConsumer<CalendarCubit, CalendarState>(
         listener: (context, state) {
       if (state.status.isInitial) {}
@@ -51,6 +50,13 @@ class CalendarViewContainer extends StatelessWidget {
                 icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
                 onPressed: () async {
                   showPopupModal(context, Container());
+                },
+              ),
+              IconButton(
+                icon:
+                    const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
+                onPressed: () async {
+                  await context.read<CalendarCubit>().refreshCalendar();
                 },
               ),
               IconButton(

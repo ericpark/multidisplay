@@ -14,6 +14,7 @@ class CalendarState extends Equatable {
   CalendarState({
     this.status = CalendarStatus.initial,
     this.calendars = const [],
+    this.calendarDetails = const {},
     List<CalendarEvent>? events,
   }) : events = events ?? [];
 
@@ -22,16 +23,19 @@ class CalendarState extends Equatable {
 
   final CalendarStatus status;
   final List<String> calendars;
+  final Map<String, CalendarDetails> calendarDetails;
   final List<CalendarEvent> events;
 
   CalendarState copyWith({
     CalendarStatus? status,
     List<String>? calendars,
+    Map<String, CalendarDetails>? calendarDetails,
     List<CalendarEvent>? events,
   }) {
     return CalendarState(
       status: status ?? this.status,
       calendars: calendars ?? this.calendars,
+      calendarDetails: calendarDetails ?? this.calendarDetails,
       events: events ?? this.events,
     );
   }
@@ -39,7 +43,7 @@ class CalendarState extends Equatable {
   Map<String, dynamic> toJson() => _$CalendarStateToJson(this);
 
   @override
-  List<Object> get props => [status, events, calendars];
+  List<Object> get props => [status, events, calendars, calendarDetails];
 }
 
 final class CalendarInitial extends CalendarState {}

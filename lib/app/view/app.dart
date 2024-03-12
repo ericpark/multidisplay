@@ -5,7 +5,7 @@ import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
 
 import 'package:multidisplay/app/app.dart';
-import 'package:multidisplay/theme/theme.dart';
+//import 'package:multidisplay/theme/theme.dart';
 
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/calendar/calendar.dart';
@@ -39,9 +39,9 @@ class App extends StatelessWidget {
             BlocProvider<AppBloc>(
               create: (BuildContext context) => AppBloc(),
             ),
-            BlocProvider<ThemeCubit>(
+            /*BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
-            ),
+            ),*/
             BlocProvider<CalendarCubit>(
               create: (BuildContext context) =>
                   CalendarCubit(context.read<CalendarRepository>())..init(),
@@ -89,22 +89,24 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, Color>(builder: (context, color) {
-      return MaterialApp(
-          theme: ThemeData(
-            appBarTheme: const AppBarTheme(
-              elevation: 0,
-            ),
-            colorScheme: ColorScheme.fromSeed(seedColor: color),
-            useMaterial3: true,
+    //return BlocBuilder<ThemeCubit, Color>(builder: (context, color) {
+    return MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
           ),
-          home: DefaultTabController(
-            length: tabs.length,
-            child: Scaffold(
-              appBar: AppBar(bottom: TabBar(tabs: tabs)),
-              body: TabBarView(children: pages),
-            ),
-          ));
-    });
+          //colorScheme: ColorScheme.fromSeed(seedColor: color),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: Theme.of(context).primaryColor),
+          useMaterial3: true,
+        ),
+        home: DefaultTabController(
+          length: tabs.length,
+          child: Scaffold(
+            appBar: AppBar(bottom: TabBar(tabs: tabs)),
+            body: TabBarView(children: pages),
+          ),
+        ));
+    //});
   }
 }

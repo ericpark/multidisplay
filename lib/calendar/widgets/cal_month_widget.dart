@@ -12,8 +12,9 @@ class CalendarMonthWidget extends StatelessWidget {
     return SfCalendar(
       view: CalendarView.month,
       monthViewSettings: const MonthViewSettings(
-          navigationDirection: MonthNavigationDirection.vertical,
-          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+        navigationDirection: MonthNavigationDirection.vertical,
+        appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+      ),
       dataSource: CalendarEventDataSource(events ?? []),
     );
   }

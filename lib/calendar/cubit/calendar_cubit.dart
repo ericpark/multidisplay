@@ -17,6 +17,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     emit(state.copyWith(status: CalendarStatus.loading));
 
     await getCalendarsList();
+    await getCalendarDetails();
     fetchEvents(state.calendars);
   }
 
@@ -29,24 +30,52 @@ class CalendarCubit extends Cubit<CalendarState> {
     emit(state.copyWith(calendars: calendars));
   }
 
+  Future<void> getCalendarDetails() async {
+    // Commented out this emit so it doesn't change from loading to success to loading
+    // emit(state.copyWith(status: CalendarStatus.loading));
+
+    final calendarDetailsFromFirebase = await _calendarRepository
+        .getAllCalendarDetails(calendarIDs: state.calendars);
+
+    Map<String, CalendarDetails> calendarDetails = {};
+
+    for (var cDetails in calendarDetailsFromFirebase) {
+      calendarDetails[cDetails.id!] =
+          CalendarDetails.fromJson(cDetails.toJson());
+    }
+
+    emit(state.copyWith(calendarDetails: calendarDetails));
+  }
+
   Future<void> refreshCalendar() async {
+    await getCalendarDetails();
+
+    await fetchEvents(state.calendars);
+    return;
+  }
+
+  Future<void> refreshCalendarUI() async {
+    emit(state.copyWith(status: CalendarStatus.loading));
+    emit(state.copyWith(status: CalendarStatus.success));
+
     return;
   }
 
   Future<void> addCalendarEvent(CalendarEvent event) async {
     final eventData = event.toRepository();
-    //emit(state.copyWith(status: CalendarStatus.loading));
+    emit(state.copyWith(status: CalendarStatus.loading));
     final newEvent =
         await _calendarRepository.addNewEvent(eventData: eventData);
 
     List<CalendarEvent> updatedListOfEvents = state.events;
     updatedListOfEvents.add(CalendarEvent.fromRepository(newEvent));
 
-    /*emit(state.copyWith(
-        status: CalendarStatus.success, events: updatedListOfEvents));*/
+    emit(state.copyWith(
+        status: CalendarStatus.success, events: updatedListOfEvents));
   }
 
   Future<void> updateCalendarEvent() async {
+    fetchEvents(state.calendars);
     return;
   }
 
@@ -58,7 +87,9 @@ class CalendarCubit extends Cubit<CalendarState> {
       final firebaseEvents = await _calendarRepository
           .getAllEventsFromCalendars(calendarIDs: calendarIDs);
       calendarEvents = firebaseEvents
-          .map((fEvent) => CalendarEvent.fromRepository(fEvent))
+          .map((fEvent) => CalendarEvent.fromRepository(fEvent).copyWith(
+              background: state.calendarDetails[fEvent.calendarId]?.color ??
+                  fEvent.color))
           .toList();
       emit(state.copyWith(
           status: CalendarStatus.success, events: calendarEvents));

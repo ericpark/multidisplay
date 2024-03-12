@@ -12,16 +12,34 @@ class CalendarEvent extends Equatable {
   const CalendarEvent(
       {required this.eventName,
       required this.start,
-      required this.end,
       required this.background,
-      required this.isAllDay});
+      required this.calendarId,
+      DateTime? end,
+      bool? isAllDay,
+      bool? active,
+      String? description})
+      : end = end ?? start,
+        isAllDay = isAllDay ?? true,
+        active = active ?? true,
+        description = description ?? "";
+
+  CalendarEvent.empty()
+      : this(
+          eventName: "",
+          start: DateTime(1970),
+          background: Colors.transparent,
+          calendarId: "",
+        );
 
   final String eventName;
   final DateTime start;
   final DateTime end;
+  final String calendarId;
   @ColorConverter()
   final Color background;
   final bool isAllDay;
+  final bool active;
+  final String description;
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
       _$CalendarEventFromJson(json);
@@ -33,7 +51,10 @@ class CalendarEvent extends Equatable {
       start: event.startDate,
       end: event.endDate,
       background: event.color,
-      isAllDay: false,
+      isAllDay: event.allDay,
+      active: event.active,
+      description: event.description,
+      calendarId: event.calendarId,
     );
   }
 
@@ -42,10 +63,11 @@ class CalendarEvent extends Equatable {
       eventName: eventName,
       startDate: start,
       endDate: end,
-      calendarId: "guestcal",
-      active: true,
+      calendarId: calendarId,
+      active: active,
       color: background,
       recurring: false,
+      description: description,
     );
   }
 
@@ -57,6 +79,9 @@ class CalendarEvent extends Equatable {
     DateTime? end,
     Color? background,
     bool? isAllDay,
+    bool? active,
+    String? description,
+    String? calendarId,
   }) {
     return CalendarEvent(
       eventName: eventName ?? this.eventName,
@@ -64,11 +89,15 @@ class CalendarEvent extends Equatable {
       end: end ?? this.end,
       background: background ?? this.background,
       isAllDay: isAllDay ?? this.isAllDay,
+      active: isAllDay ?? this.active,
+      description: description ?? this.description,
+      calendarId: calendarId ?? this.calendarId,
     );
   }
 
   @override
-  List<Object> get props => [eventName, start, end, background, isAllDay];
+  List<Object> get props =>
+      [eventName, start, end, background, isAllDay, description, calendarId];
 }
 
 class ColorConverter implements JsonConverter<Color, String> {

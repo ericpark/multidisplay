@@ -10,6 +10,7 @@ class CalendarEventForm extends StatelessWidget {
     return Builder(
       builder: (context) {
         final formBloc = context.read<CalendarFormBloc>();
+        final calendarCubit = context.read<CalendarCubit>();
 
         return Theme(
           data: Theme.of(context).copyWith(
@@ -40,34 +41,96 @@ class CalendarEventForm extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       TextFieldBlocBuilder(
-                        textFieldBloc: formBloc.name,
+                        textFieldBloc: formBloc.eventName,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
-                          labelText: 'Name',
+                          labelText: 'Event Name',
                           prefixIcon: Icon(Icons.people),
+                          suffixIcon: Icon(
+                            Icons.emergency,
+                            size: 10,
+                          ),
                         ),
                       ),
-                      RadioButtonGroupFieldBlocBuilder<String>(
-                        selectFieldBloc: formBloc.gender,
-                        itemBuilder: (context, value) => FieldItem(
-                            child: Text(
-                                value[0].toUpperCase() + value.substring(1))),
+                      DropdownFieldBlocBuilder<String>(
+                        selectFieldBloc: formBloc.calendar,
                         decoration: const InputDecoration(
-                          labelText: 'Gender',
-                          prefixIcon: SizedBox(),
+                          labelText: 'Calendar',
+                          prefixIcon: Icon(Icons.edit_calendar),
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
+                            child: Icon(
+                              Icons.emergency,
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                        itemBuilder: (context, value) => FieldItem(
+                          child: Flex(direction: Axis.horizontal, children: [
+                            Expanded(
+                              flex: 9,
+                              child: Text(calendarCubit
+                                  .state.calendarDetails[value]!.name),
+                            ),
+                            Expanded(flex: 5, child: Container()),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
+                              child: SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: Container(
+                                    color: calendarCubit
+                                        .state.calendarDetails[value]?.color),
+                              ),
+                            ),
+                          ]),
                         ),
                       ),
                       DateTimeFieldBlocBuilder(
-                        dateTimeFieldBloc: formBloc.birthDate,
-                        format: DateFormat('dd-MM-yyyy'),
+                        dateTimeFieldBloc: formBloc.startDate,
+                        format: DateFormat('MM-dd-yyyy'),
                         initialDate: DateTime.now(),
                         firstDate: DateTime(1900),
                         lastDate: DateTime(2100),
                         decoration: const InputDecoration(
-                          labelText: 'Date of Birth',
-                          prefixIcon: Icon(Icons.calendar_today),
+                          labelText: 'Start Date',
+                          prefixIcon: Icon(Icons.calendar_month_outlined),
+                          suffixIcon: Icon(
+                            Icons.emergency,
+                            size: 10,
+                          ),
                         ),
                       ),
+                      DateTimeFieldBlocBuilder(
+                        dateTimeFieldBloc: formBloc.endDate,
+                        format: DateFormat('MM-dd-yyyy'),
+                        initialDate: formBloc.startDate.value ?? DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                        decoration: const InputDecoration(
+                          labelText: 'End Date',
+                          prefixIcon: Icon(Icons.calendar_month_outlined),
+                        ),
+                      ),
+                      TextFieldBlocBuilder(
+                        textFieldBloc: formBloc.description,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          prefixIcon: Icon(Icons.description),
+                        ),
+                        maxLines: 3,
+                        minLines: 3,
+                      ),
+                      FilterChipFieldBlocBuilder(
+                        multiSelectFieldBloc: formBloc.tags,
+                        decoration: const InputDecoration(
+                          labelText: 'Tags',
+                          prefixIcon: Icon(Icons.tag_sharp),
+                        ),
+                        itemBuilder: (context, value) =>
+                            ChipFieldItem(label: Text(value)),
+                      )
                     ],
                   ),
                 ),

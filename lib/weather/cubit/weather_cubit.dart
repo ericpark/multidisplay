@@ -139,6 +139,47 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
+  void handlePeriodicRefresh(int timerDuration) {
+    DateTime current = DateTime.now();
+    bool shouldRefreshCurrent = false;
+    bool shouldRefreshHourly = false;
+    bool shouldRefreshDaily = false;
+
+    if (!state.autoRefresh) {
+      return; // Break if autoRefresh is disabled.
+    }
+
+    if ((current.hour == 0) && (current.minute == 1)) {
+      refreshWeather(all: true); // At 12:01 AM, fetch all
+      return;
+    }
+
+    if ((current.hour == 0) && (current.minute < 15)) {
+      return; // Don't fetch until after 15 minutes past midnight
+    }
+
+    // check how long last updated has been to update data.
+    if (current.difference(state.dailyForecast[0].lastUpdated).inSeconds >
+        7199) {
+      shouldRefreshDaily = true;
+    }
+    if (current.difference(state.hourlyForecast[0].lastUpdated).inSeconds >
+        1799) {
+      shouldRefreshHourly = true;
+    }
+    if (current.difference(state.weather.lastUpdated).inSeconds > 299) {
+      shouldRefreshCurrent = true;
+    }
+
+    if (shouldRefreshCurrent || shouldRefreshHourly || shouldRefreshDaily) {
+      refreshWeather(
+        current: shouldRefreshCurrent,
+        hourly: shouldRefreshHourly,
+        daily: shouldRefreshDaily,
+      );
+    }
+  }
+
   void toggleAutoRefresh() {
     final autoRefresh = state.autoRefresh;
     emit(

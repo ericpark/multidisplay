@@ -12,7 +12,13 @@ class WeatherView extends StatelessWidget {
     WeatherCubit weatherCubit = context.read<WeatherCubit>();
     TimerBloc timerBloc = context.read<TimerBloc>();
 
+    // The state is reevaluated every minute. This is to allow refresh rate
+    // to be calculated based on timer constants.
+    final ticksPerMinute = (60 / timerBloc.getDefaultDuration());
+
     return BlocConsumer<TimerBloc, TimerState>(
+      buildWhen: (previous, current) =>
+          previous.duration % (ticksPerMinute) == 0,
       listener: (timerContext, timerState) {
         switch (timerState) {
           case TimerInitial _:
@@ -25,10 +31,12 @@ class WeatherView extends StatelessWidget {
             }
             timerBloc.add(const TimerStarted(duration: defaultDuration));
           case TimerRunInProgress _:
-            if (timerState.duration % 60 != 0) {
+            print("${timerState.duration} ---- ${DateTime.now()}");
+            // Each tick is 30 seconds so 2 * 30 = every minute.
+            if (timerState.duration % (ticksPerMinute) != 0) {
               break; // To increase efficiency, check only every new minute
             }
-            weatherCubit.handlePeriodicRefresh(timerState.duration);
+            weatherCubit.handlePeriodicRefresh();
           default:
             break;
         }

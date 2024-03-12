@@ -139,7 +139,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
-  void handlePeriodicRefresh(int timerDuration) {
+  void handlePeriodicRefresh() {
     DateTime current = DateTime.now();
     bool shouldRefreshCurrent = false;
     bool shouldRefreshHourly = false;

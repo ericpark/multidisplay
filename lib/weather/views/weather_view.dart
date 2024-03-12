@@ -31,7 +31,6 @@ class WeatherView extends StatelessWidget {
             }
             timerBloc.add(const TimerStarted(duration: defaultDuration));
           case TimerRunInProgress _:
-            print("${timerState.duration} ---- ${DateTime.now()}");
             // Each tick is 30 seconds so 2 * 30 = every minute.
             if (timerState.duration % (ticksPerMinute) != 0) {
               break; // To increase efficiency, check only every new minute

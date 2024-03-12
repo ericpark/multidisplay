@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/search/search.dart';
-import 'package:multidisplay/theme/theme.dart';
+//import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/timer/timer.dart';
 import 'package:multidisplay/weather/weather.dart';
-import 'package:weather_repository/weather_repository.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WeatherCubit(context.read<WeatherRepository>()),
-      child: const WeatherView(),
-    );
+    //Removed BlocBuilder that returned BlocProvider.value so there isn't two instances
+
+    // Possibly wrap WeatherView in bloc consumer and handle setup tasks here?
+    return const WeatherView();
   }
 }
 
@@ -31,6 +29,7 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   void initState() {
     super.initState();
+    // I think I can move this to the parent and change this class to stateless
     timerBloc = context.read<TimerBloc>();
     timerBloc.add(const TimerStarted(duration: defaultDuration));
   }
@@ -44,16 +43,12 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          actions: [],
-        ),
+        appBar: AppBar(),
         body: Center(
           child: BlocConsumer<WeatherCubit, WeatherState>(
             listener: (context, state) {
               if (state.status.isSuccess) {
-                context.read<ThemeCubit>().updateTheme(state.weather);
-                //timerBloc.add(const TimerStarted(duration: defaultDuration));
+                //context.read<ThemeCubit>().updateTheme(state.weather);
               }
             },
             builder: (context, state) {
@@ -103,10 +98,11 @@ class _WeatherViewState extends State<WeatherView> {
 
                           // (60 * mins - 1) is used so the refresh times do not overlap.
 
-                          // Runs every 120 minutes. First time is delayed
-                          // by 3999 seconds. This means if it is manually refreshed,
-                          // the data isn't refreshed multiple times in a short time span
-                          if ((timerState.duration + 3999) % 7199 == 0) {
+                          /* Runs every 120 minutes. First time is delayed
+                          * by 3999 seconds. This means if it is manually refreshed,
+                          * the data isn't refreshed multiple times in a short time span
+                          */
+                          if ((timerState.duration + 0) % 7199 == 0) {
                             context
                                 .read<WeatherCubit>()
                                 .refreshWeather(daily: true, current: true);

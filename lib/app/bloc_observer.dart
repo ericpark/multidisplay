@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
-import 'package:bloc/bloc.dart';
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/timer/timer.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -20,10 +21,19 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
-    if (!(change.currentState is TimerRunInProgress &&
-        change.nextState is TimerRunInProgress)) {
-      print('CHANGE: $change');
+    if (change.currentState is TimerRunInProgress &&
+        change.nextState is TimerRunInProgress) {
+      return;
     }
+    if (change.currentState is TextFieldBlocState &&
+        change.nextState is TextFieldBlocState) {
+      return;
+    }
+    if (change.currentState is CalendarState &&
+        change.nextState is CalendarState) {
+      return;
+    }
+    print('CHANGE: $change');
   }
 
   @override

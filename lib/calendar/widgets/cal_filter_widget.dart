@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-class CalendarFilterWidget extends StatelessWidget {
-  const CalendarFilterWidget({super.key});
+class CalendarFilter extends StatelessWidget {
+  const CalendarFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +40,18 @@ class CalendarFilterWidget extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Calendars',
+                        child: Text(state.events[0].eventName,
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
-                      CalendarFilterListTile(),
-                      CalendarFilterListTile(),
-                      CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
+                      const CalendarFilterListTile(),
                       const SizedBox(
                         height: 50,
                       ),
                       ElevatedButton(
                         onPressed: () => {},
-                        child: Text('Add New'),
+                        child: const Text('Add New'),
                       ),
                     ],
                   )),
@@ -64,7 +64,7 @@ class CalendarFilterWidget extends StatelessWidget {
 }
 
 class CalendarFilterListTile extends StatefulWidget {
-  CalendarFilterListTile({super.key});
+  const CalendarFilterListTile({super.key});
 
   @override
   State<CalendarFilterListTile> createState() => _CalendarFilterListTileState();

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-class CalendarPopulatedWidget extends StatelessWidget {
-  const CalendarPopulatedWidget({super.key});
+class CalendarLayout extends StatelessWidget {
+  const CalendarLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: BlocConsumer<CalendarCubit, CalendarState>(
-        listener: (context, state) {
-          if (state.status.isSuccess) {}
-        },
+      child: BlocBuilder<CalendarCubit, CalendarState>(
+        buildWhen: (previous, current) =>
+            (previous.events != current.events) ||
+            (previous.status != current.status),
         builder: (context, state) {
           switch (state.status) {
             case CalendarStatus.initial:
@@ -20,11 +20,13 @@ class CalendarPopulatedWidget extends StatelessWidget {
             case CalendarStatus.loading:
               return const CalendarLoading();
             case CalendarStatus.success:
-              return const Flex(
-                direction: Axis.vertical,
+              return Flex(
+                direction: Axis.horizontal,
                 children: [
-                  Expanded(flex: 60, child: CalendarMonthWidget()),
-                  Expanded(flex: 40, child: CalendarScheduleWidget()),
+                  Expanded(
+                      flex: 60,
+                      child: CalendarMonthWidget(events: state.events)),
+                  const Expanded(flex: 40, child: CalendarSchedule()),
                 ],
               );
             case CalendarStatus.failure:

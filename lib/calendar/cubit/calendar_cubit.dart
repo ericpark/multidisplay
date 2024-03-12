@@ -1,46 +1,100 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-part 'calendar_state.dart';
+import 'package:calendar_repository/calendar_repository.dart'
+    show CalendarRepository;
 
+part 'calendar_state.dart';
 part 'calendar_cubit.g.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
-  CalendarCubit() : super(CalendarInitial());
+  CalendarCubit(this._calendarRepository) : super(CalendarInitial());
+  final CalendarRepository _calendarRepository;
+
+  Future<void> init() async {
+    emit(state.copyWith(status: CalendarStatus.loading));
+
+    await getCalendarsList();
+    await getCalendarDetails();
+    fetchEvents(state.calendars);
+  }
+
+  Future<void> getCalendarsList() async {
+    // Commented out this emit so it doesn't change from loading to success to loading
+    // emit(state.copyWith(status: CalendarStatus.loading));
+    List<String> calendars =
+        await _calendarRepository.getAllCalendars(userId: "default");
+
+    emit(state.copyWith(calendars: calendars));
+  }
+
+  Future<void> getCalendarDetails() async {
+    // Commented out this emit so it doesn't change from loading to success to loading
+    // emit(state.copyWith(status: CalendarStatus.loading));
+
+    final calendarDetailsFromFirebase = await _calendarRepository
+        .getAllCalendarDetails(calendarIDs: state.calendars);
+
+    Map<String, CalendarDetails> calendarDetails = {};
+
+    for (var cDetails in calendarDetailsFromFirebase) {
+      calendarDetails[cDetails.id!] =
+          CalendarDetails.fromJson(cDetails.toJson());
+    }
+
+    emit(state.copyWith(calendarDetails: calendarDetails));
+  }
 
   Future<void> refreshCalendar() async {
+    await getCalendarDetails();
+
+    await fetchEvents(state.calendars);
     return;
   }
 
-  Future<void> addCalendarEvent() async {
+  Future<void> refreshCalendarUI() async {
+    emit(state.copyWith(status: CalendarStatus.loading));
+    emit(state.copyWith(status: CalendarStatus.success));
+
     return;
+  }
+
+  Future<void> addCalendarEvent(CalendarEvent event) async {
+    final eventData = event.toRepository();
+    emit(state.copyWith(status: CalendarStatus.loading));
+    final newEvent =
+        await _calendarRepository.addNewEvent(eventData: eventData);
+
+    List<CalendarEvent> updatedListOfEvents = state.events;
+    updatedListOfEvents.add(CalendarEvent.fromRepository(newEvent));
+
+    emit(state.copyWith(
+        status: CalendarStatus.success, events: updatedListOfEvents));
   }
 
   Future<void> updateCalendarEvent() async {
+    fetchEvents(state.calendars);
     return;
   }
 
-  List<Meeting> getEvents() {
-    final List<Meeting> meetings = <Meeting>[];
-    //final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(2023, 11, 3, 13, 0, 0);
-    final DateTime endTime = startTime.add(const Duration(days: 2));
-    meetings.add(Meeting(
-        'Ke Mary Otis', startTime, endTime, const Color(0xFF0F8644), false));
-    final DateTime startTime2 = DateTime(2024, 2, 13, 13, 0, 0);
-    final DateTime endTime2 = startTime2.add(const Duration(days: 10));
-    meetings.add(
-        Meeting('Milo', startTime2, endTime2, const Color(0xFF0F8644), false));
-    return meetings;
+  Future<void> fetchEvents(List<String> calendarIDs) async {
+    if (calendarIDs.isEmpty) return;
+    emit(state.copyWith(status: CalendarStatus.loading));
+    try {
+      List<CalendarEvent> calendarEvents = [];
+      final firebaseEvents = await _calendarRepository
+          .getAllEventsFromCalendars(calendarIDs: calendarIDs);
+      calendarEvents = firebaseEvents
+          .map((fEvent) => CalendarEvent.fromRepository(fEvent).copyWith(
+              background: state.calendarDetails[fEvent.calendarId]?.color ??
+                  fEvent.color))
+          .toList();
+      emit(state.copyWith(
+          status: CalendarStatus.success, events: calendarEvents));
+    } on Exception {
+      emit(state.copyWith(status: CalendarStatus.failure));
+    }
   }
-
-  @override
-  CalendarState fromJson(Map<String, dynamic> json) =>
-      CalendarState.fromJson(json);
-
-  /*@override
-  Map<String, dynamic> toJson(CalendarState state) => state.toJson();*/
 }

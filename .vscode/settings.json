@@ -2,12 +2,20 @@
     "cSpell.words": [
         "ARGB",
         "Cupertino",
+        "firestore",
+        "guestcal",
+        "Hexcode",
+        "horiz",
         "LTRB",
         "meteo",
         "mocktail",
+        "nodoc",
         "Schyler",
         "syncfusion",
         "tabbar",
         "weathercode"
-    ]
+    ],
+    "[dart]": {
+        "editor.tabCompletion": "on"
+    }
 }

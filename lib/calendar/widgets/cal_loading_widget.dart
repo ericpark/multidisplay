@@ -6,19 +6,21 @@ class CalendarLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text('⛅', style: TextStyle(fontSize: 64)),
-        Text(
-          'Loading Calendar',
-          style: theme.textTheme.headlineSmall,
-        ),
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: CircularProgressIndicator(),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.calendar_month),
+          Text(
+            'Loading Calendar',
+            style: theme.textTheme.headlineSmall,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ),
     );
   }
 }

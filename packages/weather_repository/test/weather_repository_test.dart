@@ -321,6 +321,7 @@ void main() {
         when(() => hourlyWeather.time).thenReturn(DateTime.parse("2024-01-01"));
         when(() => hourlyWeather.temperature_2m).thenReturn(45);
         when(() => hourlyWeather.soil_moisture_0_to_1cm).thenReturn(0.313);
+        when(() => hourlyWeather.precipitation).thenReturn(0.015);
         when(() => hourlyWeather.weather_code).thenReturn(-1);
         when(() => weatherApiClient.locationSearch(any())).thenAnswer(
           (_) async => location,
@@ -340,7 +341,9 @@ void main() {
               temperature: 45,
               location: city,
               soilMoisture: 0.313,
+              precipitation: 0.015,
               condition: WeatherCondition.unknown,
+              soilCondition: SoilCondition.dry,
             )
           ],
         );

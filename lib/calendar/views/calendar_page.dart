@@ -2,21 +2,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
-import 'package:multidisplay/calendar/widgets/cal_filter_widget.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarCubit, CalendarState>(
-      builder: (context, state) {
-        return Scaffold(
+    CalendarCubit calCubit = context.read<CalendarCubit>();
+    // Do stuff here that will run when tab changes
+    if (calCubit.state.status.isInitial) {}
+    if (calCubit.state.status.isLoading) {}
+    if (calCubit.state.status.isSuccess) {}
+    return BlocBuilder<CalendarCubit, CalendarState>(builder: (context, state) {
+      return BlocProvider.value(
+        value: calCubit,
+        child: const CalendarViewContainer(),
+      );
+    });
+  }
+}
+
+class CalendarViewContainer extends StatelessWidget {
+  const CalendarViewContainer({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<CalendarCubit, CalendarState>(
+        listener: (context, state) {
+      if (state.status.isInitial) {}
+      if (state.status.isSuccess) {}
+    }, builder: (context, state) {
+      return Scaffold(
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
               onPressed: () async {
-                showPopupModal(context, const CalendarFilterWidget());
+                await context
+                    .read<CalendarCubit>()
+                    .fetchEvents(state.calendars);
+
+                if (context.mounted) {
+                  showPopupModal(context, const CalendarFilter());
+                }
               },
             ),
             actions: [
@@ -27,23 +53,22 @@ class CalendarPage extends StatelessWidget {
                 },
               ),
               IconButton(
+                icon:
+                    const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
+                onPressed: () async {
+                  await context.read<CalendarCubit>().refreshCalendar();
+                },
+              ),
+              IconButton(
                 icon: const Icon(Icons.add, semanticLabel: 'New Event'),
                 onPressed: () async {
-                  showPopupModal(context, const CalendarNewEvent());
+                  showPopupModal(context, const CalendarNewEventView());
                 },
               ),
             ],
           ),
-          body: const Flex(
-            direction: Axis.horizontal,
-            children: [
-              Expanded(flex: 60, child: CalendarMonthWidget()),
-              Expanded(flex: 40, child: CalendarScheduleWidget()),
-            ],
-          ),
-        );
-      },
-    );
+          body: const CalendarLayout());
+    });
   }
 
   void showPopupModal(BuildContext buildContext, Widget widget) {

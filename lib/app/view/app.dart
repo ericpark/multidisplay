@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weather_repository/weather_repository.dart';
+import 'package:calendar_repository/calendar_repository.dart';
 
 import 'package:multidisplay/app/app.dart';
-import 'package:multidisplay/theme/theme.dart';
+//import 'package:multidisplay/theme/theme.dart';
 
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/calendar/calendar.dart';
@@ -16,25 +17,34 @@ import 'package:multidisplay/timer/timer.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class App extends StatelessWidget {
-  const App({required WeatherRepository weatherRepository, super.key})
-      : _weatherRepository = weatherRepository;
+  const App(
+      {required WeatherRepository weatherRepository,
+      required CalendarRepository calendarRepository,
+      super.key})
+      : _weatherRepository = weatherRepository,
+        _calendarRepository = calendarRepository;
 
   final WeatherRepository _weatherRepository;
+  final CalendarRepository _calendarRepository;
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-        value: _weatherRepository,
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: _weatherRepository),
+          RepositoryProvider.value(value: _calendarRepository),
+        ],
         child: MultiBlocProvider(
           providers: [
             BlocProvider<AppBloc>(
               create: (BuildContext context) => AppBloc(),
             ),
-            BlocProvider<ThemeCubit>(
+            /*BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
-            ),
+            ),*/
             BlocProvider<CalendarCubit>(
-              create: (BuildContext context) => CalendarCubit(),
+              create: (BuildContext context) =>
+                  CalendarCubit(context.read<CalendarRepository>())..init(),
             ),
             BlocProvider<TimerBloc>(
               create: (BuildContext context) =>
@@ -79,22 +89,24 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, Color>(builder: (context, color) {
-      return MaterialApp(
-          theme: ThemeData(
-            appBarTheme: const AppBarTheme(
-              elevation: 0,
-            ),
-            colorScheme: ColorScheme.fromSeed(seedColor: color),
-            useMaterial3: true,
+    //return BlocBuilder<ThemeCubit, Color>(builder: (context, color) {
+    return MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
           ),
-          home: DefaultTabController(
-            length: tabs.length,
-            child: Scaffold(
-              appBar: AppBar(bottom: TabBar(tabs: tabs)),
-              body: TabBarView(children: pages),
-            ),
-          ));
-    });
+          //colorScheme: ColorScheme.fromSeed(seedColor: color),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: Theme.of(context).primaryColor),
+          useMaterial3: true,
+        ),
+        home: DefaultTabController(
+          length: tabs.length,
+          child: Scaffold(
+            appBar: AppBar(bottom: TabBar(tabs: tabs)),
+            body: TabBarView(children: pages),
+          ),
+        ));
+    //});
   }
 }

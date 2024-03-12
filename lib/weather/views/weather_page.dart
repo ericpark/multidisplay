@@ -9,10 +9,11 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Removed BlocBuilder that returned BlocProvider.value so there isn't two instances
     TimerBloc timerBloc = context.read<TimerBloc>();
-    timerBloc.add(const TimerStarted(duration: defaultDuration));
-    // Possibly wrap WeatherView in bloc consumer and handle setup tasks here?
+    WeatherCubit weatherCubit = context.read<WeatherCubit>();
+
+    weatherCubit.refreshWeather(current: true, hourly: true, daily: true);
+    timerBloc.add(TimerStarted(duration: timerBloc.getDefaultDuration()));
     return const WeatherContainerView();
   }
 }

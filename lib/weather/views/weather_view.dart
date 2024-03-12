@@ -18,7 +18,8 @@ class WeatherView extends StatelessWidget {
 
     return BlocConsumer<TimerBloc, TimerState>(
       buildWhen: (previous, current) =>
-          previous.duration % (ticksPerMinute) == 0,
+          (previous.duration % ticksPerMinute == 0) ||
+          (previous is TimerRunPause && current is TimerRunInProgress),
       listener: (timerContext, timerState) {
         switch (timerState) {
           case TimerInitial _:

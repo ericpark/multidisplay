@@ -25,6 +25,9 @@ class WeatherView extends StatelessWidget {
             }
             timerBloc.add(const TimerStarted(duration: defaultDuration));
           case TimerRunInProgress _:
+            if (timerState.duration % 60 != 0) {
+              break; // To increase efficiency, check only every new minute
+            }
             weatherCubit.handlePeriodicRefresh(timerState.duration);
           default:
             break;

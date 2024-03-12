@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:multidisplay/weather/weather.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class ThemeCubit extends HydratedCubit<Color> {
-  ThemeCubit() : super(defaultColor);
+class ThemeCubit extends HydratedCubit<ThemeData> {
+  ThemeCubit() : super(lightTheme);
 
-  static const defaultColor = Color(0xFF2196F3);
+  static ThemeData lightTheme = ThemeData.from(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFFC3EFF2),
+    ),
+    useMaterial3: true,
+  );
+  static ThemeData darkTheme = ThemeData.dark(useMaterial3: true);
 
-  void updateTheme(Weather? weather) {
-    if (weather != null) emit(weather.toColor);
+  bool get isLight => state == lightTheme;
+
+  bool get isDark => state == darkTheme;
+
+  void toggleTheme() {
+    emit(state == lightTheme ? darkTheme : lightTheme);
+  }
+
+  void toggleToTheme(ThemeData theme) {
+    emit(theme == lightTheme ? lightTheme : darkTheme);
+  }
+
+  String getTheme() {
+    return state == lightTheme ? "lightTheme" : "darkTheme";
   }
 
   @override
-  Color fromJson(Map<String, dynamic> json) {
-    return Color(int.parse(json['color'] as String));
+  ThemeData fromJson(Map<String, dynamic> json) {
+    return json['theme'] == "lightTheme" ? lightTheme : darkTheme;
   }
 
   @override
-  Map<String, dynamic> toJson(Color state) {
-    return <String, String>{'color': '${state.value}'};
-  }
-}
-
-extension on Weather {
-  Color get toColor {
-    switch (condition) {
-      case WeatherCondition.clear:
-        return Colors.yellow;
-      case WeatherCondition.snowy:
-        return Colors.lightBlueAccent;
-      case WeatherCondition.cloudy:
-        return Colors.blueGrey;
-      case WeatherCondition.rainy:
-        return Colors.indigoAccent;
-      case WeatherCondition.unknown:
-        return ThemeCubit.defaultColor;
-    }
+  Map<String, dynamic> toJson(ThemeData state) {
+    return <String, String>{
+      'theme': state == lightTheme ? "lightTheme" : "darkTheme"
+    };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -26,8 +27,12 @@ void main() async {
         ? HydratedStorage.webStorageDirectory
         : await getTemporaryDirectory(),
   );
+
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+
   runApp(App(
     weatherRepository: WeatherRepository(),
     calendarRepository: CalendarRepository(firebaseDB: db),
+    savedThemeMode: savedThemeMode,
   ));
 }

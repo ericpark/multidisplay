@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,7 +6,7 @@ import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
 
 import 'package:multidisplay/app/app.dart';
-//import 'package:multidisplay/theme/theme.dart';
+import 'package:multidisplay/theme/theme.dart';
 
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/calendar/calendar.dart';
@@ -20,12 +21,15 @@ class App extends StatelessWidget {
   const App(
       {required WeatherRepository weatherRepository,
       required CalendarRepository calendarRepository,
-      super.key})
+      super.key,
+      AdaptiveThemeMode? savedThemeMode})
       : _weatherRepository = weatherRepository,
-        _calendarRepository = calendarRepository;
+        _calendarRepository = calendarRepository,
+        savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
 
   final WeatherRepository _weatherRepository;
   final CalendarRepository _calendarRepository;
+  final AdaptiveThemeMode? savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +43,9 @@ class App extends StatelessWidget {
             BlocProvider<AppBloc>(
               create: (BuildContext context) => AppBloc(),
             ),
-            /*BlocProvider<ThemeCubit>(
+            BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
-            ),*/
+            ),
             BlocProvider<CalendarCubit>(
               create: (BuildContext context) =>
                   CalendarCubit(context.read<CalendarRepository>())..init(),
@@ -58,13 +62,14 @@ class App extends StatelessWidget {
               create: (context) => HomeCubit(),
             ),
           ],
-          child: AppView(),
+          child: AppView(savedThemeMode: savedThemeMode),
         ));
   }
 }
 
 class AppView extends StatelessWidget {
-  AppView({super.key});
+  AppView({super.key, AdaptiveThemeMode? savedThemeMode})
+      : savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
 
   final List<Widget> tabs = const [
     Tab(text: "Home"),
@@ -87,26 +92,32 @@ class AppView extends StatelessWidget {
     }),
   ];
 
+  final AdaptiveThemeMode? savedThemeMode;
+
   @override
   Widget build(BuildContext context) {
-    //return BlocBuilder<ThemeCubit, Color>(builder: (context, color) {
-    return MaterialApp(
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-          ),
-          //colorScheme: ColorScheme.fromSeed(seedColor: color),
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: Theme.of(context).primaryColor),
-          useMaterial3: true,
-        ),
-        home: DefaultTabController(
-          length: tabs.length,
-          child: Scaffold(
-            appBar: AppBar(bottom: TabBar(tabs: tabs)),
-            body: TabBarView(children: pages),
-          ),
-        ));
-    //});
+    return BlocBuilder<ThemeCubit, ThemeData>(
+        builder: (context, selectedTheme) {
+      return AdaptiveTheme(
+        light: ThemeCubit.lightTheme,
+        dark: ThemeCubit.darkTheme,
+        initial: savedThemeMode ?? AdaptiveThemeMode.system,
+        builder: (theme, darkTheme) {
+          return MaterialApp(
+            theme: theme,
+            home: DefaultTabController(
+              length: tabs.length,
+              child: Scaffold(
+                appBar: AppBar(
+                  bottom: TabBar(tabs: tabs),
+                  toolbarHeight: 10,
+                ),
+                body: TabBarView(children: pages),
+              ),
+            ),
+          );
+        },
+      );
+    });
   }
 }

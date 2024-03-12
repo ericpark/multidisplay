@@ -1,8 +1,10 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/search/search.dart';
+import 'package:multidisplay/theme/theme.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage._();
@@ -32,20 +34,90 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
           ),
+          BlocBuilder<ThemeCubit, ThemeData>(
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              return ListTile(
+                title: const Text('Match Theme with System Default'),
+                isThreeLine: true,
+                subtitle: const Text(
+                  'Automatically switch theme based on system default',
+                ),
+                trailing: Switch(
+                  value: AdaptiveTheme.of(context).mode.isSystem,
+                  onChanged: (value) {
+                    if (value) {
+                      // Switch to system settings
+                      AdaptiveTheme.of(context).setSystem();
+                      // Align cubit with the new theme.
+                      ThemeData theme = AdaptiveTheme.of(context).theme;
+                      context.read<ThemeCubit>().toggleToTheme(theme);
+                    } else {
+                      // Align cubit with the current theme.
+                      ThemeData theme = AdaptiveTheme.of(context).theme;
+                      context.read<ThemeCubit>().toggleToTheme(theme);
+                      if (context.read<ThemeCubit>().isDark) {
+                        AdaptiveTheme.of(context).setLight();
+                      } else {
+                        AdaptiveTheme.of(context).setDark();
+                      }
+                      context.read<ThemeCubit>().toggleTheme();
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+          BlocConsumer<ThemeCubit, ThemeData>(
+            listener: (context, state) {
+              if (state != AdaptiveTheme.of(context).theme) {
+                context.read<ThemeCubit>().toggleTheme();
+              }
+            },
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              return ListTile(
+                title: const Text('Dark Theme'),
+                isThreeLine: true,
+                subtitle: const Text(
+                  'Toggle between Light Theme and Dark Theme',
+                ),
+                trailing: Switch(
+                  value: context.read<ThemeCubit>().isDark,
+                  onChanged: (AdaptiveTheme.of(context).mode.isSystem)
+                      ? null // Disable if set to system
+                      : (switchToDark) {
+                          context.read<ThemeCubit>().toggleTheme();
+
+                          /*This value is AFTER the switch has been pressed. 
+                            If isDark was true and then the switch was tapped,
+                            the user wants to switch to a Light Theme. switchToDark 
+                            will return false (the new value), NOT the value of context.read<ThemeCubit>().isDark;
+                          */
+                          if (switchToDark) {
+                            AdaptiveTheme.of(context).setDark();
+                          } else {
+                            AdaptiveTheme.of(context).setLight();
+                          }
+                        },
+                ),
+              );
+            },
+          ),
           BlocBuilder<HomeCubit, HomeState>(
             buildWhen: (previous, current) =>
                 previous.clockType != current.clockType,
             builder: (context, state) {
               return ListTile(
-                title: const Text('Clock Type'),
+                title: const Text('Use Military Time'),
                 isThreeLine: true,
                 subtitle: const Text(
                   'AM/PM vs Military',
                 ),
                 trailing: Switch(
-                  value: state.clockType == ClockType.standard,
-                  onChanged: (_) => context.read<HomeCubit>().toggleClockType(),
-                ),
+                    value: state.clockType == ClockType.standard,
+                    //onChanged: (_) => context.read<HomeCubit>().toggleClockType(),
+                    onChanged: null),
               );
             },
           ),

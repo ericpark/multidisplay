@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:multidisplay/constants.dart';
 import 'package:multidisplay/timer/timer.dart';
 import 'package:equatable/equatable.dart';
 
 part 'timer_event.dart';
 part 'timer_state.dart';
 
-const int defaultDuration = 7200;
+// constants.dart
+const defaultDuration = DEFAULT_TICKER_DURATION;
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   TimerBloc({required Ticker ticker})

@@ -44,11 +44,13 @@ class HourlyForecastPopulated extends StatelessWidget {
     }
     List<_ChartData> precipitationData = filterHours
         .map((hourly) => _ChartData(
-            DateFormat('jm').format(hourly.date), hourly.precipitation))
+            DateFormat('jm').format(hourly.date).replaceAll(":00", ""),
+            hourly.precipitation))
         .toList();
     List<_ChartData> temperatureData = filterHours
         .map((hourly) => _ChartData(
-            DateFormat('jm').format(hourly.date), hourly.temperature.value))
+            DateFormat('jm').format(hourly.date).replaceAll(":00", ""),
+            hourly.temperature.value))
         .toList();
 
     TooltipBehavior tooltip = TooltipBehavior(enable: true);
@@ -129,7 +131,7 @@ class HourlyForecastWidget extends StatelessWidget {
               children: [
                 // HOUR
                 Text(
-                  DateFormat('jm').format(weather.date),
+                  DateFormat('jm').format(weather.date).replaceAll(":00", ""),
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.normal,
                   ),

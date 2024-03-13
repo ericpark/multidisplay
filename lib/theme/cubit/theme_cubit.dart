@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+const primaryColor = Color(0xFFC3EFF2);
+const secondaryColor = Color(0xFF6AD996);
+const accentColor = Color(0xFFD9846A);
+const deepPrimaryColor = Color(0xFF6A8CD9);
+const tealGreenColor = Color(0xFF6AD9BB);
+const darkerBlueColor = Color(0xFF6C6AD9);
+
 class ThemeCubit extends HydratedCubit<ThemeData> {
   ThemeCubit() : super(lightTheme);
 
   static ThemeData lightTheme = ThemeData.from(
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xFFC3EFF2),
+      primary: deepPrimaryColor,
+      secondary: secondaryColor,
+      tertiary: accentColor,
+      surfaceTint: tealGreenColor,
     ),
     useMaterial3: true,
   );

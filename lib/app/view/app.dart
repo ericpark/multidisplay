@@ -108,6 +108,7 @@ class AppView extends StatelessWidget {
             home: DefaultTabController(
               length: tabs.length,
               child: Scaffold(
+                resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   bottom: TabBar(tabs: tabs),
                   toolbarHeight: 10,

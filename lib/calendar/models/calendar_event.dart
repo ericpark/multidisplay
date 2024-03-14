@@ -9,19 +9,21 @@ part 'calendar_event.g.dart';
 
 @JsonSerializable()
 class CalendarEvent extends Equatable {
-  const CalendarEvent(
-      {required this.eventName,
-      required this.start,
-      required this.background,
-      required this.calendarId,
-      DateTime? end,
-      bool? isAllDay,
-      bool? active,
-      String? description})
-      : end = end ?? start,
+  const CalendarEvent({
+    required this.eventName,
+    required this.start,
+    required this.background,
+    required this.calendarId,
+    DateTime? end,
+    bool? isAllDay,
+    bool? active,
+    String? description,
+    String? notes,
+  })  : end = end ?? start,
         isAllDay = isAllDay ?? true,
         active = active ?? true,
-        description = description ?? "";
+        description = description ?? "",
+        notes = notes ?? "";
 
   CalendarEvent.empty()
       : this(
@@ -40,6 +42,7 @@ class CalendarEvent extends Equatable {
   final bool isAllDay;
   final bool active;
   final String description;
+  final String notes;
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
       _$CalendarEventFromJson(json);

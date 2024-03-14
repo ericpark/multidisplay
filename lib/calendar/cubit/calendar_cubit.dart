@@ -55,9 +55,18 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   Future<void> refreshCalendarUI() async {
-    emit(state.copyWith(status: CalendarStatus.loading));
+    //emit(state.copyWith(status: CalendarStatus.loading));
+    // Temporary fix to refresh after popover is gone rather than rewriting
+    // the builder functions for both scheduler and month views.
+    await Future.delayed(const Duration(milliseconds: 200));
+
     emit(state.copyWith(status: CalendarStatus.success));
 
+    return;
+  }
+
+  Future<void> startLoading() async {
+    emit(state.copyWith(status: CalendarStatus.loading));
     return;
   }
 
@@ -96,5 +105,12 @@ class CalendarCubit extends Cubit<CalendarState> {
     } on Exception {
       emit(state.copyWith(status: CalendarStatus.failure));
     }
+  }
+
+  Future<void> focusOnDate(DateTime date) async {
+    emit(state.copyWith(status: CalendarStatus.transitioning));
+    // Delay for transition
+    await Future.delayed(const Duration(milliseconds: 100));
+    emit(state.copyWith(status: CalendarStatus.success, selectedDate: date));
   }
 }

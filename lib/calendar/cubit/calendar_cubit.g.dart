@@ -38,10 +38,15 @@ CalendarState _$CalendarStateFromJson(Map<String, dynamic> json) =>
                   ?.map(
                       (e) => CalendarEvent.fromJson(e as Map<String, dynamic>))
                   .toList()),
+          selectedDate: $checkedConvert('selected_date',
+              (v) => v == null ? null : DateTime.parse(v as String)),
         );
         return val;
       },
-      fieldKeyMap: const {'calendarDetails': 'calendar_details'},
+      fieldKeyMap: const {
+        'calendarDetails': 'calendar_details',
+        'selectedDate': 'selected_date'
+      },
     );
 
 Map<String, dynamic> _$CalendarStateToJson(CalendarState instance) =>
@@ -51,6 +56,7 @@ Map<String, dynamic> _$CalendarStateToJson(CalendarState instance) =>
       'calendar_details':
           instance.calendarDetails.map((k, e) => MapEntry(k, e.toJson())),
       'events': instance.events.map((e) => e.toJson()).toList(),
+      'selected_date': instance.selectedDate.toIso8601String(),
     };
 
 const _$CalendarStatusEnumMap = {

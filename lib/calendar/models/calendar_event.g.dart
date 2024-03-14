@@ -24,6 +24,7 @@ CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
           isAllDay: $checkedConvert('is_all_day', (v) => v as bool?),
           active: $checkedConvert('active', (v) => v as bool?),
           description: $checkedConvert('description', (v) => v as String?),
+          notes: $checkedConvert('notes', (v) => v as String?),
         );
         return val;
       },
@@ -44,4 +45,5 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) =>
       'is_all_day': instance.isAllDay,
       'active': instance.active,
       'description': instance.description,
+      'notes': instance.notes,
     };

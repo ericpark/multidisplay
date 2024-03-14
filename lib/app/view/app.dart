@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
 import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
@@ -61,6 +62,9 @@ class App extends StatelessWidget {
             BlocProvider(
               create: (context) => HomeCubit(),
             ),
+            BlocProvider(
+              create: (context) => TrackingCubit()..init(),
+            ),
           ],
           child: AppView(savedThemeMode: savedThemeMode),
         ));
@@ -76,6 +80,7 @@ class AppView extends StatelessWidget {
     Tab(text: "Calendar"),
     Tab(text: "Weather"),
     Tab(text: "Expenses"),
+    Tab(text: "Tracking"),
     Tab(text: "Settings"),
   ];
 
@@ -84,6 +89,7 @@ class AppView extends StatelessWidget {
     const CalendarPage(),
     const WeatherPage(),
     const ExpensePage(),
+    const TrackingPage(),
     BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
       return BlocProvider.value(
         value: context.read<WeatherCubit>(),

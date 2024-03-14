@@ -40,8 +40,9 @@ class AppBlocObserver extends BlocObserver {
         change.nextState is CalendarState) {
       return;
     }
+
     if (kDebugMode) {
-      print('CHANGE: $change');
+      //print('CHANGE: $change');
     }
   }
 

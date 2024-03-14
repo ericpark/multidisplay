@@ -10,16 +10,23 @@ class CalendarLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: BlocBuilder<CalendarCubit, CalendarState>(
-        buildWhen: (previous, current) =>
-            (previous.events != current.events) ||
-            (previous.status != current.status),
+        buildWhen: (previous, current) {
+          if (previous.selectedDate != current.selectedDate) {
+            return true;
+          }
+          if ((previous.events != current.events) ||
+              (previous.status != current.status)) {
+            return true;
+          }
+          return false;
+        },
         builder: (context, state) {
           switch (state.status) {
             case CalendarStatus.initial:
               return const CalendarEmpty();
             case CalendarStatus.loading:
               return const CalendarLoading();
-            case CalendarStatus.success:
+            case CalendarStatus.success || CalendarStatus.transitioning:
               return Flex(
                 direction: Axis.horizontal,
                 children: [

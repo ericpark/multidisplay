@@ -17,6 +17,9 @@ class CalendarNewEventView extends StatelessWidget {
         builder: (context) {
           CalendarFormBloc formBloc = context.read<CalendarFormBloc>();
 
+          bool isKeyboardShowing =
+              MediaQuery.of(context).viewInsets.vertical > 0;
+
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
@@ -26,7 +29,8 @@ class CalendarNewEventView extends StatelessWidget {
                       const Icon(Icons.close_outlined, semanticLabel: 'Close'),
                   onPressed: () async {
                     if (!context.mounted) return;
-                    Navigator.of(context).pop();
+                    Navigator.pop(
+                        context, "keyboard_showing_$isKeyboardShowing");
                   }),
               title: const Text("Create New Event"),
               actions: [
@@ -46,7 +50,8 @@ class CalendarNewEventView extends StatelessWidget {
 
                     // Dismiss popover
                     if (!context.mounted) return;
-                    Navigator.of(context).pop();
+                    Navigator.pop(
+                        context, "keyboard_showing_$isKeyboardShowing");
                   },
                 ),
               ],

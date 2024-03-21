@@ -28,9 +28,16 @@ class TrackingViewContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TrackingCubit trackingCubit = context.read<TrackingCubit>();
+
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          elevation: 1,
+          scrolledUnderElevation: 5.0,
+          shadowColor: Colors.black,
+          backgroundColor: Theme.of(context).secondaryHeaderColor,
+          clipBehavior: Clip.antiAlias,
           /*leading: IconButton(
             icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
             onPressed: () async {},
@@ -42,7 +49,9 @@ class TrackingViewContainer extends StatelessWidget {
             ),*/
             IconButton(
               icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
-              onPressed: () async {},
+              onPressed: () async {
+                await trackingCubit.fetchTrackingGroups();
+              },
             ),
             IconButton(
               icon: const Icon(Icons.add, semanticLabel: 'New Event'),

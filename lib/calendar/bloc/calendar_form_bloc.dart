@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
@@ -89,9 +87,9 @@ class CalendarFormBloc extends FormBloc<String, String> {
 
     emitSuccess(
       canSubmitAgain: true,
-      successResponse: const JsonEncoder.withIndent('    ').convert(
+      /*(successResponse: const JsonEncoder.withIndent('    ').convert(
         state.toJson(),
-      ),
+      ),*/
     );
   }
 

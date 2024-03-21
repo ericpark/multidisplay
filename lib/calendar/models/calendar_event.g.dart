@@ -19,6 +19,7 @@ CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
           background: $checkedConvert('background',
               (v) => const ColorConverter().fromJson(v as String)),
           calendarId: $checkedConvert('calendar_id', (v) => v as String),
+          id: $checkedConvert('id', (v) => v as String?),
           end: $checkedConvert(
               'end', (v) => v == null ? null : DateTime.parse(v as String)),
           isAllDay: $checkedConvert('is_all_day', (v) => v as bool?),
@@ -41,6 +42,7 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) =>
       'start': instance.start.toIso8601String(),
       'end': instance.end.toIso8601String(),
       'calendar_id': instance.calendarId,
+      'id': instance.id,
       'background': const ColorConverter().toJson(instance.background),
       'is_all_day': instance.isAllDay,
       'active': instance.active,

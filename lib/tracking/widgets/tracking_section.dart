@@ -7,6 +7,51 @@ class TrackingSectionWidget extends StatelessWidget {
 
   final String sectionName;
 
+  Widget getTrackingWidget(
+      {required int index,
+      required TrackingSummary data,
+      required ColorScheme colorScheme}) {
+    final main =
+        data.metrics[data.mainMetric] ?? {"display_name": "", "value": ""};
+    final left = data.metrics[data.leftMetric];
+    final right = data.metrics[data.rightMetric];
+
+    Color? color;
+
+    switch (data.trackingType) {
+      case "consecutive":
+        return ConsecutiveTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingName: data.name,
+          mainMetric: main,
+          leftMetric: left,
+          rightMetric: right,
+          lastDate: data.records.last.date,
+        );
+      case "last_seven":
+        color = colorScheme.secondary;
+        return SimpleTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingName: data.name,
+          mainMetric: main,
+          leftMetric: left,
+          rightMetric: right,
+          color: color,
+        );
+      default:
+        return SimpleTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingName: data.name,
+          mainMetric: main,
+          leftMetric: left,
+          rightMetric: right,
+        );
+    }
+  }
+
   Widget sectionHeader({
     required String sectionHeader,
     required TextStyle? textStyle,
@@ -23,23 +68,19 @@ class TrackingSectionWidget extends StatelessWidget {
     );
   }
 
-  Widget sectionWidgets({required List<TrackingSummary> data}) {
+  Widget sectionWidgets(
+      {required List<TrackingSummary> data, required ColorScheme colorScheme}) {
     List<Widget> trackingWidgets = [];
 
     for (int i = 0; i < data.length; i++) {
-      trackingWidgets.add(SimpleTrackingWidget(
-        id: i,
-        sectionTitle: data[i].section,
-        trackingName: data[i].name,
-        trackingCount: data[i].count,
-        subtitle: data[i].subtitle,
-      ));
+      trackingWidgets.add(
+          getTrackingWidget(index: i, data: data[i], colorScheme: colorScheme));
     }
     return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: data.length,
         itemBuilder: (context, index) {
           return trackingWidgets[index];
         },
@@ -68,7 +109,9 @@ class TrackingSectionWidget extends StatelessWidget {
                   sectionHeader: sectionHeaderString,
                   textStyle: sectionHeaderStyle,
                 ),
-                sectionWidgets(data: state.trackingGroups[sectionName]!.data)
+                sectionWidgets(
+                    data: state.trackingGroups[sectionName]!.data,
+                    colorScheme: Theme.of(context).colorScheme)
               ],
             );
           case TrackingStatus.failure:

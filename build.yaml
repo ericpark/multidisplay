@@ -1,5 +1,67 @@
 targets:
-  $default:
+  multidisplay:
+    sources:
+      - lib/**       
+      - pubspec.*
+      - $package$
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - implicit_dynamic_parameter
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
+          explicit_to_json: true
+      freezed:
+        options:
+          copy_with: true
+  open_meteo:
+    sources:
+      - packages/open_meteo_api/lib/src/models/**
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - implicit_dynamic_parameter
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
+          explicit_to_json: true
+  weather_repo:
+    sources:
+      - packages/weather_repository/lib/src/models/**
+    dependencies:
+      - :open_meteo
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - implicit_dynamic_parameter
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
+          explicit_to_json: true
+  calendar_repo:
+    sources:
+      - packages/calendar_repository/lib/src/models/**
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - implicit_dynamic_parameter
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
+          explicit_to_json: true
+  tracking_repo:
+    sources:
+      include:
+        - packages/tracking_repository/lib/src/models/**
     builders:
       source_gen|combining_builder:
         options:

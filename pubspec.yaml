@@ -47,6 +47,8 @@ dependencies:
     path: packages/weather_repository
   calendar_repository:
     path: packages/calendar_repository
+  tracking_repository:
+    path: packages/tracking_repository
   hydrated_bloc: ^9.0.0
   json_annotation: ^4.4.0
   path_provider: ^2.0.8
@@ -75,6 +77,8 @@ dev_dependencies:
   flutter_native_splash: ^2.3.10
   flutter_launcher_icons: "^0.13.1"
   freezed: ^2.4.7
+  firestore_converter_generator: ^1.0.11
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -82,6 +82,12 @@ class CalendarRepository {
           (querySnapshot) {
             List<CalendarEvent> events = [];
             for (var docSnapshot in querySnapshot.docs) {
+              CalendarEvent event = docSnapshot.data();
+              if (event.id == "" || event.id == null) {
+                updateEvent(
+                    eventId: docSnapshot.id,
+                    updatedFields: {"id": docSnapshot.id});
+              }
               events.add(docSnapshot.data());
             }
             return events;

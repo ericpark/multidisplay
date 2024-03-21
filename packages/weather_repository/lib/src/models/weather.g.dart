@@ -30,6 +30,12 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
               $checkedConvert('soil_moisture', (v) => (v as num?)?.toDouble()),
           soilCondition: $checkedConvert('soil_condition',
               (v) => $enumDecodeNullable(_$SoilConditionEnumMap, v)),
+          sunrise: $checkedConvert(
+              'sunrise', (v) => v == null ? null : DateTime.parse(v as String)),
+          sunset: $checkedConvert(
+              'sunset', (v) => v == null ? null : DateTime.parse(v as String)),
+          precipitationProbability:
+              $checkedConvert('precipitation_probability', (v) => v as int?),
         );
         return val;
       },
@@ -37,7 +43,8 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
         'temperatureHigh': 'temperature_high',
         'temperatureLow': 'temperature_low',
         'soilMoisture': 'soil_moisture',
-        'soilCondition': 'soil_condition'
+        'soilCondition': 'soil_condition',
+        'precipitationProbability': 'precipitation_probability'
       },
     );
 
@@ -51,6 +58,9 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'precipitation': instance.precipitation,
       'soil_moisture': instance.soilMoisture,
       'soil_condition': _$SoilConditionEnumMap[instance.soilCondition]!,
+      'sunrise': instance.sunrise.toIso8601String(),
+      'sunset': instance.sunset.toIso8601String(),
+      'precipitation_probability': instance.precipitationProbability,
     };
 
 const _$WeatherConditionEnumMap = {

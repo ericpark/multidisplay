@@ -23,17 +23,17 @@ class TrackingLayout extends StatelessWidget {
         List<Widget> sections = getSections(state.trackingSections);
         //sections = state.trackingSections;
         return ReorderableListView(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           children: <Widget>[
             for (int index = 0; index < sections.length; index += 1)
               Padding(
                 key: Key('$index'),
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(8.0),
                 child: PhysicalModel(
                     color: Theme.of(context).dialogBackgroundColor,
-                    elevation: 5,
+                    elevation: 10,
                     shadowColor: Colors.black,
-                    borderRadius: BorderRadius.circular(0),
+                    borderRadius: BorderRadius.circular(20),
                     child: ListTile(title: sections[index])),
               ),
           ],

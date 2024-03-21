@@ -33,6 +33,10 @@ class CalendarViewContainer extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          elevation: 10,
+          shadowColor: Colors.black,
+          backgroundColor: Theme.of(context).secondaryHeaderColor,
+          clipBehavior: Clip.antiAlias,
           leading: IconButton(
             icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
             onPressed: () async {
@@ -42,7 +46,6 @@ class CalendarViewContainer extends StatelessWidget {
 
               if (context.mounted) {
                 await showDismissableModal(context, const CalendarFilterView());
-                await calendarCubit.refreshCalendarUI();
               }
             },
           ),
@@ -52,8 +55,7 @@ class CalendarViewContainer extends StatelessWidget {
               onPressed: () async {
                 /*calendarCubit.emit(calendarCubit.state
                     .copyWith(status: CalendarStatus.loading));*/
-                showDismissableModal(context, Container());
-                await calendarCubit.refreshCalendarUI();
+                await showDismissableModal(context, Container());
               },
             ),
             IconButton(
@@ -71,14 +73,13 @@ class CalendarViewContainer extends StatelessWidget {
                 }
                 await showDismissableModal(
                     context, const CalendarNewEventView());
-                await calendarCubit.refreshCalendarUI();
 
                 //await calendarCubit.refreshCalendarUI();
               },
             ),
           ],
         ),
-        body: const CalendarLayout());
+        body: const SafeArea(child: CalendarLayout()));
   }
 }
 /*

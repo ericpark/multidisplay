@@ -43,6 +43,7 @@ class WeatherView extends StatelessWidget {
       },
       builder: (timerContext, timerState) {
         //timerBloc = timerContext.read<TimerBloc>();
+        final sunriseAndSunset = weatherCubit.getNextSunriseAndSunset();
         return Flex(
           direction: Axis.vertical,
           children: [
@@ -53,7 +54,7 @@ class WeatherView extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 30,
-                    child: WeatherPopulated(
+                    child: CurrentWeatherWidget(
                       weather: weatherCubit.state.weather,
                       units: weatherCubit.state.temperatureUnits,
                       onRefresh: () {
@@ -70,6 +71,15 @@ class WeatherView extends StatelessWidget {
                     child: HourlyForecastPopulated(
                       forecast: weatherCubit.state.hourlyForecast,
                       units: weatherCubit.state.temperatureUnits,
+                      sunrise: sunriseAndSunset["sunrise"],
+                      sunset: sunriseAndSunset["sunset"],
+                      onRefresh: () {
+                        timerBloc
+                            .add(const TimerStarted(duration: defaultDuration));
+                        return context
+                            .read<WeatherCubit>()
+                            .refreshWeather(hourly: true);
+                      },
                     ),
                   ),
                 ],

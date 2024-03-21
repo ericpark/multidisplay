@@ -22,10 +22,21 @@ TrackingSummary _$TrackingSummaryFromJson(Map<String, dynamic> json) {
 mixin _$TrackingSummary {
   String get name => throw _privateConstructorUsedError;
   String get section => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total')
+  @JsonKey(name: 'count')
   int get count => throw _privateConstructorUsedError;
+  @JsonKey(name: 'tracking_subtitle')
   String? get subtitle => throw _privateConstructorUsedError;
-  String get left => throw _privateConstructorUsedError;
-  String get right => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  String get ownerId => throw _privateConstructorUsedError;
+  String get mainMetric => throw _privateConstructorUsedError;
+  String get leftMetric => throw _privateConstructorUsedError;
+  String get rightMetric => throw _privateConstructorUsedError;
+  Map<String, Map<String, String>> get metrics =>
+      throw _privateConstructorUsedError;
+  bool get autoUpdate => throw _privateConstructorUsedError;
+  List<TrackingRecord> get records => throw _privateConstructorUsedError;
+  String get trackingType => throw _privateConstructorUsedError;
   @DateTimeNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -44,10 +55,17 @@ abstract class $TrackingSummaryCopyWith<$Res> {
   $Res call(
       {String name,
       String section,
-      int count,
-      String? subtitle,
-      String left,
-      String right,
+      @JsonKey(name: 'total') @JsonKey(name: 'count') int count,
+      @JsonKey(name: 'tracking_subtitle') String? subtitle,
+      String id,
+      String ownerId,
+      String mainMetric,
+      String leftMetric,
+      String rightMetric,
+      Map<String, Map<String, String>> metrics,
+      bool autoUpdate,
+      List<TrackingRecord> records,
+      String trackingType,
       @DateTimeNullableConverter() DateTime? createdAt});
 }
 
@@ -68,8 +86,15 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? section = null,
     Object? count = null,
     Object? subtitle = freezed,
-    Object? left = null,
-    Object? right = null,
+    Object? id = null,
+    Object? ownerId = null,
+    Object? mainMetric = null,
+    Object? leftMetric = null,
+    Object? rightMetric = null,
+    Object? metrics = null,
+    Object? autoUpdate = null,
+    Object? records = null,
+    Object? trackingType = null,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -89,13 +114,41 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.subtitle
           : subtitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      left: null == left
-          ? _value.left
-          : left // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
-      right: null == right
-          ? _value.right
-          : right // ignore: cast_nullable_to_non_nullable
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      mainMetric: null == mainMetric
+          ? _value.mainMetric
+          : mainMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      leftMetric: null == leftMetric
+          ? _value.leftMetric
+          : leftMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      rightMetric: null == rightMetric
+          ? _value.rightMetric
+          : rightMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      metrics: null == metrics
+          ? _value.metrics
+          : metrics // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
+      autoUpdate: null == autoUpdate
+          ? _value.autoUpdate
+          : autoUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      records: null == records
+          ? _value.records
+          : records // ignore: cast_nullable_to_non_nullable
+              as List<TrackingRecord>,
+      trackingType: null == trackingType
+          ? _value.trackingType
+          : trackingType // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -116,10 +169,17 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
   $Res call(
       {String name,
       String section,
-      int count,
-      String? subtitle,
-      String left,
-      String right,
+      @JsonKey(name: 'total') @JsonKey(name: 'count') int count,
+      @JsonKey(name: 'tracking_subtitle') String? subtitle,
+      String id,
+      String ownerId,
+      String mainMetric,
+      String leftMetric,
+      String rightMetric,
+      Map<String, Map<String, String>> metrics,
+      bool autoUpdate,
+      List<TrackingRecord> records,
+      String trackingType,
       @DateTimeNullableConverter() DateTime? createdAt});
 }
 
@@ -138,8 +198,15 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? section = null,
     Object? count = null,
     Object? subtitle = freezed,
-    Object? left = null,
-    Object? right = null,
+    Object? id = null,
+    Object? ownerId = null,
+    Object? mainMetric = null,
+    Object? leftMetric = null,
+    Object? rightMetric = null,
+    Object? metrics = null,
+    Object? autoUpdate = null,
+    Object? records = null,
+    Object? trackingType = null,
     Object? createdAt = freezed,
   }) {
     return _then(_$TrackingSummaryImpl(
@@ -159,13 +226,41 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value.subtitle
           : subtitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      left: null == left
-          ? _value.left
-          : left // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
-      right: null == right
-          ? _value.right
-          : right // ignore: cast_nullable_to_non_nullable
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      mainMetric: null == mainMetric
+          ? _value.mainMetric
+          : mainMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      leftMetric: null == leftMetric
+          ? _value.leftMetric
+          : leftMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      rightMetric: null == rightMetric
+          ? _value.rightMetric
+          : rightMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      metrics: null == metrics
+          ? _value._metrics
+          : metrics // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
+      autoUpdate: null == autoUpdate
+          ? _value.autoUpdate
+          : autoUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      records: null == records
+          ? _value._records
+          : records // ignore: cast_nullable_to_non_nullable
+              as List<TrackingRecord>,
+      trackingType: null == trackingType
+          ? _value.trackingType
+          : trackingType // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -177,15 +272,25 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TrackingSummaryImpl implements _TrackingSummary {
+class _$TrackingSummaryImpl extends _TrackingSummary {
   const _$TrackingSummaryImpl(
       {required this.name,
       required this.section,
-      this.count = 0,
-      this.subtitle,
-      this.left = '',
-      this.right = '',
-      @DateTimeNullableConverter() this.createdAt});
+      @JsonKey(name: 'total') @JsonKey(name: 'count') this.count = 0,
+      @JsonKey(name: 'tracking_subtitle') this.subtitle,
+      required this.id,
+      required this.ownerId,
+      this.mainMetric = '',
+      this.leftMetric = '',
+      this.rightMetric = '',
+      final Map<String, Map<String, String>> metrics = const {},
+      this.autoUpdate = false,
+      final List<TrackingRecord> records = const [],
+      this.trackingType = '',
+      @DateTimeNullableConverter() this.createdAt})
+      : _metrics = metrics,
+        _records = records,
+        super._();
 
   factory _$TrackingSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$TrackingSummaryImplFromJson(json);
@@ -195,23 +300,56 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   @override
   final String section;
   @override
-  @JsonKey()
+  @JsonKey(name: 'total')
+  @JsonKey(name: 'count')
   final int count;
   @override
+  @JsonKey(name: 'tracking_subtitle')
   final String? subtitle;
   @override
-  @JsonKey()
-  final String left;
+  final String id;
+  @override
+  final String ownerId;
   @override
   @JsonKey()
-  final String right;
+  final String mainMetric;
+  @override
+  @JsonKey()
+  final String leftMetric;
+  @override
+  @JsonKey()
+  final String rightMetric;
+  final Map<String, Map<String, String>> _metrics;
+  @override
+  @JsonKey()
+  Map<String, Map<String, String>> get metrics {
+    if (_metrics is EqualUnmodifiableMapView) return _metrics;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_metrics);
+  }
+
+  @override
+  @JsonKey()
+  final bool autoUpdate;
+  final List<TrackingRecord> _records;
+  @override
+  @JsonKey()
+  List<TrackingRecord> get records {
+    if (_records is EqualUnmodifiableListView) return _records;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_records);
+  }
+
+  @override
+  @JsonKey()
+  final String trackingType;
   @override
   @DateTimeNullableConverter()
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, left: $left, right: $right, createdAt: $createdAt)';
+    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, id: $id, ownerId: $ownerId, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, metrics: $metrics, autoUpdate: $autoUpdate, records: $records, trackingType: $trackingType, createdAt: $createdAt)';
   }
 
   @override
@@ -224,8 +362,20 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
             (identical(other.count, count) || other.count == count) &&
             (identical(other.subtitle, subtitle) ||
                 other.subtitle == subtitle) &&
-            (identical(other.left, left) || other.left == left) &&
-            (identical(other.right, right) || other.right == right) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
+            (identical(other.mainMetric, mainMetric) ||
+                other.mainMetric == mainMetric) &&
+            (identical(other.leftMetric, leftMetric) ||
+                other.leftMetric == leftMetric) &&
+            (identical(other.rightMetric, rightMetric) ||
+                other.rightMetric == rightMetric) &&
+            const DeepCollectionEquality().equals(other._metrics, _metrics) &&
+            (identical(other.autoUpdate, autoUpdate) ||
+                other.autoUpdate == autoUpdate) &&
+            const DeepCollectionEquality().equals(other._records, _records) &&
+            (identical(other.trackingType, trackingType) ||
+                other.trackingType == trackingType) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -233,7 +383,21 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, name, section, count, subtitle, left, right, createdAt);
+      runtimeType,
+      name,
+      section,
+      count,
+      subtitle,
+      id,
+      ownerId,
+      mainMetric,
+      leftMetric,
+      rightMetric,
+      const DeepCollectionEquality().hash(_metrics),
+      autoUpdate,
+      const DeepCollectionEquality().hash(_records),
+      trackingType,
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -250,16 +414,24 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   }
 }
 
-abstract class _TrackingSummary implements TrackingSummary {
+abstract class _TrackingSummary extends TrackingSummary {
   const factory _TrackingSummary(
           {required final String name,
           required final String section,
-          final int count,
-          final String? subtitle,
-          final String left,
-          final String right,
+          @JsonKey(name: 'total') @JsonKey(name: 'count') final int count,
+          @JsonKey(name: 'tracking_subtitle') final String? subtitle,
+          required final String id,
+          required final String ownerId,
+          final String mainMetric,
+          final String leftMetric,
+          final String rightMetric,
+          final Map<String, Map<String, String>> metrics,
+          final bool autoUpdate,
+          final List<TrackingRecord> records,
+          final String trackingType,
           @DateTimeNullableConverter() final DateTime? createdAt}) =
       _$TrackingSummaryImpl;
+  const _TrackingSummary._() : super._();
 
   factory _TrackingSummary.fromJson(Map<String, dynamic> json) =
       _$TrackingSummaryImpl.fromJson;
@@ -269,13 +441,30 @@ abstract class _TrackingSummary implements TrackingSummary {
   @override
   String get section;
   @override
+  @JsonKey(name: 'total')
+  @JsonKey(name: 'count')
   int get count;
   @override
+  @JsonKey(name: 'tracking_subtitle')
   String? get subtitle;
   @override
-  String get left;
+  String get id;
   @override
-  String get right;
+  String get ownerId;
+  @override
+  String get mainMetric;
+  @override
+  String get leftMetric;
+  @override
+  String get rightMetric;
+  @override
+  Map<String, Map<String, String>> get metrics;
+  @override
+  bool get autoUpdate;
+  @override
+  List<TrackingRecord> get records;
+  @override
+  String get trackingType;
   @override
   @DateTimeNullableConverter()
   DateTime? get createdAt;

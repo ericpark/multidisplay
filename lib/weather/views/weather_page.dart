@@ -27,27 +27,31 @@ class WeatherContainerView extends StatelessWidget {
 
     // Possibly wrap WeatherView in bloc consumer and handle setup tasks here?
     return Scaffold(
-        appBar: AppBar(),
         body: Center(
-          child: BlocConsumer<WeatherCubit, WeatherState>(
-            listener: (context, state) {
-              if (state.status.isSuccess) {
-                //context.read<ThemeCubit>().updateTheme(state.weather);
-              }
-            },
-            builder: (context, state) {
-              switch (state.status) {
-                case WeatherStatus.initial:
-                  return const WeatherEmpty();
-                case WeatherStatus.loading:
-                  return const WeatherLoading();
-                case WeatherStatus.success:
-                  return const WeatherView();
-                case WeatherStatus.failure:
-                  return const WeatherError();
-              }
-            },
-          ),
-        ));
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: BlocConsumer<WeatherCubit, WeatherState>(
+          listener: (context, state) {
+            if (state.status.isSuccess) {
+              //context.read<ThemeCubit>().updateTheme(state.weather);
+            }
+          },
+          builder: (context, state) {
+            switch (state.status) {
+              case WeatherStatus.initial:
+                return const WeatherEmpty();
+              case WeatherStatus.loading:
+                return const WeatherLoading();
+              case WeatherStatus.success:
+                return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: const WeatherView());
+              case WeatherStatus.failure:
+                return const WeatherError();
+            }
+          },
+        ),
+      ),
+    ));
   }
 }

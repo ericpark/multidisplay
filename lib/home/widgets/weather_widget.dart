@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/weather/weather.dart';
 
-class WeatherWidget extends StatefulWidget {
+class WeatherWidget extends StatelessWidget {
   const WeatherWidget({super.key});
 
   @override
-  State<WeatherWidget> createState() => _WeatherWidgetState();
-}
-
-class _WeatherWidgetState extends State<WeatherWidget> {
-  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Column(children: [
-            Text("Weather Placeholder"),
-          ])
-        ],
-      ),
+    WeatherCubit weatherCubit = context.read<WeatherCubit>();
+    return CurrentWeatherWidget(
+      weather: weatherCubit.state.weather,
+      units: weatherCubit.state.temperatureUnits,
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firestore_converter/firestore_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,6 +19,13 @@ class TrackingSummary with _$TrackingSummary {
     required String section,
     @Default(0) int total,
     @Default('') String description,
+    @Default('') String trackingType,
+    @Default('') String trackingSubtitle,
+    @Default('') String mainMetric,
+    @Default('') String leftMetric,
+    @Default('') String rightMetric,
+    @Default(false) bool autoUpdate,
+    @Default({}) Map<String, Map<String, String>> metrics,
     @Default(true) bool? active,
     @DateTimeNullableConverter() DateTime? createdAt,
     @Default([]) List<String>? tags,

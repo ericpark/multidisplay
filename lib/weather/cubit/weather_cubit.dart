@@ -53,6 +53,25 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
+  Map<String, DateTime> getNextSunriseAndSunset() {
+    DateTime now = DateTime.now();
+    DateTime currentHour = DateTime.now().subtract(Duration(
+        hours: 1,
+        minutes: now.minute,
+        seconds: now.second,
+        milliseconds: now.millisecond,
+        microseconds: now.microsecond));
+    List<Weather> nextSunrise = state.dailyForecast
+        .where((daily) => daily.sunrise.isAfter(currentHour))
+        .take(1)
+        .toList();
+    List<Weather> nextSunset = state.dailyForecast
+        .where((daily) => daily.sunset.isAfter(currentHour))
+        .take(1)
+        .toList();
+    return {"sunrise": nextSunrise[0].sunrise, "sunset": nextSunset[0].sunset};
+  }
+
   Future<List<Weather>> getHourlyWeather() async {
     try {
       final fetchedHourlyForecasts = await _weatherRepository

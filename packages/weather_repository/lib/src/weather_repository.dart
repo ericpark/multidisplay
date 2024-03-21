@@ -43,6 +43,9 @@ class WeatherRepository {
         temperatureLow: weather.temperature_2m_min,
         location: location.name,
         condition: weather.weather_code.toInt().toCondition,
+        sunrise: weather.sunrise,
+        sunset: weather.sunset,
+        precipitationProbability: weather.precipitation_probability_max,
       ));
     }
     return weather_forecast;
@@ -71,6 +74,7 @@ class WeatherRepository {
         soilMoisture: weather.soil_moisture_0_to_1cm,
         precipitation: weather.precipitation,
         soilCondition: predictedSoilCondition,
+        precipitationProbability: weather.precipitation_probability,
       ));
     }
     return weather_forecast;

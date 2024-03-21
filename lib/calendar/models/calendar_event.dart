@@ -14,12 +14,14 @@ class CalendarEvent extends Equatable {
     required this.start,
     required this.background,
     required this.calendarId,
+    String? id,
     DateTime? end,
     bool? isAllDay,
     bool? active,
     String? description,
     String? notes,
-  })  : end = end ?? start,
+  })  : id = id ?? "",
+        end = end ?? start,
         isAllDay = isAllDay ?? true,
         active = active ?? true,
         description = description ?? "",
@@ -37,6 +39,7 @@ class CalendarEvent extends Equatable {
   final DateTime start;
   final DateTime end;
   final String calendarId;
+  final String id;
   @ColorConverter()
   final Color background;
   final bool isAllDay;
@@ -58,6 +61,7 @@ class CalendarEvent extends Equatable {
       active: event.active,
       description: event.description,
       calendarId: event.calendarId,
+      id: event.id,
     );
   }
 
@@ -71,6 +75,7 @@ class CalendarEvent extends Equatable {
       color: background,
       recurring: false,
       description: description,
+      id: id,
     );
   }
 
@@ -85,6 +90,7 @@ class CalendarEvent extends Equatable {
     bool? active,
     String? description,
     String? calendarId,
+    String? id,
   }) {
     return CalendarEvent(
       eventName: eventName ?? this.eventName,
@@ -95,12 +101,21 @@ class CalendarEvent extends Equatable {
       active: isAllDay ?? this.active,
       description: description ?? this.description,
       calendarId: calendarId ?? this.calendarId,
+      id: id ?? this.id,
     );
   }
 
   @override
-  List<Object> get props =>
-      [eventName, start, end, background, isAllDay, description, calendarId];
+  List<Object> get props => [
+        eventName,
+        start,
+        end,
+        background,
+        isAllDay,
+        description,
+        calendarId,
+        id,
+      ];
 }
 
 class ColorConverter implements JsonConverter<Color, String> {

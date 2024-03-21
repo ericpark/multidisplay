@@ -22,6 +22,23 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
           total: $checkedConvert('total', (v) => v as int? ?? 0),
           description:
               $checkedConvert('description', (v) => v as String? ?? ''),
+          trackingType:
+              $checkedConvert('tracking_type', (v) => v as String? ?? ''),
+          trackingSubtitle:
+              $checkedConvert('tracking_subtitle', (v) => v as String? ?? ''),
+          mainMetric: $checkedConvert('main_metric', (v) => v as String? ?? ''),
+          leftMetric: $checkedConvert('left_metric', (v) => v as String? ?? ''),
+          rightMetric:
+              $checkedConvert('right_metric', (v) => v as String? ?? ''),
+          autoUpdate:
+              $checkedConvert('auto_update', (v) => v as bool? ?? false),
+          metrics: $checkedConvert(
+              'metrics',
+              (v) =>
+                  (v as Map<String, dynamic>?)?.map(
+                    (k, e) => MapEntry(k, Map<String, String>.from(e as Map)),
+                  ) ??
+                  const {}),
           active: $checkedConvert('active', (v) => v as bool? ?? true),
           createdAt: $checkedConvert('created_at',
               (v) => const DateTimeNullableConverter().fromJson(v)),
@@ -33,7 +50,16 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {'ownerId': 'owner_id', 'createdAt': 'created_at'},
+      fieldKeyMap: const {
+        'ownerId': 'owner_id',
+        'trackingType': 'tracking_type',
+        'trackingSubtitle': 'tracking_subtitle',
+        'mainMetric': 'main_metric',
+        'leftMetric': 'left_metric',
+        'rightMetric': 'right_metric',
+        'autoUpdate': 'auto_update',
+        'createdAt': 'created_at'
+      },
     );
 
 Map<String, dynamic> _$$TrackingSummaryImplToJson(
@@ -45,6 +71,13 @@ Map<String, dynamic> _$$TrackingSummaryImplToJson(
       'section': instance.section,
       'total': instance.total,
       'description': instance.description,
+      'tracking_type': instance.trackingType,
+      'tracking_subtitle': instance.trackingSubtitle,
+      'main_metric': instance.mainMetric,
+      'left_metric': instance.leftMetric,
+      'right_metric': instance.rightMetric,
+      'auto_update': instance.autoUpdate,
+      'metrics': instance.metrics,
       'active': instance.active,
       'created_at':
           const DateTimeNullableConverter().toJson(instance.createdAt),

@@ -4,17 +4,22 @@ import 'package:multidisplay/calendar/calendar.dart';
 
 Future<dynamic> showDismissableModal(
     BuildContext buildContext, Widget widget) async {
-  buildContext.read<CalendarCubit>().startLoading();
+  CalendarCubit cubit = buildContext.read<CalendarCubit>();
+  cubit.startLoading();
 
   await showCupertinoModalPopup(
     barrierDismissible: true,
     context: buildContext,
     builder: (BuildContext context) {
+      cubit = context.read<CalendarCubit>();
       return Dismissible(
           direction: DismissDirection.down,
-          key: const Key('dismissableModal'),
+          key: UniqueKey(),
           onDismissed: (dismissDirection) async {
-            Navigator.of(context).pop();
+            bool isKeyboardShowing =
+                MediaQuery.of(context).viewInsets.vertical > 0;
+            cubit = context.read<CalendarCubit>();
+            Navigator.pop(context, "swipe_pop_$isKeyboardShowing");
           },
           child: CupertinoPopupSurface(
             child: Container(
@@ -26,6 +31,14 @@ Future<dynamic> showDismissableModal(
             ),
           ));
     },
-  );
-  //.then((_) => buildContext.read<CalendarCubit>().refreshCalendarUI());
+  ).then((popType) async {
+    if (popType == "keyboard_showing_true" || popType == "swipe_pop_true") {
+      await cubit.startLoading();
+
+      await Future.delayed(const Duration(milliseconds: 800));
+    } else {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    await cubit.refreshCalendarUI();
+  });
 }

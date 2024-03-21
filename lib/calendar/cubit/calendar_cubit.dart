@@ -58,16 +58,12 @@ class CalendarCubit extends Cubit<CalendarState> {
     //emit(state.copyWith(status: CalendarStatus.loading));
     // Temporary fix to refresh after popover is gone rather than rewriting
     // the builder functions for both scheduler and month views.
-    await Future.delayed(const Duration(milliseconds: 200));
-
+    //await Future.delayed(const Duration(milliseconds: 500));
     emit(state.copyWith(status: CalendarStatus.success));
-
-    return;
   }
 
   Future<void> startLoading() async {
     emit(state.copyWith(status: CalendarStatus.loading));
-    return;
   }
 
   Future<void> addCalendarEvent(CalendarEvent event) async {
@@ -83,9 +79,27 @@ class CalendarCubit extends Cubit<CalendarState> {
         status: CalendarStatus.success, events: updatedListOfEvents));
   }
 
-  Future<void> updateCalendarEvent() async {
-    fetchEvents(state.calendars);
-    return;
+  Future<void> updateCalendarEvent(
+      {required String eventId, required CalendarEvent event}) async {
+    CalendarEvent originalEvent =
+        state.events.where((e) => e.id == eventId).toList()[0].copyWith(
+              eventName: event.eventName,
+              end: event.end,
+              start: event.start,
+              description: event.description,
+              calendarId: event.calendarId,
+            );
+
+    emit(state.copyWith(status: CalendarStatus.loading));
+    await _calendarRepository.updateEvent(
+        eventId: eventId, updatedFields: originalEvent.toRepository().toJson());
+
+    List<CalendarEvent> updatedListOfEvents =
+        state.events.where((event) => event.id != eventId).toList();
+    updatedListOfEvents.add(originalEvent);
+
+    emit(state.copyWith(
+        status: CalendarStatus.success, events: updatedListOfEvents));
   }
 
   Future<void> fetchEvents(List<String> calendarIDs) async {

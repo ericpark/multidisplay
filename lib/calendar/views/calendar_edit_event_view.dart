@@ -86,6 +86,9 @@ class CalendarEditEventView extends StatelessWidget {
         builder: (context) {
           CalendarFormBloc formBloc = context.read<CalendarFormBloc>();
 
+          bool isKeyboardShowing =
+              MediaQuery.of(context).viewInsets.vertical > 0;
+
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
@@ -94,7 +97,8 @@ class CalendarEditEventView extends StatelessWidget {
                   icon:
                       const Icon(Icons.close_outlined, semanticLabel: 'Close'),
                   onPressed: () async {
-                    Navigator.of(context).pop();
+                    Navigator.pop(
+                        context, "keyboard_showing_$isKeyboardShowing");
                   }),
               title: const Text("Edit Event"),
               actions: [
@@ -109,12 +113,14 @@ class CalendarEditEventView extends StatelessWidget {
                     }
 
                     // If successful, add event
-                    CalendarEvent newEventData = formBloc.toCalendarEvent();
-                    await calendarCubit.addCalendarEvent(newEventData);
-
+                    CalendarEvent updatedEvent = formBloc.toCalendarEvent();
+                    await calendarCubit.updateCalendarEvent(
+                        eventId: event.id, event: updatedEvent);
+                    //await calendarCubit.refreshCalendarUI();
                     // Dismiss popover
                     if (!context.mounted) return;
-                    Navigator.of(context).pop();
+                    Navigator.pop(
+                        context, "keyboard_showing_$isKeyboardShowing");
                   },
                 ),
               ],

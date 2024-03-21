@@ -26,6 +26,14 @@ mixin _$TrackingSummary {
   String get section => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  String get trackingType => throw _privateConstructorUsedError;
+  String get trackingSubtitle => throw _privateConstructorUsedError;
+  String get mainMetric => throw _privateConstructorUsedError;
+  String get leftMetric => throw _privateConstructorUsedError;
+  String get rightMetric => throw _privateConstructorUsedError;
+  bool get autoUpdate => throw _privateConstructorUsedError;
+  Map<String, Map<String, String>> get metrics =>
+      throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
   @DateTimeNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -50,6 +58,13 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       String section,
       int total,
       String description,
+      String trackingType,
+      String trackingSubtitle,
+      String mainMetric,
+      String leftMetric,
+      String rightMetric,
+      bool autoUpdate,
+      Map<String, Map<String, String>> metrics,
       bool? active,
       @DateTimeNullableConverter() DateTime? createdAt,
       List<String>? tags});
@@ -74,6 +89,13 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? section = null,
     Object? total = null,
     Object? description = null,
+    Object? trackingType = null,
+    Object? trackingSubtitle = null,
+    Object? mainMetric = null,
+    Object? leftMetric = null,
+    Object? rightMetric = null,
+    Object? autoUpdate = null,
+    Object? metrics = null,
     Object? active = freezed,
     Object? createdAt = freezed,
     Object? tags = freezed,
@@ -103,6 +125,34 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      trackingType: null == trackingType
+          ? _value.trackingType
+          : trackingType // ignore: cast_nullable_to_non_nullable
+              as String,
+      trackingSubtitle: null == trackingSubtitle
+          ? _value.trackingSubtitle
+          : trackingSubtitle // ignore: cast_nullable_to_non_nullable
+              as String,
+      mainMetric: null == mainMetric
+          ? _value.mainMetric
+          : mainMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      leftMetric: null == leftMetric
+          ? _value.leftMetric
+          : leftMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      rightMetric: null == rightMetric
+          ? _value.rightMetric
+          : rightMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      autoUpdate: null == autoUpdate
+          ? _value.autoUpdate
+          : autoUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      metrics: null == metrics
+          ? _value.metrics
+          : metrics // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -134,6 +184,13 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       String section,
       int total,
       String description,
+      String trackingType,
+      String trackingSubtitle,
+      String mainMetric,
+      String leftMetric,
+      String rightMetric,
+      bool autoUpdate,
+      Map<String, Map<String, String>> metrics,
       bool? active,
       @DateTimeNullableConverter() DateTime? createdAt,
       List<String>? tags});
@@ -156,6 +213,13 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? section = null,
     Object? total = null,
     Object? description = null,
+    Object? trackingType = null,
+    Object? trackingSubtitle = null,
+    Object? mainMetric = null,
+    Object? leftMetric = null,
+    Object? rightMetric = null,
+    Object? autoUpdate = null,
+    Object? metrics = null,
     Object? active = freezed,
     Object? createdAt = freezed,
     Object? tags = freezed,
@@ -185,6 +249,34 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      trackingType: null == trackingType
+          ? _value.trackingType
+          : trackingType // ignore: cast_nullable_to_non_nullable
+              as String,
+      trackingSubtitle: null == trackingSubtitle
+          ? _value.trackingSubtitle
+          : trackingSubtitle // ignore: cast_nullable_to_non_nullable
+              as String,
+      mainMetric: null == mainMetric
+          ? _value.mainMetric
+          : mainMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      leftMetric: null == leftMetric
+          ? _value.leftMetric
+          : leftMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      rightMetric: null == rightMetric
+          ? _value.rightMetric
+          : rightMetric // ignore: cast_nullable_to_non_nullable
+              as String,
+      autoUpdate: null == autoUpdate
+          ? _value.autoUpdate
+          : autoUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      metrics: null == metrics
+          ? _value._metrics
+          : metrics // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -211,10 +303,18 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       required this.section,
       this.total = 0,
       this.description = '',
+      this.trackingType = '',
+      this.trackingSubtitle = '',
+      this.mainMetric = '',
+      this.leftMetric = '',
+      this.rightMetric = '',
+      this.autoUpdate = false,
+      final Map<String, Map<String, String>> metrics = const {},
       this.active = true,
       @DateTimeNullableConverter() this.createdAt,
       final List<String>? tags = const []})
-      : _tags = tags;
+      : _metrics = metrics,
+        _tags = tags;
 
   factory _$TrackingSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$TrackingSummaryImplFromJson(json);
@@ -235,6 +335,33 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   final String description;
   @override
   @JsonKey()
+  final String trackingType;
+  @override
+  @JsonKey()
+  final String trackingSubtitle;
+  @override
+  @JsonKey()
+  final String mainMetric;
+  @override
+  @JsonKey()
+  final String leftMetric;
+  @override
+  @JsonKey()
+  final String rightMetric;
+  @override
+  @JsonKey()
+  final bool autoUpdate;
+  final Map<String, Map<String, String>> _metrics;
+  @override
+  @JsonKey()
+  Map<String, Map<String, String>> get metrics {
+    if (_metrics is EqualUnmodifiableMapView) return _metrics;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_metrics);
+  }
+
+  @override
+  @JsonKey()
   final bool? active;
   @override
   @DateTimeNullableConverter()
@@ -252,7 +379,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
 
   @override
   String toString() {
-    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, active: $active, createdAt: $createdAt, tags: $tags)';
+    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, trackingType: $trackingType, trackingSubtitle: $trackingSubtitle, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, autoUpdate: $autoUpdate, metrics: $metrics, active: $active, createdAt: $createdAt, tags: $tags)';
   }
 
   @override
@@ -267,6 +394,19 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
             (identical(other.total, total) || other.total == total) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.trackingType, trackingType) ||
+                other.trackingType == trackingType) &&
+            (identical(other.trackingSubtitle, trackingSubtitle) ||
+                other.trackingSubtitle == trackingSubtitle) &&
+            (identical(other.mainMetric, mainMetric) ||
+                other.mainMetric == mainMetric) &&
+            (identical(other.leftMetric, leftMetric) ||
+                other.leftMetric == leftMetric) &&
+            (identical(other.rightMetric, rightMetric) ||
+                other.rightMetric == rightMetric) &&
+            (identical(other.autoUpdate, autoUpdate) ||
+                other.autoUpdate == autoUpdate) &&
+            const DeepCollectionEquality().equals(other._metrics, _metrics) &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -283,6 +423,13 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       section,
       total,
       description,
+      trackingType,
+      trackingSubtitle,
+      mainMetric,
+      leftMetric,
+      rightMetric,
+      autoUpdate,
+      const DeepCollectionEquality().hash(_metrics),
       active,
       createdAt,
       const DeepCollectionEquality().hash(_tags));
@@ -310,6 +457,13 @@ abstract class _TrackingSummary implements TrackingSummary {
       required final String section,
       final int total,
       final String description,
+      final String trackingType,
+      final String trackingSubtitle,
+      final String mainMetric,
+      final String leftMetric,
+      final String rightMetric,
+      final bool autoUpdate,
+      final Map<String, Map<String, String>> metrics,
       final bool? active,
       @DateTimeNullableConverter() final DateTime? createdAt,
       final List<String>? tags}) = _$TrackingSummaryImpl;
@@ -329,6 +483,20 @@ abstract class _TrackingSummary implements TrackingSummary {
   int get total;
   @override
   String get description;
+  @override
+  String get trackingType;
+  @override
+  String get trackingSubtitle;
+  @override
+  String get mainMetric;
+  @override
+  String get leftMetric;
+  @override
+  String get rightMetric;
+  @override
+  bool get autoUpdate;
+  @override
+  Map<String, Map<String, String>> get metrics;
   @override
   bool? get active;
   @override

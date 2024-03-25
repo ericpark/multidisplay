@@ -14,9 +14,9 @@ class ThemeCubit extends HydratedCubit<ThemeData> {
 
   static ThemeData lightTheme = ThemeData.from(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromARGB(197, 195, 239, 242),
-      primary: darkGreenColor,
-      secondary: deepPrimaryColor,
+      seedColor: primaryColor,
+      primary: deepPrimaryColor,
+      secondary: secondaryColor,
       tertiary: accentColor,
       surfaceTint: tealGreenColor,
     ),

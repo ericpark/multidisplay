@@ -8,6 +8,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(const AppState.started()) {
     on<AppStarted>(onAppStarted);
     on<AppLoaded>(onAppLoaded);
+    on<AppPageChanged>(onAppPageChanged);
   }
 
   void onAppStarted(AppStarted event, Emitter<AppState> emit) async {
@@ -18,5 +19,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(state);
   }
 
-  void onAppPageChanged() {}
+  void onAppPageChanged(AppPageChanged event, Emitter<AppState> emit) {
+    emit(state.copyWith(page: event.page));
+  }
 }

@@ -101,6 +101,13 @@ class DailyForecastCell extends StatelessWidget {
                 ),
                 // WEATHER ICON
                 _WeatherIcon(condition: weather.condition),
+                // WEATHER DESCRIPTION
+                Text(
+                  weather.condition.toWeatherDescription,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
                 // HIGH TEXT SPAN
                 RichText(
                   text: TextSpan(
@@ -150,6 +157,23 @@ class DailyForecastCell extends StatelessWidget {
                             )),
                       ]),
                 ),
+                RichText(
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  text: TextSpan(
+                      text: "",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                            text:
+                                "(${weather.precipitation.toStringAsFixed(2)} in)",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            )),
+                      ]),
+                ),
               ],
             ),
           ),
@@ -162,19 +186,25 @@ class DailyForecastCell extends StatelessWidget {
 class _WeatherIcon extends StatelessWidget {
   const _WeatherIcon({required this.condition});
 
-  static const _iconSize = 75.0;
+  static const _iconSize = 50.0;
 
   final WeatherCondition condition;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: _iconSize,
-      height: _iconSize,
-      child: Icon(
-        condition.toWeatherIcon,
-        size: _iconSize,
-        applyTextScaling: true,
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: SizedBox(
+          width: _iconSize,
+          height: _iconSize,
+          child: Icon(
+            condition.toWeatherIcon,
+            size: _iconSize,
+            applyTextScaling: true,
+          ),
+        ),
       ),
     );
   }

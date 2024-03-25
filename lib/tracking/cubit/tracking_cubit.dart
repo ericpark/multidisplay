@@ -10,6 +10,7 @@ part 'tracking_state.dart';
 part 'tracking_cubit_consecutive.dart';
 part 'tracking_cubit_last_seven.dart';
 part 'tracking_cubit_days_since.dart';
+part 'tracking_cubit_fixed_week.dart';
 
 class TrackingCubit extends HydratedCubit<TrackingState> {
   TrackingCubit(this._trackingRepository)
@@ -106,7 +107,7 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
         updatedTrackingSummary = incrementLastSevenTracker(
             trackingSummary: trackingSummary.copyWith(records: records));
       case "days_ago":
-        updatedTrackingSummary = incrementLastSevenTracker(
+        updatedTrackingSummary = incrementDaysSince(
             trackingSummary: trackingSummary.copyWith(records: records));
       default:
         updatedTrackingSummary = trackingSummary;

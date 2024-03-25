@@ -66,7 +66,8 @@ class SimpleTrackingWidget extends StatelessWidget {
     return GestureDetector(
       onDoubleTap: () => _handleDoubleTap(trackingCubit: trackingCubit),
       onLongPress: () => _handleLongPress(context, Container()),
-      onTap: () => _handleOnTap(context, Container()),
+      onTap: () =>
+          _handleOnTap(context, TrackingDetailsView(id: id, section: section)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: PhysicalModel(

@@ -11,6 +11,7 @@ class WeatherRepository {
 
   Future<Weather> getWeather(String city) async {
     final location = await _weatherApiClient.locationSearch(city);
+
     final weather = await _weatherApiClient.getCurrentWeather(
       latitude: location.latitude,
       longitude: location.longitude,
@@ -46,6 +47,7 @@ class WeatherRepository {
         sunrise: weather.sunrise,
         sunset: weather.sunset,
         precipitationProbability: weather.precipitation_probability_max,
+        precipitation: weather.precipitation_sum,
       ));
     }
     return weather_forecast;
@@ -89,63 +91,62 @@ extension on int {
       case 0:
         return WeatherCondition.clear;
       case 1:
-      //return WeatherCondition.mainlyClear;
+        return WeatherCondition.mainlyClear;
       case 2:
-      //return WeatherCondition.partlyCloudy;
+        return WeatherCondition.partlyCloudy;
       case 3:
-      //return WeatherCondition.overcast;
+        return WeatherCondition.overcast;
       case 45:
-      // return WeatherCondition.fog;
+        return WeatherCondition.fog;
       case 48:
-        return WeatherCondition.cloudy;
-      //return WeatherCondition.depositingRimeFog;
+        //return WeatherCondition.cloudy;
+        return WeatherCondition.depositingRimeFog;
       case 51:
-      //return WeatherCondition.drizzleLight;
+        return WeatherCondition.drizzleLight;
       case 53:
-      //return WeatherCondition.drizzleModerate;
+        return WeatherCondition.drizzleModerate;
       case 55:
-      //return WeatherCondition.drizzleDense;
+        return WeatherCondition.drizzleDense;
       case 56:
-      //return WeatherCondition.freezingRainLight;
+        return WeatherCondition.freezingRainLight;
       case 57:
-      //return WeatherCondition.freezingDrizzleHeavy;
+        return WeatherCondition.freezingDrizzleHeavy;
       case 61:
-      //return WeatherCondition.rainySlight;
+        return WeatherCondition.rainySlight;
       case 63:
-      //return WeatherCondition.rainyModerate;
+        return WeatherCondition.rainyModerate;
       case 65:
-      //return WeatherCondition.rainyHeavy;
+        return WeatherCondition.rainyHeavy;
       case 66:
-      //return WeatherCondition.freezingRainLight;
+        return WeatherCondition.freezingRainLight;
       case 67:
-      //return WeatherCondition.freezingRainHeavy;
+        return WeatherCondition.freezingRainHeavy;
       case 80:
-      //return WeatherCondition.rainShowersSlight;
+        return WeatherCondition.rainShowersSlight;
       case 81:
-      //return WeatherCondition.rainShowersModerate;
+        return WeatherCondition.rainShowersModerate;
       case 82:
-      //return WeatherCondition.rainShowersViolent;
+        return WeatherCondition.rainShowersViolent;
       case 95:
-      //return WeatherCondition.thunderSlight;
+        return WeatherCondition.thunderSlight;
       case 96:
-      //return WeatherCondition.thunderModerate;
+        return WeatherCondition.thunderModerate;
       case 99:
-        return WeatherCondition.rainy;
-      //return WeatherCondition.thunderWithHeavyHail;
+        //return WeatherCondition.rainy;
+        return WeatherCondition.thunderWithHeavyHail;
       case 71:
-      //return WeatherCondition.snowySlight;
+        return WeatherCondition.snowySlight;
       case 73:
-      //return WeatherCondition.snowyModerate;
+        return WeatherCondition.snowyModerate;
       case 75:
-      //return WeatherCondition.snowyHeavy;
+        return WeatherCondition.snowyHeavy;
       case 77:
-      //return WeatherCondition.snowGrains;
+        return WeatherCondition.snowGrains;
       case 85:
-      //return WeatherCondition.snowShowersSlight;
+        return WeatherCondition.snowShowersSlight;
       case 86:
-        return WeatherCondition.snowy;
-
-      //return WeatherCondition.snowShowersHeavy;
+        //return WeatherCondition.snowy;
+        return WeatherCondition.snowShowersHeavy;
       default:
         return WeatherCondition.unknown;
     }

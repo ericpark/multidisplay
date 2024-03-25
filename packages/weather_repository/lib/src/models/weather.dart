@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:intl/intl.dart';
 
 part 'weather.g.dart';
-/*
+
 enum WeatherCondition {
   clear,
   @JsonValue("Mainly Clear")
@@ -36,8 +36,9 @@ enum WeatherCondition {
   thunderWithSlightHail,
   thunderWithHeavyHail,
   unknown,
-}*/
+}
 
+/*
 enum WeatherCondition {
   clear,
   rainy,
@@ -45,7 +46,7 @@ enum WeatherCondition {
   snowy,
   unknown,
 }
-
+*/
 enum SoilCondition {
   dry,
   muddy,

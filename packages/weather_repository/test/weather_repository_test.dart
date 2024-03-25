@@ -161,7 +161,7 @@ void main() {
             temperatureHigh: 42.42,
             temperatureLow: 42.42,
             location: city,
-            condition: WeatherCondition.cloudy,
+            condition: WeatherCondition.depositingRimeFog,
           ),
         );
       });
@@ -194,7 +194,7 @@ void main() {
             temperatureHigh: 42.42,
             temperatureLow: 42.42,
             location: city,
-            condition: WeatherCondition.rainy,
+            condition: WeatherCondition.rainySlight,
           ),
         );
       });
@@ -231,7 +231,7 @@ void main() {
             temperatureHigh: 42.42,
             temperatureLow: 42.42,
             location: city,
-            condition: WeatherCondition.snowy,
+            condition: WeatherCondition.snowyModerate,
           ),
         );
       });

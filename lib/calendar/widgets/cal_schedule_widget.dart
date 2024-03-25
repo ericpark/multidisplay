@@ -30,10 +30,13 @@ class CalendarSchedule extends StatelessWidget {
                 child: SfCalendar(
                   view: CalendarView.schedule,
                   headerHeight: 0,
-                  scheduleViewSettings: const ScheduleViewSettings(
+                  scheduleViewSettings: ScheduleViewSettings(
                       hideEmptyScheduleWeek: true,
-                      monthHeaderSettings: MonthHeaderSettings(height: 70),
-                      weekHeaderSettings: WeekHeaderSettings(height: 10)),
+                      monthHeaderSettings: MonthHeaderSettings(
+                          height: 70,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary),
+                      weekHeaderSettings: const WeekHeaderSettings(height: 10)),
                   dataSource:
                       CalendarEventDataSource(calendarCubit.state.events),
                   initialSelectedDate: calendarCubit.state.selectedDate,

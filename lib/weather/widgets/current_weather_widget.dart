@@ -61,6 +61,12 @@ class CurrentWeatherWidget extends StatelessWidget {
                                         condition: weather.condition),
                                   ),
                                   Text(
+                                    weather.condition.toWeatherDescription,
+                                    style: theme.textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  Text(
                                     weather.formattedTemperature(units),
                                     style:
                                         theme.textTheme.displayMedium?.copyWith(

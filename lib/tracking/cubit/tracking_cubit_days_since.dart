@@ -13,11 +13,11 @@ TrackingSummary incrementDaysSince({required TrackingSummary trackingSummary}) {
     };
     switch (key) {
       case "days_since_last":
-        int prev = int.parse(currentMetric["value"] ?? "0");
-        updatedMetric["value"] = getHighScore(curr: currentStreak, prev: prev);
-      case "streak_start_date":
-        updatedMetric["value"] =
-            getStreakStartDate(curr: currentStreak, records: records);
+        updatedMetric["value"] = getDaysSinceLast(records: records);
+      case "last_date":
+        updatedMetric["value"] = getLastDate(records: records);
+      case "last_seven_days":
+        updatedMetric["value"] = "${getLastSevenDayCount(records: records)}";
       default:
         updatedMetric["value"] = currentMetric["value"] ?? "-";
     }
@@ -29,3 +29,8 @@ TrackingSummary incrementDaysSince({required TrackingSummary trackingSummary}) {
 
   return updatedTrackingSummary;
 }
+
+String getLastDate({required List<TrackingRecord> records}) =>
+    records.isNotEmpty
+        ? DateFormat("MM/dd/yyyy").format(records.last.date)
+        : "-";

@@ -46,7 +46,6 @@ class OpenMeteoApiClient {
     if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
 
     final results = locationJson['results'] as List;
-
     if (results.isEmpty) throw LocationNotFoundFailure();
 
     return Location.fromJson(results.first as Map<String, dynamic>);

@@ -90,6 +90,34 @@ class AppView extends StatelessWidget {
     Tab(text: "Settings"),
   ];
 
+  final List<BottomNavigationBarItem> bottomTabs =
+      const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.wb_sunny),
+      label: 'Weather',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.calendar_today),
+      label: 'Calendar',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.timeline),
+      label: 'Tracking',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money),
+      label: 'Expenses',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.settings),
+      label: 'Settings',
+    ),
+  ];
+
   final List<Widget> pages = [
     const HomePage(),
     const WeatherPage(),
@@ -108,30 +136,36 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeData>(
-        builder: (context, selectedTheme) {
-      return AdaptiveTheme(
-        light: ThemeCubit.lightTheme,
-        dark: ThemeCubit.darkTheme,
-        initial: savedThemeMode ?? AdaptiveThemeMode.system,
-        builder: (theme, darkTheme) {
-          return MaterialApp(
-            theme: theme,
-            home: DefaultTabController(
-              length: tabs.length,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                appBar: AppBar(
-                  backgroundColor: theme.secondaryHeaderColor,
-                  bottom: TabBar(tabs: tabs),
-                  toolbarHeight: 10,
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, appState) {
+        AppBloc appBloc = context.read<AppBloc>();
+
+        return BlocBuilder<ThemeCubit, ThemeData>(
+            builder: (context, selectedTheme) {
+          return AdaptiveTheme(
+            light: ThemeCubit.lightTheme,
+            dark: ThemeCubit.darkTheme,
+            initial: savedThemeMode ?? AdaptiveThemeMode.system,
+            builder: (theme, darkTheme) {
+              return MaterialApp(
+                theme: theme,
+                home: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: pages[appBloc.state.page],
+                  bottomNavigationBar: BottomNavigationBar(
+                    items: bottomTabs,
+                    currentIndex: appState.page,
+                    selectedItemColor: theme.primaryColor,
+                    unselectedItemColor: Colors.grey,
+                    showUnselectedLabels: true,
+                    onTap: (index) => appBloc.add(AppPageChanged(page: index)),
+                  ),
                 ),
-                body: TabBarView(children: pages),
-              ),
-            ),
+              );
+            },
           );
-        },
-      );
-    });
+        });
+      },
+    );
   }
 }

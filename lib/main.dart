@@ -12,6 +12,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
+import 'package:tracking_repository/tracking_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ void main() async {
   runApp(App(
     weatherRepository: WeatherRepository(),
     calendarRepository: CalendarRepository(firebaseDB: db),
+    trackingRepository: TrackingRepository(firebaseDB: db),
     savedThemeMode: savedThemeMode,
   ));
 }

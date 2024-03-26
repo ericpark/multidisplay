@@ -109,16 +109,15 @@ class SettingsPage extends StatelessWidget {
                 previous.clockType != current.clockType,
             builder: (context, state) {
               return ListTile(
-                title: const Text('Use Military Time'),
-                isThreeLine: true,
-                subtitle: const Text(
-                  'AM/PM vs Military',
-                ),
-                trailing: Switch(
-                    value: state.clockType == ClockType.standard,
-                    //onChanged: (_) => context.read<HomeCubit>().toggleClockType(),
-                    onChanged: null),
-              );
+                  title: const Text('Use Military Time'),
+                  isThreeLine: true,
+                  subtitle: const Text(
+                    'AM/PM vs Military',
+                  ),
+                  trailing: Switch(
+                      value: state.clockType.isMilitary,
+                      onChanged: (_) =>
+                          context.read<HomeCubit>().toggleClockType()));
             },
           ),
           const Divider(),

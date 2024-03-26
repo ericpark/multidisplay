@@ -30,6 +30,12 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
               $checkedConvert('soil_moisture', (v) => (v as num?)?.toDouble()),
           soilCondition: $checkedConvert('soil_condition',
               (v) => $enumDecodeNullable(_$SoilConditionEnumMap, v)),
+          sunrise: $checkedConvert(
+              'sunrise', (v) => v == null ? null : DateTime.parse(v as String)),
+          sunset: $checkedConvert(
+              'sunset', (v) => v == null ? null : DateTime.parse(v as String)),
+          precipitationProbability:
+              $checkedConvert('precipitation_probability', (v) => v as int?),
         );
         return val;
       },
@@ -37,7 +43,8 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
         'temperatureHigh': 'temperature_high',
         'temperatureLow': 'temperature_low',
         'soilMoisture': 'soil_moisture',
-        'soilCondition': 'soil_condition'
+        'soilCondition': 'soil_condition',
+        'precipitationProbability': 'precipitation_probability'
       },
     );
 
@@ -51,13 +58,41 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'precipitation': instance.precipitation,
       'soil_moisture': instance.soilMoisture,
       'soil_condition': _$SoilConditionEnumMap[instance.soilCondition]!,
+      'sunrise': instance.sunrise.toIso8601String(),
+      'sunset': instance.sunset.toIso8601String(),
+      'precipitation_probability': instance.precipitationProbability,
     };
 
 const _$WeatherConditionEnumMap = {
   WeatherCondition.clear: 'clear',
-  WeatherCondition.rainy: 'rainy',
-  WeatherCondition.cloudy: 'cloudy',
-  WeatherCondition.snowy: 'snowy',
+  WeatherCondition.mainlyClear: 'Mainly Clear',
+  WeatherCondition.partlyCloudy: 'partlyCloudy',
+  WeatherCondition.overcast: 'overcast',
+  WeatherCondition.fog: 'fog',
+  WeatherCondition.depositingRimeFog: 'depositingRimeFog',
+  WeatherCondition.drizzleLight: 'drizzleLight',
+  WeatherCondition.drizzleModerate: 'drizzleModerate',
+  WeatherCondition.drizzleDense: 'drizzleDense',
+  WeatherCondition.freezingDrizzleLight: 'freezingDrizzleLight',
+  WeatherCondition.freezingDrizzleHeavy: 'freezingDrizzleHeavy',
+  WeatherCondition.rainySlight: 'rainySlight',
+  WeatherCondition.rainyModerate: 'rainyModerate',
+  WeatherCondition.rainyHeavy: 'rainyHeavy',
+  WeatherCondition.freezingRainLight: 'freezingRainLight',
+  WeatherCondition.freezingRainHeavy: 'freezingRainHeavy',
+  WeatherCondition.snowySlight: 'snowySlight',
+  WeatherCondition.snowyModerate: 'snowyModerate',
+  WeatherCondition.snowyHeavy: 'snowyHeavy',
+  WeatherCondition.snowGrains: 'snowGrains',
+  WeatherCondition.rainShowersSlight: 'rainShowersSlight',
+  WeatherCondition.rainShowersModerate: 'rainShowersModerate',
+  WeatherCondition.rainShowersViolent: 'rainShowersViolent',
+  WeatherCondition.snowShowersSlight: 'snowShowersSlight',
+  WeatherCondition.snowShowersHeavy: 'snowShowersHeavy',
+  WeatherCondition.thunderSlight: 'thunderSlight',
+  WeatherCondition.thunderModerate: 'thunderModerate',
+  WeatherCondition.thunderWithSlightHail: 'thunderWithSlightHail',
+  WeatherCondition.thunderWithHeavyHail: 'thunderWithHeavyHail',
   WeatherCondition.unknown: 'unknown',
 };
 

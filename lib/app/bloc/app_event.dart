@@ -13,5 +13,6 @@ final class AppLoaded extends AppEvent {
 }
 
 final class AppPageChanged extends AppEvent {
-  const AppPageChanged();
+  const AppPageChanged({required this.page});
+  final int page;
 }

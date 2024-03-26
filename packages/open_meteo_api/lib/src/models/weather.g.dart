@@ -22,3 +22,8 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
       fieldKeyMap: const {'weatherCode': 'weathercode'},
     );
+
+Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
+      'temperature': instance.temperature,
+      'weathercode': instance.weatherCode,
+    };

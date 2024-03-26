@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:multidisplay/home/home.dart';
 
 class ClockWidget extends StatefulWidget {
   const ClockWidget({super.key});
@@ -14,32 +16,14 @@ class _ClockWidgetState extends State<ClockWidget> {
   late Timer timer;
 
   var now = DateTime.now();
-  var nowMinute = "...";
-  var nowHour = "...";
-  var nowDate = "...";
-  var nowDay = "...";
-  var nowMonth = "...";
-  var nowSeconds = "";
 
   @override
   void initState() {
     super.initState();
 
-    nowDay = DateFormat('EEEE').format(now);
-    nowDate = now.day.toString().padLeft(2, "0");
-    nowMonth = now.month.toString().padLeft(2, "0");
-    nowMinute = DateTime.now().minute.toString().padLeft(2, "0");
-    nowHour = DateTime.now().hour.toString().padLeft(2, "0");
-    nowSeconds = DateTime.now().second.toString().padLeft(2, "0");
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      var now = DateTime.now();
       setState(() {
-        nowDay = DateFormat('EEEE').format(now);
-        nowDate = now.day.toString().padLeft(2, "0");
-        nowMonth = now.month.toString().padLeft(2, "0");
-        nowMinute = DateTime.now().minute.toString().padLeft(2, "0");
-        nowHour = DateTime.now().hour.toString().padLeft(2, "0");
-        nowSeconds = DateTime.now().second.toString().padLeft(2, "0");
+        now = DateTime.now();
       });
     });
   }
@@ -52,32 +36,48 @@ class _ClockWidgetState extends State<ClockWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Column(children: [
-            const Text("Today is"),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                child: Text(
-                  "$nowDay, $nowMonth/$nowDate",
-                  style: const TextStyle(fontSize: 50, color: Colors.black),
-                ),
+    final theme = Theme.of(context);
+
+    final homeCubit = context.read<HomeCubit>();
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: PhysicalModel(
+            color: Theme.of(context).dialogBackgroundColor,
+            elevation: 10,
+            shadowColor: Colors.black,
+            borderRadius: BorderRadius.circular(20),
+            clipBehavior: Clip.hardEdge,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(children: [
+                    const Text("Today is"),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Text(
+                          DateFormat('MMMMEEEEd').format(now),
+                          style: theme.textTheme.headlineLarge,
+                        ),
+                      ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.cover,
+                      child: homeCubit.state.clockType.isMilitary
+                          ? Text(
+                              DateFormat('Hms').format(now),
+                              style: theme.textTheme.displayLarge,
+                            )
+                          : Text(
+                              DateFormat('jms').format(now),
+                              style: theme.textTheme.displayLarge,
+                            ),
+                    )
+                  ])
+                ],
               ),
-            ),
-            FittedBox(
-              fit: BoxFit.cover,
-              child: Text(
-                "$nowHour:$nowMinute:$nowSeconds",
-                style: const TextStyle(fontSize: 100, color: Colors.black),
-              ),
-            )
-          ])
-        ],
-      ),
-    );
+            )));
   }
 }

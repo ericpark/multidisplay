@@ -10,180 +10,337 @@ class HourlyForecastPopulated extends StatelessWidget {
   const HourlyForecastPopulated({
     required this.forecast,
     required this.units,
+    this.onRefresh,
+    this.sunrise,
+    this.sunset,
     super.key,
   });
 
   final List<Weather> forecast;
   final TemperatureUnits units;
+  final DateTime? sunrise;
+  final DateTime? sunset;
+  final ValueGetter<Future<void>>? onRefresh;
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> forecastWidgets = [];
-    DateTime now = DateTime.now();
-    DateTime currentHour = DateTime.now().subtract(Duration(
-        hours: 1,
-        minutes: now.minute,
-        seconds: now.second,
-        milliseconds: now.millisecond,
-        microseconds: now.microsecond));
-    List<Weather> filterHours = forecast
-        .where((hourly) => hourly.date.isAfter(currentHour))
-        .take(24)
-        .toList();
-
-    for (var i = 0; i < filterHours.length; i++) {
-      // Show an icon for every three hours and the last one for a 24 hour period
-      if ((i % 3 == 0) || (i == filterHours.length - 1)) {
-        forecastWidgets.add(
-          Expanded(
-              flex: 1, // Evenly Distribute in size
-              child:
-                  HourlyForecastWidget(weather: filterHours[i], units: units)),
-        );
-      }
+  LinearGradient? _getHourlyGradientTransition(
+      {required List<Weather> filterHours}) {
+    if (sunrise == null || sunset == null) {
+      return null;
     }
-    List<_ChartData> precipitationData = filterHours
-        .map((hourly) => _ChartData(
-            DateFormat('jm').format(hourly.date).replaceAll(":00", ""),
-            hourly.precipitation))
-        .toList();
-    List<_ChartData> temperatureData = filterHours
-        .map((hourly) => _ChartData(
-            DateFormat('jm').format(hourly.date).replaceAll(":00", ""),
-            hourly.temperature.value))
-        .toList();
+    final List<double> stops = <double>[];
+    final List<Color> color = <Color>[];
+    final totalMinutes = filterHours.length * 60;
 
-    TooltipBehavior tooltip = TooltipBehavior(enable: true);
+    Color firstColor;
+    Color secondColor;
 
-    return Center(
-      child: Column(
-        children: [
-          Flex(
-            direction: Axis.horizontal,
-            children: forecastWidgets,
-          ),
-          Expanded(
-            child: SfCartesianChart(
-                primaryXAxis: const CategoryAxis(),
-                axes: const [
-                  NumericAxis(
-                    name: "Precipitation",
-                    opposedPosition: true,
-                    title: AxisTitle(text: "precipitation (in)"),
-                  ),
-                ],
-                tooltipBehavior: tooltip,
-                primaryYAxis: NumericAxis(
-                  name: "Temperature",
-                  title: AxisTitle(
-                    text: "Temperature (°${units.isCelsius ? 'C' : 'F'})",
-                  ),
-                ),
-                series: <CartesianSeries<_ChartData, String>>[
-                  AreaSeries<_ChartData, String>(
-                    dataSource: temperatureData,
-                    yAxisName: "Temperature",
-                    xValueMapper: (_ChartData temperatureData, _) =>
-                        temperatureData.x,
-                    yValueMapper: (_ChartData temperatureData, _) =>
-                        temperatureData.y,
-                    name: 'Temperature',
-                    color: Colors.amber[200],
-                  ),
-                  AreaSeries<_ChartData, String>(
-                    dataSource: precipitationData,
-                    yAxisName: "Precipitation",
-                    xValueMapper: (_ChartData precipitationData, _) =>
-                        precipitationData.x,
-                    yValueMapper: (_ChartData precipitationData, _) =>
-                        precipitationData.y,
-                    name: 'Precipitation',
-                    color: Colors.blue[200],
-                  ),
-                ]),
-          ),
-        ],
+    for (var h = 0; h < filterHours.length - 1; h++) {
+      var hour = filterHours[h];
+      var nextHour = filterHours[h + 1];
+
+      firstColor = hour.temperature.color;
+      secondColor = nextHour.temperature.color;
+
+      color.add(firstColor);
+      color.add(firstColor);
+      color.add(secondColor);
+      color.add(secondColor);
+
+      stops.add((h * 60) / totalMinutes);
+      stops.add(((h * 60) + 15) / totalMinutes);
+      stops.add(((h * 60) + 45) / totalMinutes);
+      stops.add(((h * 60) + 60) / totalMinutes);
+    }
+    return LinearGradient(colors: color, stops: stops);
+  }
+
+  dynamic _getTemperatureSeries({required List<Weather> filterHours}) {
+    final List<ChartData> temperatureData = filterHours
+        .map((hourly) => ChartData(
+            hourly.date, hourly.temperature.value, Colors.transparent))
+        .toList();
+    final tempGradientColors =
+        _getHourlyGradientTransition(filterHours: filterHours);
+
+    return AreaSeries<ChartData, DateTime>(
+      dataSource: temperatureData,
+      yAxisName: "Temperature",
+      xValueMapper: (ChartData temperatureData, _) => temperatureData.x,
+      yValueMapper: (ChartData temperatureData, _) => temperatureData.y,
+      gradient: tempGradientColors,
+      color: tempGradientColors == null ? Colors.transparent : null,
+      name: 'Temperature',
+      markerSettings: const MarkerSettings(
+        isVisible: true,
+        color: Colors.black45,
+        borderColor: Colors.transparent,
+        borderWidth: 1,
+        height: 5,
+        width: 5,
       ),
     );
   }
-}
 
-class HourlyForecastWidget extends StatelessWidget {
-  const HourlyForecastWidget({
-    required this.weather,
-    required this.units,
-    super.key,
-  });
+  dynamic _getPrecipitationSeries({required List<Weather> filterHours}) {
+    List<ChartData> precipitationData = filterHours
+        .map((hourly) =>
+            ChartData(hourly.date, hourly.precipitation, Colors.blue[200]!))
+        .toList();
 
-  final Weather weather;
-  final TemperatureUnits units;
+    return SplineSeries<ChartData, DateTime>(
+      dataSource: precipitationData,
+      yAxisName: "Precipitation",
+      xValueMapper: (ChartData precipitationData, _) => precipitationData.x,
+      yValueMapper: (ChartData precipitationData, _) => precipitationData.y,
+      name: 'Precipitation',
+      color: Colors.blue[500],
+    );
+  }
+
+  List<PlotBand> _getPlotBands({
+    required List<Weather> filterHours,
+    required double height,
+  }) {
+    final firstTransition = sunset!.isBefore(sunrise!) ? sunset! : sunrise!;
+    final secondTransition = sunset!.isBefore(sunrise!) ? sunrise! : sunset!;
+
+    const transitionMinutes = Duration(minutes: 30);
+    const dayColor = Color.fromRGBO(255, 193, 7, 0.25);
+    const nightColor = Color.fromRGBO(63, 81, 181, 0.35);
+    const sunsetGradient =
+        LinearGradient(colors: [dayColor, nightColor], stops: [0, 0.75]);
+    const sunriseGradient =
+        LinearGradient(colors: [nightColor, dayColor], stops: [0, 0.75]);
+
+    final nowMarker = PlotBand(
+      isVisible: true,
+      start: DateTime.now(),
+      end: DateTime.now(),
+      text: "Now",
+      verticalTextPadding: '5%',
+      associatedAxisStart: 0,
+      associatedAxisEnd: height - 15,
+      textAngle: 0,
+      borderWidth: 1,
+      borderColor: Colors.grey.shade600,
+      shouldRenderAboveSeries: true,
+      verticalTextAlignment: TextAnchor.start,
+      //horizontalTextAlignment: TextAnchor.start,
+      dashArray: const <double>[10, 10],
+    );
+
+    final sunsetMarker = PlotBand(
+      isVisible: true,
+      start: sunset!,
+      end: sunset!,
+      text: "    ${DateFormat("h:mm a").format(sunset!)}",
+      verticalTextPadding: '5%',
+      associatedAxisStart: 0,
+      associatedAxisEnd: height - 15,
+      textAngle: 0,
+      borderWidth: 1,
+      borderColor: Colors.grey.shade600,
+      shouldRenderAboveSeries: true,
+      verticalTextAlignment: TextAnchor.start,
+      //horizontalTextAlignment: TextAnchor.start,
+      dashArray: const <double>[10, 10],
+    );
+
+    final sunriseMarker = PlotBand(
+      isVisible: true,
+      start: sunrise!,
+      end: sunrise!,
+      text: "    ${DateFormat("h:mm a").format(sunrise!)}",
+      verticalTextPadding: '5%',
+      associatedAxisStart: 0,
+      associatedAxisEnd: height - 15,
+      textAngle: 0,
+      borderWidth: 1,
+      borderColor: Colors.grey.shade600,
+      shouldRenderAboveSeries: true,
+      verticalTextAlignment: TextAnchor.start,
+      //horizontalTextAlignment: TextAnchor.start,
+      dashArray: const <double>[10, 10],
+    );
+    final firstSection = PlotBand(
+      isVisible: true,
+      start: filterHours[0].date,
+      end: firstTransition,
+      associatedAxisStart: height - 10,
+      associatedAxisEnd: height,
+      text: sunset!.isBefore(sunrise!) ? "day" : "night",
+      color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
+      //verticalTextPadding: '1%',
+      textAngle: 0,
+      //verticalTextAlignment: TextAnchor.start,
+      borderWidth: 1,
+    );
+    final firstTransitionSection = PlotBand(
+      isVisible: true,
+      start: firstTransition,
+      end: firstTransition.add(transitionMinutes),
+      associatedAxisStart: height - 10,
+      associatedAxisEnd: height,
+      text: sunset!.isBefore(sunrise!) ? "sunset" : "sunrise",
+      gradient: sunset!.isBefore(sunrise!) ? sunsetGradient : sunriseGradient,
+      //verticalTextPadding: '1%',
+      textAngle: 0,
+      //verticalTextAlignment: TextAnchor.start,
+      borderWidth: 1,
+      //opacity: 0.5,
+    );
+
+    final middleSection = PlotBand(
+      isVisible: true,
+      start: firstTransition.add(transitionMinutes),
+      end: secondTransition,
+      associatedAxisStart: height - 10,
+      associatedAxisEnd: height,
+      text: sunset!.isBefore(sunrise!) ? "night" : "day",
+      color: sunset!.isBefore(sunrise!) ? nightColor : dayColor,
+      //verticalTextPadding: '1%',
+      textAngle: 0,
+      //verticalTextAlignment: TextAnchor.start,
+      borderWidth: 1,
+    );
+
+    final secondTransitionSection = PlotBand(
+      isVisible: true,
+      start: secondTransition,
+      end: secondTransition.add(transitionMinutes),
+      associatedAxisStart: height - 10,
+      associatedAxisEnd: height,
+      text: sunset!.isBefore(sunrise!) ? "sunrise" : "sunset",
+      gradient: sunset!.isBefore(sunrise!) ? sunriseGradient : sunsetGradient,
+      //verticalTextPadding: '1%',
+      textAngle: 0,
+      //verticalTextAlignment: TextAnchor.start,
+      borderWidth: 1,
+      //opacity: 0.5,
+    );
+
+    final lastSection = PlotBand(
+      isVisible: true,
+      start: secondTransition.add(transitionMinutes),
+      end: filterHours.last.date,
+      associatedAxisStart: height - 10,
+      associatedAxisEnd: height,
+      text: sunset!.isBefore(sunrise!) ? "day" : "night",
+      color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
+      //verticalTextPadding: '1%',
+      textAngle: 0,
+      //verticalTextAlignment: TextAnchor.start,
+      borderWidth: 1,
+    );
+    return [
+      nowMarker,
+      sunsetMarker,
+      sunriseMarker,
+      firstSection,
+      firstTransitionSection,
+      middleSection,
+      secondTransitionSection,
+      lastSection,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
+    final now = DateTime.now();
+    final currentHour = now.subtract(Duration(
+      hours: 1,
+      minutes: now.minute,
+      seconds: now.second,
+      milliseconds: now.millisecond,
+      microseconds: now.microsecond,
+    ));
+
+    final List<Weather> filterHours = forecast
+        .where((hourly) => hourly.date.isAfter(currentHour))
+        .take(25)
+        .toList();
+
+    final maxTemp = filterHours
+        .reduce((curr, next) =>
+            curr.temperature.value > next.temperature.value ? curr : next)
+        .temperature
+        .value;
+    final maximumXValue = (maxTemp < 70) ? 90.0 : maxTemp + 20;
+
+    // TEMPERATURE GRAPH
+    final temperatureSeries = _getTemperatureSeries(filterHours: filterHours);
+    final temperatureAxis = NumericAxis(
+        name: "Temperature",
+        title: AxisTitle(
+          text: "Temperature (°${units.isCelsius ? 'C' : 'F'})",
+        ),
+        maximum: maximumXValue);
+
+    // PRECIPITATION GRAPH
+    final precipitationSeries =
+        _getPrecipitationSeries(filterHours: filterHours);
+    const precipitationAxis = NumericAxis(
+        name: "Precipitation",
+        opposedPosition: true,
+        title: AxisTitle(text: "precipitation (in)"),
+        minimum: 0,
+        maximum: 1,
+        majorGridLines: MajorGridLines(width: 0));
+
+    final plotBands =
+        _getPlotBands(filterHours: filterHours, height: maximumXValue);
+
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      return Stack(
         children: [
-          //_WeatherBackground(),
-          Center(
-            child: Column(
-              children: [
-                // HOUR
-                Text(
-                  DateFormat('jm').format(weather.date).replaceAll(":00", ""),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.normal,
+          RefreshIndicator(
+            onRefresh: onRefresh ?? () async => {},
+            child: SingleChildScrollView(
+              physics: onRefresh != null
+                  ? const AlwaysScrollableScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              clipBehavior: Clip.none,
+              child: SizedBox(
+                height: viewportConstraints.maxHeight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PhysicalModel(
+                    color: Theme.of(context).dialogBackgroundColor,
+                    elevation: 10,
+                    shadowColor: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          HourlyForecastIconsWidget(
+                              filterHours: filterHours, units: units),
+                          Expanded(
+                            child: SfCartesianChart(
+                              primaryXAxis: DateTimeAxis(
+                                dateFormat: DateFormat('h a'),
+                                intervalType: DateTimeIntervalType.hours,
+                                interval: 1,
+                                plotBands: plotBands,
+                              ),
+                              axes: const [precipitationAxis],
+                              primaryYAxis: temperatureAxis,
+                              series: <CartesianSeries<ChartData, DateTime>>[
+                                temperatureSeries,
+                                precipitationSeries
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                // WEATHER ICON
-                _WeatherIcon(condition: weather.condition),
-                // HIGH TEXT SPAN
-                Text(
-                  weather.formattedTemperature(units),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  weather.soilCondition.name,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+          )
         ],
-      ),
-    );
+      );
+    });
   }
-}
-
-class _WeatherIcon extends StatelessWidget {
-  const _WeatherIcon({required this.condition});
-
-  static const _iconSize = 40.0;
-
-  final WeatherCondition condition;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: _iconSize,
-      height: _iconSize,
-      child: Icon(
-        condition.toWeatherIcon,
-        size: _iconSize,
-        applyTextScaling: true,
-      ),
-    );
-  }
-}
-
-class _ChartData {
-  _ChartData(this.x, this.y);
-
-  final String x;
-  final double y;
 }

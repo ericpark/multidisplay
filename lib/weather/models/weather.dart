@@ -30,7 +30,7 @@ class Temperature extends Equatable {
 
 @JsonSerializable()
 class Weather extends Equatable {
-  const Weather({
+  Weather({
     required this.condition,
     required this.lastUpdated,
     required this.date,
@@ -41,11 +41,17 @@ class Weather extends Equatable {
     double? precipitation,
     double? soilMoisture,
     SoilCondition? soilCondition,
+    DateTime? sunrise,
+    DateTime? sunset,
+    int? precipitationProbability,
   })  : temperatureHigh = temperatureHigh ?? temperature,
         temperatureLow = temperatureLow ?? temperature,
         precipitation = precipitation ?? 0.0,
         soilMoisture = soilMoisture ?? 0.0,
-        soilCondition = soilCondition ?? SoilCondition.unknown;
+        soilCondition = soilCondition ?? SoilCondition.unknown,
+        sunrise = sunrise ?? DateTime.now(),
+        sunset = sunset ?? DateTime.now(),
+        precipitationProbability = precipitationProbability ?? 0;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
@@ -62,6 +68,9 @@ class Weather extends Equatable {
       precipitation: weather.precipitation,
       soilMoisture: weather.soilMoisture,
       soilCondition: weather.soilCondition,
+      sunrise: weather.sunrise,
+      sunset: weather.sunset,
+      precipitationProbability: weather.precipitationProbability,
     );
   }
 
@@ -76,6 +85,7 @@ class Weather extends Equatable {
     precipitation: 0,
     soilMoisture: 0,
     soilCondition: SoilCondition.unknown,
+    precipitationProbability: 0,
   );
 
   final WeatherCondition condition;
@@ -88,6 +98,9 @@ class Weather extends Equatable {
   final double precipitation;
   final double soilMoisture;
   final SoilCondition soilCondition;
+  final DateTime sunrise;
+  final DateTime sunset;
+  final int precipitationProbability;
 
   @override
   List<Object> get props => [
@@ -100,23 +113,28 @@ class Weather extends Equatable {
         temperatureLow,
         precipitation,
         soilMoisture,
-        soilCondition
+        soilCondition,
+        sunrise,
+        sunset,
+        precipitationProbability,
       ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
 
-  Weather copyWith({
-    WeatherCondition? condition,
-    DateTime? lastUpdated,
-    DateTime? date,
-    String? location,
-    Temperature? temperature,
-    Temperature? temperatureHigh,
-    Temperature? temperatureLow,
-    double? precipitation,
-    double? soilMoisture,
-    SoilCondition? soilCondition,
-  }) {
+  Weather copyWith(
+      {WeatherCondition? condition,
+      DateTime? lastUpdated,
+      DateTime? date,
+      String? location,
+      Temperature? temperature,
+      Temperature? temperatureHigh,
+      Temperature? temperatureLow,
+      double? precipitation,
+      double? soilMoisture,
+      SoilCondition? soilCondition,
+      DateTime? sunrise,
+      DateTime? sunset,
+      int? precipitationProbability}) {
     return Weather(
       condition: condition ?? this.condition,
       lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -128,6 +146,10 @@ class Weather extends Equatable {
       precipitation: precipitation ?? this.precipitation,
       soilMoisture: soilMoisture ?? this.soilMoisture,
       soilCondition: soilCondition ?? this.soilCondition,
+      sunrise: sunrise ?? this.sunrise,
+      sunset: sunset ?? this.sunset,
+      precipitationProbability:
+          precipitationProbability ?? this.precipitationProbability,
     );
   }
 }

@@ -27,14 +27,29 @@ class CalendarLayout extends StatelessWidget {
             case CalendarStatus.loading:
               return const CalendarLoading();
             case CalendarStatus.success || CalendarStatus.transitioning:
-              return Flex(
-                direction: Axis.horizontal,
-                children: [
-                  Expanded(
-                      flex: 60,
-                      child: CalendarMonthWidget(events: state.events)),
-                  const Expanded(flex: 40, child: CalendarSchedule()),
-                ],
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (constraints.maxWidth < 400) {
+                    return Flex(
+                      direction: Axis.vertical,
+                      children: [
+                        Expanded(
+                            flex: 40,
+                            child: CalendarMonthWidget(events: state.events)),
+                        const Expanded(flex: 60, child: CalendarSchedule()),
+                      ],
+                    );
+                  }
+                  return Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Expanded(
+                          flex: 60,
+                          child: CalendarMonthWidget(events: state.events)),
+                      const Expanded(flex: 40, child: CalendarSchedule()),
+                    ],
+                  );
+                },
               );
             case CalendarStatus.failure:
               return const CalendarError();

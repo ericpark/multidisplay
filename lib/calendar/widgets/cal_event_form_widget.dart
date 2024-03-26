@@ -29,10 +29,10 @@ class CalendarEventForm extends StatelessWidget {
 
         return FormBlocListener<CalendarFormBloc, String, String>(
           onSuccess: (context, state) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(state.successResponse!),
               duration: const Duration(seconds: 2),
-            ));
+            ));*/
           },
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),

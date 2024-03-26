@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/timer/timer.dart';
 import 'package:multidisplay/weather/weather.dart';
 
@@ -26,9 +25,11 @@ class WeatherContainerView extends StatelessWidget {
     //Removed BlocBuilder that returned BlocProvider.value so there isn't two instances
 
     // Possibly wrap WeatherView in bloc consumer and handle setup tasks here?
-    return Scaffold(
-        appBar: AppBar(),
-        body: Center(
+    return SafeArea(
+      child: Scaffold(
+          body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
           child: BlocConsumer<WeatherCubit, WeatherState>(
             listener: (context, state) {
               if (state.status.isSuccess) {
@@ -42,12 +43,16 @@ class WeatherContainerView extends StatelessWidget {
                 case WeatherStatus.loading:
                   return const WeatherLoading();
                 case WeatherStatus.success:
-                  return const WeatherView();
+                  return SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: const WeatherView());
                 case WeatherStatus.failure:
                   return const WeatherError();
               }
             },
           ),
-        ));
+        ),
+      )),
+    );
   }
 }

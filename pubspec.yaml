@@ -47,6 +47,8 @@ dependencies:
     path: packages/weather_repository
   calendar_repository:
     path: packages/calendar_repository
+  tracking_repository:
+    path: packages/tracking_repository
   hydrated_bloc: ^9.0.0
   json_annotation: ^4.4.0
   path_provider: ^2.0.8
@@ -54,10 +56,10 @@ dependencies:
   syncfusion_flutter_charts: ^24.2.8
   firebase_core: ^2.24.2
   cloud_firestore: ^4.15.6
-  freezed_annotation: ^2.4.1
   form_bloc: ^0.31.0
   flutter_form_bloc: ^0.31.0
   adaptive_theme: ^3.6.0
+  freezed_annotation: ^2.4.1
   
 dev_dependencies:
   flutter_test:
@@ -68,12 +70,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
-  build_runner: ^2.0.0
+  build_runner: ^2.4.8
   json_serializable: ^6.3.1
   mocktail: ^1.0.0
   bloc_test: ^9.1.0
   flutter_native_splash: ^2.3.10
   flutter_launcher_icons: "^0.13.1"
+  freezed: ^2.4.7
+  firestore_converter_generator: ^1.0.11
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

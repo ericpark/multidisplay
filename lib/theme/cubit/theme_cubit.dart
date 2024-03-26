@@ -3,9 +3,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 const primaryColor = Color(0xFFC3EFF2);
 const secondaryColor = Color(0xFF6AD996);
-const accentColor = Color(0xFFD9846A);
+const accentColor = Color.fromRGBO(217, 132, 106, 1);
 const deepPrimaryColor = Color(0xFF6A8CD9);
 const tealGreenColor = Color(0xFF6AD9BB);
+const darkGreenColor = Color.fromARGB(255, 2, 145, 0);
 const darkerBlueColor = Color(0xFF6C6AD9);
 
 class ThemeCubit extends HydratedCubit<ThemeData> {
@@ -13,14 +14,14 @@ class ThemeCubit extends HydratedCubit<ThemeData> {
 
   static ThemeData lightTheme = ThemeData.from(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFFC3EFF2),
+      seedColor: primaryColor,
       primary: deepPrimaryColor,
       secondary: secondaryColor,
       tertiary: accentColor,
       surfaceTint: tealGreenColor,
     ),
     useMaterial3: true,
-  );
+  ).copyWith(scaffoldBackgroundColor: Colors.grey[50]);
   static ThemeData darkTheme = ThemeData.dark(useMaterial3: true);
 
   bool get isLight => state == lightTheme;

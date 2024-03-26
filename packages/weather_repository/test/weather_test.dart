@@ -22,8 +22,8 @@ void main() {
                 .having((w) => w.temperatureHigh, 'temperatureHigh', 60.1)
                 .having((w) => w.temperatureLow, 'temperatureLow', 40.1)
                 .having((w) => w.temperature, 'temperature', 45.1)
-                .having(
-                    (w) => w.condition, 'condition', WeatherCondition.cloudy));
+                .having((w) => w.condition, 'condition',
+                    WeatherCondition.partlyCloudy));
       });
     });
     group('toJson', () {

@@ -16,11 +16,12 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
   Future<void> fetchWeather(String? city) async {
     if (city == null || city.isEmpty) return;
 
-    emit(state.copyWith(status: WeatherStatus.loading));
+    emit(state.copyWith(
+        status: WeatherStatus.loading,
+        weather: (Weather.empty.copyWith(location: city))));
 
     try {
       final units = state.temperatureUnits;
-
       Weather currentWeather = await getCurrentWeather();
       List<Weather> hourlyForecast = await getHourlyWeather();
       List<Weather> dailyForecast = await getDailyWeather();
@@ -51,6 +52,25 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     } on Exception {
       return state.weather;
     }
+  }
+
+  Map<String, DateTime> getNextSunriseAndSunset() {
+    DateTime now = DateTime.now();
+    DateTime currentHour = DateTime.now().subtract(Duration(
+        hours: 1,
+        minutes: now.minute,
+        seconds: now.second,
+        milliseconds: now.millisecond,
+        microseconds: now.microsecond));
+    List<Weather> nextSunrise = state.dailyForecast
+        .where((daily) => daily.sunrise.isAfter(currentHour))
+        .take(1)
+        .toList();
+    List<Weather> nextSunset = state.dailyForecast
+        .where((daily) => daily.sunset.isAfter(currentHour))
+        .take(1)
+        .toList();
+    return {"sunrise": nextSunrise[0].sunrise, "sunset": nextSunset[0].sunset};
   }
 
   Future<List<Weather>> getHourlyWeather() async {

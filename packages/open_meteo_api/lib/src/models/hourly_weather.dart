@@ -22,7 +22,7 @@ class HourlyWeather {
   final double apparent_temperature;
   final double precipitation;
   final double soil_moisture_0_to_1cm;
-  final double precipitation_probability;
+  final int precipitation_probability;
 
   @JsonKey(name: 'weather_code')
   final double weather_code;

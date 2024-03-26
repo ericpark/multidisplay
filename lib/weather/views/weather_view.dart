@@ -43,50 +43,109 @@ class WeatherView extends StatelessWidget {
       },
       builder: (timerContext, timerState) {
         //timerBloc = timerContext.read<TimerBloc>();
-        return Flex(
-          direction: Axis.vertical,
-          children: [
-            Expanded(
-              flex: 55,
-              child: Flex(
-                direction: Axis.horizontal,
-                children: [
-                  Expanded(
-                    flex: 30,
-                    child: WeatherPopulated(
-                      weather: weatherCubit.state.weather,
-                      units: weatherCubit.state.temperatureUnits,
-                      onRefresh: () {
-                        timerBloc
-                            .add(const TimerStarted(duration: defaultDuration));
-                        return context
-                            .read<WeatherCubit>()
-                            .refreshWeather(all: true);
-                      },
-                    ),
+        final sunriseAndSunset = weatherCubit.getNextSunriseAndSunset();
+
+        return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 400) {
+            return ListView(
+              //direction: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                SizedBox(
+                  height: 400,
+                  child: CurrentWeatherWidget(
+                    weather: weatherCubit.state.weather,
+                    units: weatherCubit.state.temperatureUnits,
+                    /*onRefresh: () {
+                      timerBloc
+                          .add(const TimerStarted(duration: defaultDuration));
+                      return context
+                          .read<WeatherCubit>()
+                          .refreshWeather(all: true);
+                    },*/
                   ),
-                  Expanded(
-                    flex: 70,
-                    child: HourlyForecastPopulated(
-                      forecast: weatherCubit.state.hourlyForecast,
-                      units: weatherCubit.state.temperatureUnits,
-                    ),
+                ),
+                SizedBox(
+                  height: 400,
+                  child: HourlyForecastPopulated(
+                    forecast: weatherCubit.state.hourlyForecast,
+                    units: weatherCubit.state.temperatureUnits,
+                    sunrise: sunriseAndSunset["sunrise"],
+                    sunset: sunriseAndSunset["sunset"],
+                    /*onRefresh: () {
+                      timerBloc
+                          .add(const TimerStarted(duration: defaultDuration));
+                      return context
+                          .read<WeatherCubit>()
+                          .refreshWeather(hourly: true);
+                    },*/
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 45,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
-                child: DailyForecastPopulated(
-                  forecast: weatherCubit.state.dailyForecast,
-                  units: weatherCubit.state.temperatureUnits,
+                ),
+                SizedBox(
+                  height: 450,
+                  child: DailyForecastPopulated(
+                    forecast: weatherCubit.state.dailyForecast,
+                    units: weatherCubit.state.temperatureUnits,
+                  ),
+                ),
+              ],
+            );
+          }
+          return Flex(
+            direction: Axis.vertical,
+            children: [
+              Expanded(
+                flex: 55,
+                child: Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                      flex: 30,
+                      child: CurrentWeatherWidget(
+                        weather: weatherCubit.state.weather,
+                        units: weatherCubit.state.temperatureUnits,
+                        onRefresh: () {
+                          timerBloc.add(
+                              const TimerStarted(duration: defaultDuration));
+                          return context
+                              .read<WeatherCubit>()
+                              .refreshWeather(all: true);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 70,
+                      child: HourlyForecastPopulated(
+                        forecast: weatherCubit.state.hourlyForecast,
+                        units: weatherCubit.state.temperatureUnits,
+                        sunrise: sunriseAndSunset["sunrise"],
+                        sunset: sunriseAndSunset["sunset"],
+                        onRefresh: () {
+                          timerBloc.add(
+                              const TimerStarted(duration: defaultDuration));
+                          return context
+                              .read<WeatherCubit>()
+                              .refreshWeather(hourly: true);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        );
+              Expanded(
+                flex: 45,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
+                  child: DailyForecastPopulated(
+                    forecast: weatherCubit.state.dailyForecast,
+                    units: weatherCubit.state.temperatureUnits,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
       },
     );
   }

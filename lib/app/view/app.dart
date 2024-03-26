@@ -1,7 +1,9 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
+import 'package:tracking_repository/tracking_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
 
@@ -21,14 +23,17 @@ class App extends StatelessWidget {
   const App(
       {required WeatherRepository weatherRepository,
       required CalendarRepository calendarRepository,
+      required TrackingRepository trackingRepository,
       super.key,
       AdaptiveThemeMode? savedThemeMode})
       : _weatherRepository = weatherRepository,
         _calendarRepository = calendarRepository,
+        _trackingRepository = trackingRepository,
         savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
 
   final WeatherRepository _weatherRepository;
   final CalendarRepository _calendarRepository;
+  final TrackingRepository _trackingRepository;
   final AdaptiveThemeMode? savedThemeMode;
 
   @override
@@ -37,6 +42,7 @@ class App extends StatelessWidget {
         providers: [
           RepositoryProvider.value(value: _weatherRepository),
           RepositoryProvider.value(value: _calendarRepository),
+          RepositoryProvider.value(value: _trackingRepository),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -49,6 +55,10 @@ class App extends StatelessWidget {
             BlocProvider<CalendarCubit>(
               create: (BuildContext context) =>
                   CalendarCubit(context.read<CalendarRepository>())..init(),
+            ),
+            BlocProvider<TrackingCubit>(
+              create: (BuildContext context) =>
+                  TrackingCubit(context.read<TrackingRepository>())..init(),
             ),
             BlocProvider<TimerBloc>(
               create: (BuildContext context) =>
@@ -73,16 +83,46 @@ class AppView extends StatelessWidget {
 
   final List<Widget> tabs = const [
     Tab(text: "Home"),
-    Tab(text: "Calendar"),
     Tab(text: "Weather"),
+    Tab(text: "Calendar"),
+    Tab(text: "Tracking"),
     Tab(text: "Expenses"),
     Tab(text: "Settings"),
   ];
 
+  final List<BottomNavigationBarItem> bottomTabs =
+      const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.wb_sunny),
+      label: 'Weather',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.calendar_today),
+      label: 'Calendar',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.timeline),
+      label: 'Tracking',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money),
+      label: 'Expenses',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.settings),
+      label: 'Settings',
+    ),
+  ];
+
   final List<Widget> pages = [
     const HomePage(),
-    const CalendarPage(),
     const WeatherPage(),
+    const CalendarPage(),
+    const TrackingPage(),
     const ExpensePage(),
     BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
       return BlocProvider.value(
@@ -96,29 +136,36 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeData>(
-        builder: (context, selectedTheme) {
-      return AdaptiveTheme(
-        light: ThemeCubit.lightTheme,
-        dark: ThemeCubit.darkTheme,
-        initial: savedThemeMode ?? AdaptiveThemeMode.system,
-        builder: (theme, darkTheme) {
-          return MaterialApp(
-            theme: theme,
-            home: DefaultTabController(
-              length: tabs.length,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                appBar: AppBar(
-                  bottom: TabBar(tabs: tabs),
-                  toolbarHeight: 10,
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, appState) {
+        AppBloc appBloc = context.read<AppBloc>();
+
+        return BlocBuilder<ThemeCubit, ThemeData>(
+            builder: (context, selectedTheme) {
+          return AdaptiveTheme(
+            light: ThemeCubit.lightTheme,
+            dark: ThemeCubit.darkTheme,
+            initial: savedThemeMode ?? AdaptiveThemeMode.system,
+            builder: (theme, darkTheme) {
+              return MaterialApp(
+                theme: theme,
+                home: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: pages[appBloc.state.page],
+                  bottomNavigationBar: BottomNavigationBar(
+                    items: bottomTabs,
+                    currentIndex: appState.page,
+                    selectedItemColor: theme.primaryColor,
+                    unselectedItemColor: Colors.grey,
+                    showUnselectedLabels: true,
+                    onTap: (index) => appBloc.add(AppPageChanged(page: index)),
+                  ),
                 ),
-                body: TabBarView(children: pages),
-              ),
-            ),
+              );
+            },
           );
-        },
-      );
-    });
+        });
+      },
+    );
   }
 }

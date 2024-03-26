@@ -6,11 +6,13 @@ class DailyForecastPopulated extends StatelessWidget {
   const DailyForecastPopulated({
     required this.forecast,
     required this.units,
+    this.onRefresh,
     super.key,
   });
 
   final List<Weather> forecast;
   final TemperatureUnits units;
+  final ValueGetter<Future<void>>? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +26,40 @@ class DailyForecastPopulated extends StatelessWidget {
       );
     }
 
-    return Center(
-      child: Flex(
-        direction: Axis.horizontal,
-        children: forecastWidgets,
-      ),
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      return Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: onRefresh ?? () async => {},
+            child: SingleChildScrollView(
+              physics: onRefresh != null
+                  ? const AlwaysScrollableScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              clipBehavior: Clip.none,
+              child: SizedBox(
+                height: viewportConstraints.maxHeight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PhysicalModel(
+                    color: Theme.of(context).dialogBackgroundColor,
+                    elevation: 10,
+                    shadowColor: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Center(
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        children: forecastWidgets,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      );
+    });
   }
 }
 
@@ -71,11 +101,18 @@ class DailyForecastCell extends StatelessWidget {
                 ),
                 // WEATHER ICON
                 _WeatherIcon(condition: weather.condition),
+                // WEATHER DESCRIPTION
+                Text(
+                  weather.condition.toWeatherDescription,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
                 // HIGH TEXT SPAN
                 RichText(
                   text: TextSpan(
-                      text: "H:  ",
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      text: "high:  ",
+                      style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                       children: [
@@ -90,8 +127,8 @@ class DailyForecastCell extends StatelessWidget {
                 // LOW TEXT SPAN
                 RichText(
                   text: TextSpan(
-                      text: "L:  ",
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      text: "low:  ",
+                      style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                       children: [
@@ -100,6 +137,40 @@ class DailyForecastCell extends StatelessWidget {
                                 temperatureType: "low"),
                             style: theme.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
+                            )),
+                      ]),
+                ),
+                // PRECIPITATION PERCENTAGE TEXT SPAN
+                RichText(
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  text: TextSpan(
+                      text: "precipitation: ",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                            text: "${weather.precipitationProbability}%",
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ]),
+                ),
+                RichText(
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  text: TextSpan(
+                      text: "",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                            text:
+                                "(${weather.precipitation.toStringAsFixed(2)} in)",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w500,
                             )),
                       ]),
                 ),
@@ -115,19 +186,25 @@ class DailyForecastCell extends StatelessWidget {
 class _WeatherIcon extends StatelessWidget {
   const _WeatherIcon({required this.condition});
 
-  static const _iconSize = 75.0;
+  static const _iconSize = 50.0;
 
   final WeatherCondition condition;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: _iconSize,
-      height: _iconSize,
-      child: Icon(
-        condition.toWeatherIcon,
-        size: _iconSize,
-        applyTextScaling: true,
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: SizedBox(
+          width: _iconSize,
+          height: _iconSize,
+          child: Icon(
+            condition.toWeatherIcon,
+            size: _iconSize,
+            applyTextScaling: true,
+          ),
+        ),
       ),
     );
   }

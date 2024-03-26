@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:intl/intl.dart';
 
 part 'weather.g.dart';
-/*
+
 enum WeatherCondition {
   clear,
   @JsonValue("Mainly Clear")
@@ -36,8 +36,9 @@ enum WeatherCondition {
   thunderWithSlightHail,
   thunderWithHeavyHail,
   unknown,
-}*/
+}
 
+/*
 enum WeatherCondition {
   clear,
   rainy,
@@ -45,7 +46,7 @@ enum WeatherCondition {
   snowy,
   unknown,
 }
-
+*/
 enum SoilCondition {
   dry,
   muddy,
@@ -64,11 +65,17 @@ class Weather extends Equatable {
     double? precipitation,
     double? soilMoisture,
     SoilCondition? soilCondition,
+    DateTime? sunrise,
+    DateTime? sunset,
+    int? precipitationProbability,
   })  : precipitation = precipitation ?? 0.0,
         temperatureHigh = temperatureHigh ?? temperature,
         temperatureLow = temperatureLow ?? temperature,
         soilMoisture = soilMoisture ?? 0.0,
-        soilCondition = soilCondition ?? SoilCondition.unknown;
+        soilCondition = soilCondition ?? SoilCondition.unknown,
+        sunrise = sunrise ?? DateTime.now(),
+        sunset = sunset ?? DateTime.now(),
+        precipitationProbability = precipitationProbability ?? 0;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
@@ -85,6 +92,9 @@ class Weather extends Equatable {
   final double precipitation;
   final double soilMoisture;
   final SoilCondition soilCondition;
+  final DateTime sunrise;
+  final DateTime sunset;
+  final int precipitationProbability;
 
   @override
   List<Object> get props => [
@@ -97,6 +107,9 @@ class Weather extends Equatable {
         precipitation,
         soilMoisture,
         soilCondition,
+        sunrise,
+        sunset,
+        precipitationProbability,
       ];
 }
 

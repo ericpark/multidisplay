@@ -25,9 +25,20 @@ HourlyWeather _$HourlyWeatherFromJson(Map<String, dynamic> json) =>
               $checkedConvert('weather_code', (v) => (v as num).toDouble()),
           soil_moisture_0_to_1cm: $checkedConvert(
               'soil_moisture_0_to_1cm', (v) => (v as num).toDouble()),
-          precipitation_probability: $checkedConvert(
-              'precipitation_probability', (v) => (v as num).toDouble()),
+          precipitation_probability:
+              $checkedConvert('precipitation_probability', (v) => v as int),
         );
         return val;
       },
     );
+
+Map<String, dynamic> _$HourlyWeatherToJson(HourlyWeather instance) =>
+    <String, dynamic>{
+      'time': instance.time.toIso8601String(),
+      'temperature_2m': instance.temperature_2m,
+      'apparent_temperature': instance.apparent_temperature,
+      'precipitation': instance.precipitation,
+      'soil_moisture_0_to_1cm': instance.soil_moisture_0_to_1cm,
+      'precipitation_probability': instance.precipitation_probability,
+      'weather_code': instance.weather_code,
+    };

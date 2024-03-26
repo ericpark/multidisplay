@@ -62,6 +62,7 @@ Map<String, dynamic> _$CalendarStateToJson(CalendarState instance) =>
 const _$CalendarStatusEnumMap = {
   CalendarStatus.initial: 'initial',
   CalendarStatus.loading: 'loading',
+  CalendarStatus.transitioning: 'transitioning',
   CalendarStatus.success: 'success',
   CalendarStatus.failure: 'failure',
 };

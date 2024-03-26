@@ -9,7 +9,7 @@ import 'package:weather_repository/weather_repository.dart'
 import '../../helpers/hydrated_bloc.dart';
 
 const weatherLocation = 'London';
-const weatherCondition = weather_repository.WeatherCondition.rainy;
+const weatherCondition = weather_repository.WeatherCondition.rainySlight;
 const weatherTemperature = 9.8;
 
 class MockWeatherRepository extends Mock
@@ -313,7 +313,7 @@ void main() {
             temperatureHigh: Temperature(value: weatherTemperature),
             temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
-            condition: WeatherCondition.rainy,
+            condition: WeatherCondition.rainShowersSlight,
           ),
         ),
         act: (cubit) => cubit.toggleUnits(),
@@ -327,7 +327,7 @@ void main() {
               temperatureHigh: Temperature(value: weatherTemperature),
               temperatureLow: Temperature(value: weatherTemperature),
               lastUpdated: DateTime(2020),
-              condition: WeatherCondition.rainy,
+              condition: WeatherCondition.rainShowersSlight,
             ),
           ),
         ],
@@ -346,7 +346,7 @@ void main() {
             temperatureHigh: Temperature(value: weatherTemperature),
             temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
-            condition: WeatherCondition.rainy,
+            condition: WeatherCondition.rainShowersSlight,
           ),
         ),
         act: (cubit) => cubit.toggleUnits(),
@@ -363,7 +363,7 @@ void main() {
               temperatureHigh: Temperature(value: weatherTemperature),
               temperatureLow: Temperature(value: weatherTemperature),
               lastUpdated: DateTime(2020),
-              condition: WeatherCondition.rainy,
+              condition: WeatherCondition.rainShowersSlight,
             ),
           ),
         ],

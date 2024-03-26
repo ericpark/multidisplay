@@ -46,7 +46,6 @@ class OpenMeteoApiClient {
     if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
 
     final results = locationJson['results'] as List;
-
     if (results.isEmpty) throw LocationNotFoundFailure();
 
     return Location.fromJson(results.first as Map<String, dynamic>);
@@ -96,7 +95,7 @@ class OpenMeteoApiClient {
       'forecast_days': '7',
       'precipitation_unit': 'inch',
       'daily':
-          'weather_code,precipitation_sum,temperature_2m_max,temperature_2m_min'
+          'weather_code,precipitation_sum,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max'
     });
     final weatherResponse = await _httpClient.get(weatherRequest);
 

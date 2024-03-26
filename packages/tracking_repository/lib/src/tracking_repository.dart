@@ -84,6 +84,30 @@ class TrackingRepository {
     }
   }
 
+  Future<TrackingSummary?> getTrackingSummaryById({
+    required String trackingSummaryId,
+  }) async {
+    if (trackingSummaryId == "") {
+      return null;
+    } else {
+      final trackingRef = trackingSummaryDoc(docId: trackingSummaryId);
+
+      TrackingSummary? trackingSummary;
+      try {
+        trackingSummary = await trackingRef.get().then(
+          (doc) {
+            return doc.data();
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
+        return trackingSummary;
+      } catch (err) {
+        print("Error while retrieving tracking summaries: $err");
+        return null;
+      }
+    }
+  }
+
   Future<String> updateTrackingSummary(
       {required String trackingSummaryId, required data}) async {
     if (trackingSummaryId == "") {

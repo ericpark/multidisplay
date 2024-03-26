@@ -40,6 +40,16 @@ class TrackingSectionWidget extends StatelessWidget {
           rightMetric: right,
           color: color,
         );
+      case "fixed_week":
+        color = colorScheme.secondary;
+        return FixedWeekTrackingWidget(
+            id: index,
+            section: data.section,
+            trackingName: data.name,
+            mainMetric: main,
+            leftMetric: left,
+            rightMetric: right,
+            remaining: int.tryParse(main["value"] ?? "") ?? 0);
       default:
         return SimpleTrackingWidget(
           id: index,
@@ -110,7 +120,7 @@ class TrackingSectionWidget extends StatelessWidget {
                   textStyle: sectionHeaderStyle,
                 ),
                 sectionWidgets(
-                    data: state.trackingGroups[sectionName]!.data,
+                    data: state.trackingGroups[sectionName]?.data ?? [],
                     colorScheme: Theme.of(context).colorScheme)
               ],
             );

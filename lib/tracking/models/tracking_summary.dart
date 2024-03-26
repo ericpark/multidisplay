@@ -25,6 +25,7 @@ abstract class TrackingSummary with _$TrackingSummary {
     @Default([]) List<TrackingRecord> records,
     @Default('') String trackingType,
     @DateTimeNullableConverter() DateTime? createdAt,
+    @DateTimeNullableConverter() DateTime? fetchedAt,
   }) = _TrackingSummary;
 
   factory TrackingSummary.fromJson(Map<String, dynamic> json) =>

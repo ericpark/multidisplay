@@ -12,6 +12,7 @@ class TrackingPage extends StatelessWidget {
     //if (trackingCubit.state.status.isInitial) {}
     //if (trackingCubit.state.status.isLoading) {}
     //if (trackingCubit.state.status.isSuccess) {}
+    trackingCubit.refreshTrackingSummariesOnNewDay();
     return BlocBuilder<TrackingCubit, TrackingState>(
         //buildWhen: (previous, current) => previous.events != current.events,
         builder: (context, state) {

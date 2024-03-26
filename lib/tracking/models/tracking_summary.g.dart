@@ -46,6 +46,8 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
               $checkedConvert('tracking_type', (v) => v as String? ?? ''),
           createdAt: $checkedConvert('created_at',
               (v) => const DateTimeNullableConverter().fromJson(v)),
+          fetchedAt: $checkedConvert('fetched_at',
+              (v) => const DateTimeNullableConverter().fromJson(v)),
         );
         return val;
       },
@@ -58,7 +60,8 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
         'rightMetric': 'right_metric',
         'autoUpdate': 'auto_update',
         'trackingType': 'tracking_type',
-        'createdAt': 'created_at'
+        'createdAt': 'created_at',
+        'fetchedAt': 'fetched_at'
       },
     );
 
@@ -80,4 +83,6 @@ Map<String, dynamic> _$$TrackingSummaryImplToJson(
       'tracking_type': instance.trackingType,
       'created_at':
           const DateTimeNullableConverter().toJson(instance.createdAt),
+      'fetched_at':
+          const DateTimeNullableConverter().toJson(instance.fetchedAt),
     };

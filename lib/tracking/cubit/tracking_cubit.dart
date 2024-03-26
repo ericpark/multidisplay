@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:collection/collection.dart';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multidisplay/tracking/tracking.dart';
@@ -11,6 +13,7 @@ part 'tracking_cubit_consecutive.dart';
 part 'tracking_cubit_last_seven.dart';
 part 'tracking_cubit_days_since.dart';
 part 'tracking_cubit_fixed_week.dart';
+part 'tracking_cubit_tracking_widgets.dart';
 
 class TrackingCubit extends HydratedCubit<TrackingState> {
   TrackingCubit(this._trackingRepository)
@@ -30,9 +33,11 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
 
     //await Future.delayed(const Duration(milliseconds: 1));
     sections = state.trackingSections;
+    sections = ["Meeko", "Gym", "Home", "Money", "Health"];
+
     if (sections.isEmpty) {
       //TODO: GET Tracking groups
-      sections = ["Meeko", "Gym", "Home"];
+      sections = ["Meeko", "Gym", "Home", "Money", "Health"];
     }
 
     emit(state.copyWith(trackingSections: sections));
@@ -53,8 +58,17 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
     for (var index = 0; index < trackingSummaries.length; index++) {
       TrackingSummary summary = trackingSummaries[index];
       if (summary.autoUpdate) {
-        summary = await updateTrackingSummaryMetrics(trackingSummary: summary);
-        trackingSummaries[index] = summary;
+        TrackingSummary updatedTrackingSummary =
+            await updateTrackingSummaryMetrics(trackingSummary: summary);
+        trackingSummaries[index] = updatedTrackingSummary;
+        bool updated = !(const DeepCollectionEquality()
+            .equals(updatedTrackingSummary.metrics, summary.metrics));
+
+        if (updated) {
+          await _trackingRepository.updateTrackingSummary(
+              trackingSummaryId: updatedTrackingSummary.id,
+              data: updatedTrackingSummary.toRepository().toJson());
+        }
       }
     }
 
@@ -89,6 +103,53 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
         trackingSummaryId: trackingSummaryId, trackingData: trackingData);
   }
 
+  Future<void> refreshTrackingSummariesOnNewDay() async {
+    //emit(state.copyWith(status: TrackingStatus.loading));
+
+    bool requiresUpdate = false;
+
+    DateTime now = DateTime.now();
+    Map<String, TrackingGroup> updatedTrackingGroups = {
+      ...state.trackingGroups
+    };
+    for (int index = 0; index < state.trackingSections.length; index++) {
+      var section = state.trackingSections[index];
+      List<TrackingSummary> trackingSummaries = [
+        ...(state.trackingGroups[section]?.data ?? [])
+      ];
+
+      if (trackingSummaries.isEmpty) {
+        break;
+      }
+      for (var summary = 0; summary < trackingSummaries.length; summary++) {
+        var trackingSummary = trackingSummaries[summary];
+        if (!trackingSummary.autoUpdate) {
+          break;
+        }
+        bool fetchedToday = trackingSummary.fetchedAt!.year == now.year &&
+            trackingSummary.fetchedAt!.month == now.month &&
+            trackingSummary.fetchedAt!.day == now.day;
+
+        if (!fetchedToday) {
+          requiresUpdate = true;
+          var updatedTrackingSummary = TrackingSummary.fromRepository(
+              (await _trackingRepository.getTrackingSummaryById(
+                  trackingSummaryId: trackingSummary.id))!);
+
+          trackingSummaries[summary] = updatedTrackingSummary;
+        }
+      }
+      updatedTrackingGroups.update(section,
+          (trackingGroup) => trackingGroup.copyWith(data: trackingSummaries));
+    }
+
+    if (requiresUpdate) {
+      emit(state.copyWith(
+          status: TrackingStatus.success,
+          trackingGroups: updatedTrackingGroups));
+    }
+  }
+
   Future<TrackingSummary> updateTrackingSummaryMetrics(
       {required TrackingSummary trackingSummary}) async {
     TrackingSummary updatedTrackingSummary;
@@ -108,6 +169,9 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
             trackingSummary: trackingSummary.copyWith(records: records));
       case "days_ago":
         updatedTrackingSummary = incrementDaysSince(
+            trackingSummary: trackingSummary.copyWith(records: records));
+      case "fixed_week":
+        updatedTrackingSummary = decrementFixedWeekTracker(
             trackingSummary: trackingSummary.copyWith(records: records));
       default:
         updatedTrackingSummary = trackingSummary;

@@ -39,6 +39,8 @@ mixin _$TrackingSummary {
   String get trackingType => throw _privateConstructorUsedError;
   @DateTimeNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  @DateTimeNullableConverter()
+  DateTime? get fetchedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -66,7 +68,8 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       bool autoUpdate,
       List<TrackingRecord> records,
       String trackingType,
-      @DateTimeNullableConverter() DateTime? createdAt});
+      @DateTimeNullableConverter() DateTime? createdAt,
+      @DateTimeNullableConverter() DateTime? fetchedAt});
 }
 
 /// @nodoc
@@ -96,6 +99,7 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? records = null,
     Object? trackingType = null,
     Object? createdAt = freezed,
+    Object? fetchedAt = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -154,6 +158,10 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      fetchedAt: freezed == fetchedAt
+          ? _value.fetchedAt
+          : fetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -180,7 +188,8 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       bool autoUpdate,
       List<TrackingRecord> records,
       String trackingType,
-      @DateTimeNullableConverter() DateTime? createdAt});
+      @DateTimeNullableConverter() DateTime? createdAt,
+      @DateTimeNullableConverter() DateTime? fetchedAt});
 }
 
 /// @nodoc
@@ -208,6 +217,7 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? records = null,
     Object? trackingType = null,
     Object? createdAt = freezed,
+    Object? fetchedAt = freezed,
   }) {
     return _then(_$TrackingSummaryImpl(
       name: null == name
@@ -266,6 +276,10 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      fetchedAt: freezed == fetchedAt
+          ? _value.fetchedAt
+          : fetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -287,7 +301,8 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
       this.autoUpdate = false,
       final List<TrackingRecord> records = const [],
       this.trackingType = '',
-      @DateTimeNullableConverter() this.createdAt})
+      @DateTimeNullableConverter() this.createdAt,
+      @DateTimeNullableConverter() this.fetchedAt})
       : _metrics = metrics,
         _records = records,
         super._();
@@ -346,10 +361,13 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
   @override
   @DateTimeNullableConverter()
   final DateTime? createdAt;
+  @override
+  @DateTimeNullableConverter()
+  final DateTime? fetchedAt;
 
   @override
   String toString() {
-    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, id: $id, ownerId: $ownerId, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, metrics: $metrics, autoUpdate: $autoUpdate, records: $records, trackingType: $trackingType, createdAt: $createdAt)';
+    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, id: $id, ownerId: $ownerId, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, metrics: $metrics, autoUpdate: $autoUpdate, records: $records, trackingType: $trackingType, createdAt: $createdAt, fetchedAt: $fetchedAt)';
   }
 
   @override
@@ -377,7 +395,9 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
             (identical(other.trackingType, trackingType) ||
                 other.trackingType == trackingType) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.fetchedAt, fetchedAt) ||
+                other.fetchedAt == fetchedAt));
   }
 
   @JsonKey(ignore: true)
@@ -397,7 +417,8 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
       autoUpdate,
       const DeepCollectionEquality().hash(_records),
       trackingType,
-      createdAt);
+      createdAt,
+      fetchedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -429,7 +450,8 @@ abstract class _TrackingSummary extends TrackingSummary {
           final bool autoUpdate,
           final List<TrackingRecord> records,
           final String trackingType,
-          @DateTimeNullableConverter() final DateTime? createdAt}) =
+          @DateTimeNullableConverter() final DateTime? createdAt,
+          @DateTimeNullableConverter() final DateTime? fetchedAt}) =
       _$TrackingSummaryImpl;
   const _TrackingSummary._() : super._();
 
@@ -468,6 +490,9 @@ abstract class _TrackingSummary extends TrackingSummary {
   @override
   @DateTimeNullableConverter()
   DateTime? get createdAt;
+  @override
+  @DateTimeNullableConverter()
+  DateTime? get fetchedAt;
   @override
   @JsonKey(ignore: true)
   _$$TrackingSummaryImplCopyWith<_$TrackingSummaryImpl> get copyWith =>

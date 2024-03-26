@@ -31,19 +31,3 @@ TrackingSummary incrementLastSevenTracker(
 
   return updatedTrackingSummary;
 }
-
-int getLastSevenDayCount({required List<TrackingRecord> records}) {
-  final now = DateTime.now();
-  final compareDate =
-      DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7));
-  return records
-      .where((record) => record.date.isAfter(compareDate))
-      .toList()
-      .length;
-}
-
-String getDaysSinceLast({required List<TrackingRecord> records}) =>
-    "${(DateTime.now().difference(records.last.date).inHours / 24).floor()}";
-
-String getLastSevenDayAverage({required int total}) =>
-    (total / 7).toStringAsFixed(2);

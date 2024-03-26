@@ -70,12 +70,3 @@ int getCurrentStreak({required List<TrackingRecord> records}) {
 
   return currentStreak;
 }
-
-String getHighScore({required int prev, required int curr}) =>
-    curr > prev ? "$curr" : "$prev";
-
-String getStreakStartDate(
-        {required int curr, required List<TrackingRecord> records}) =>
-    curr == 0
-        ? "-"
-        : DateFormat("MM/dd/yyyy").format(records[records.length - curr].date);

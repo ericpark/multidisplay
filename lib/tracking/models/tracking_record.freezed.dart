@@ -22,8 +22,10 @@ TrackingRecord _$TrackingRecordFromJson(Map<String, dynamic> json) {
 mixin _$TrackingRecord {
   @DateTimeConverter()
   DateTime get date => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @DateTimeNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +41,9 @@ abstract class $TrackingRecordCopyWith<$Res> {
   @useResult
   $Res call(
       {@DateTimeConverter() DateTime date,
-      @DateTimeNullableConverter() DateTime? createdAt});
+      String id,
+      @DateTimeNullableConverter() DateTime? createdAt,
+      String? description});
 }
 
 /// @nodoc
@@ -56,17 +60,27 @@ class _$TrackingRecordCopyWithImpl<$Res, $Val extends TrackingRecord>
   @override
   $Res call({
     Object? date = null,
+    Object? id = null,
     Object? createdAt = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -81,7 +95,9 @@ abstract class _$$TrackingRecordImplCopyWith<$Res>
   @useResult
   $Res call(
       {@DateTimeConverter() DateTime date,
-      @DateTimeNullableConverter() DateTime? createdAt});
+      String id,
+      @DateTimeNullableConverter() DateTime? createdAt,
+      String? description});
 }
 
 /// @nodoc
@@ -96,17 +112,27 @@ class __$$TrackingRecordImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? date = null,
+    Object? id = null,
     Object? createdAt = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$TrackingRecordImpl(
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -116,7 +142,9 @@ class __$$TrackingRecordImplCopyWithImpl<$Res>
 class _$TrackingRecordImpl extends _TrackingRecord {
   _$TrackingRecordImpl(
       {@DateTimeConverter() required this.date,
-      @DateTimeNullableConverter() this.createdAt})
+      this.id = '',
+      @DateTimeNullableConverter() this.createdAt,
+      this.description})
       : super._();
 
   factory _$TrackingRecordImpl.fromJson(Map<String, dynamic> json) =>
@@ -126,12 +154,17 @@ class _$TrackingRecordImpl extends _TrackingRecord {
   @DateTimeConverter()
   final DateTime date;
   @override
+  @JsonKey()
+  final String id;
+  @override
   @DateTimeNullableConverter()
   final DateTime? createdAt;
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'TrackingRecord(date: $date, createdAt: $createdAt)';
+    return 'TrackingRecord(date: $date, id: $id, createdAt: $createdAt, description: $description)';
   }
 
   @override
@@ -140,13 +173,17 @@ class _$TrackingRecordImpl extends _TrackingRecord {
         (other.runtimeType == runtimeType &&
             other is _$TrackingRecordImpl &&
             (identical(other.date, date) || other.date == date) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, date, createdAt);
+  int get hashCode =>
+      Object.hash(runtimeType, date, id, createdAt, description);
 
   @JsonKey(ignore: true)
   @override
@@ -165,9 +202,10 @@ class _$TrackingRecordImpl extends _TrackingRecord {
 
 abstract class _TrackingRecord extends TrackingRecord {
   factory _TrackingRecord(
-          {@DateTimeConverter() required final DateTime date,
-          @DateTimeNullableConverter() final DateTime? createdAt}) =
-      _$TrackingRecordImpl;
+      {@DateTimeConverter() required final DateTime date,
+      final String id,
+      @DateTimeNullableConverter() final DateTime? createdAt,
+      final String? description}) = _$TrackingRecordImpl;
   _TrackingRecord._() : super._();
 
   factory _TrackingRecord.fromJson(Map<String, dynamic> json) =
@@ -177,8 +215,12 @@ abstract class _TrackingRecord extends TrackingRecord {
   @DateTimeConverter()
   DateTime get date;
   @override
+  String get id;
+  @override
   @DateTimeNullableConverter()
   DateTime? get createdAt;
+  @override
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$TrackingRecordImplCopyWith<_$TrackingRecordImpl> get copyWith =>

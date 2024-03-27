@@ -12,7 +12,9 @@ class TrackingRecord with _$TrackingRecord {
 
   factory TrackingRecord({
     @DateTimeConverter() required DateTime date,
+    @Default('') String id,
     @DateTimeNullableConverter() DateTime? createdAt,
+    String? description,
   }) = _TrackingRecord;
 
   factory TrackingRecord.fromJson(Map<String, dynamic> json) =>

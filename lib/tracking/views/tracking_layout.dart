@@ -21,9 +21,13 @@ class TrackingLayout extends StatelessWidget {
       builder: (context, state) {
         TrackingCubit trackingCubit = context.read<TrackingCubit>();
         List<Widget> sections = getSections(state.trackingSections);
-        //sections = state.trackingSections;
         return ReorderableListView(
           padding: const EdgeInsets.symmetric(horizontal: 0),
+          onReorder: (int oldIndex, int newIndex) async {
+            await trackingCubit.reorderSections(
+                oldIndex: oldIndex, newIndex: newIndex);
+          },
+          buildDefaultDragHandles: trackingCubit.state.reorderable,
           children: <Widget>[
             for (int index = 0; index < sections.length; index += 1)
               Padding(
@@ -37,10 +41,6 @@ class TrackingLayout extends StatelessWidget {
                     child: ListTile(title: sections[index])),
               ),
           ],
-          onReorder: (int oldIndex, int newIndex) async {
-            await trackingCubit.reorderSections(
-                oldIndex: oldIndex, newIndex: newIndex);
-          },
         );
       },
     );

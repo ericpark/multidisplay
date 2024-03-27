@@ -24,6 +24,7 @@ mixin _$TrackingState {
   Map<String, TrackingGroup> get trackingGroups =>
       throw _privateConstructorUsedError;
   List<String> get trackingSections => throw _privateConstructorUsedError;
+  bool get reorderable => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,7 +41,8 @@ abstract class $TrackingStateCopyWith<$Res> {
   $Res call(
       {TrackingStatus status,
       Map<String, TrackingGroup> trackingGroups,
-      List<String> trackingSections});
+      List<String> trackingSections,
+      bool reorderable});
 }
 
 /// @nodoc
@@ -59,6 +61,7 @@ class _$TrackingStateCopyWithImpl<$Res, $Val extends TrackingState>
     Object? status = null,
     Object? trackingGroups = null,
     Object? trackingSections = null,
+    Object? reorderable = null,
   }) {
     return _then(_value.copyWith(
       status: null == status
@@ -73,6 +76,10 @@ class _$TrackingStateCopyWithImpl<$Res, $Val extends TrackingState>
           ? _value.trackingSections
           : trackingSections // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      reorderable: null == reorderable
+          ? _value.reorderable
+          : reorderable // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -88,7 +95,8 @@ abstract class _$$TrackingStateImplCopyWith<$Res>
   $Res call(
       {TrackingStatus status,
       Map<String, TrackingGroup> trackingGroups,
-      List<String> trackingSections});
+      List<String> trackingSections,
+      bool reorderable});
 }
 
 /// @nodoc
@@ -105,6 +113,7 @@ class __$$TrackingStateImplCopyWithImpl<$Res>
     Object? status = null,
     Object? trackingGroups = null,
     Object? trackingSections = null,
+    Object? reorderable = null,
   }) {
     return _then(_$TrackingStateImpl(
       status: null == status
@@ -119,6 +128,10 @@ class __$$TrackingStateImplCopyWithImpl<$Res>
           ? _value._trackingSections
           : trackingSections // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      reorderable: null == reorderable
+          ? _value.reorderable
+          : reorderable // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -129,7 +142,8 @@ class _$TrackingStateImpl implements _TrackingState {
   const _$TrackingStateImpl(
       {this.status = TrackingStatus.initial,
       final Map<String, TrackingGroup> trackingGroups = const {},
-      final List<String> trackingSections = const []})
+      final List<String> trackingSections = const [],
+      this.reorderable = false})
       : _trackingGroups = trackingGroups,
         _trackingSections = trackingSections;
 
@@ -159,8 +173,12 @@ class _$TrackingStateImpl implements _TrackingState {
   }
 
   @override
+  @JsonKey()
+  final bool reorderable;
+
+  @override
   String toString() {
-    return 'TrackingState(status: $status, trackingGroups: $trackingGroups, trackingSections: $trackingSections)';
+    return 'TrackingState(status: $status, trackingGroups: $trackingGroups, trackingSections: $trackingSections, reorderable: $reorderable)';
   }
 
   @override
@@ -172,7 +190,9 @@ class _$TrackingStateImpl implements _TrackingState {
             const DeepCollectionEquality()
                 .equals(other._trackingGroups, _trackingGroups) &&
             const DeepCollectionEquality()
-                .equals(other._trackingSections, _trackingSections));
+                .equals(other._trackingSections, _trackingSections) &&
+            (identical(other.reorderable, reorderable) ||
+                other.reorderable == reorderable));
   }
 
   @JsonKey(ignore: true)
@@ -181,7 +201,8 @@ class _$TrackingStateImpl implements _TrackingState {
       runtimeType,
       status,
       const DeepCollectionEquality().hash(_trackingGroups),
-      const DeepCollectionEquality().hash(_trackingSections));
+      const DeepCollectionEquality().hash(_trackingSections),
+      reorderable);
 
   @JsonKey(ignore: true)
   @override
@@ -201,7 +222,8 @@ abstract class _TrackingState implements TrackingState {
   const factory _TrackingState(
       {final TrackingStatus status,
       final Map<String, TrackingGroup> trackingGroups,
-      final List<String> trackingSections}) = _$TrackingStateImpl;
+      final List<String> trackingSections,
+      final bool reorderable}) = _$TrackingStateImpl;
 
   factory _TrackingState.fromJson(Map<String, dynamic> json) =
       _$TrackingStateImpl.fromJson;
@@ -212,6 +234,8 @@ abstract class _TrackingState implements TrackingState {
   Map<String, TrackingGroup> get trackingGroups;
   @override
   List<String> get trackingSections;
+  @override
+  bool get reorderable;
   @override
   @JsonKey(ignore: true)
   _$$TrackingStateImplCopyWith<_$TrackingStateImpl> get copyWith =>

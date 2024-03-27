@@ -12,9 +12,7 @@ import 'package:multidisplay/theme/theme.dart';
 
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/calendar/calendar.dart';
-import 'package:multidisplay/expenses/expenses_page.dart';
 import 'package:multidisplay/weather/weather.dart';
-import 'package:multidisplay/settings/settings.dart';
 import 'package:multidisplay/timer/timer.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -78,59 +76,8 @@ class App extends StatelessWidget {
 }
 
 class AppView extends StatelessWidget {
-  AppView({super.key, AdaptiveThemeMode? savedThemeMode})
+  const AppView({super.key, AdaptiveThemeMode? savedThemeMode})
       : savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
-
-  final List<Widget> tabs = const [
-    Tab(text: "Home"),
-    Tab(text: "Weather"),
-    Tab(text: "Calendar"),
-    Tab(text: "Tracking"),
-    Tab(text: "Expenses"),
-    Tab(text: "Settings"),
-  ];
-
-  final List<BottomNavigationBarItem> bottomTabs =
-      const <BottomNavigationBarItem>[
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.wb_sunny),
-      label: 'Weather',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.calendar_today),
-      label: 'Calendar',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.timeline),
-      label: 'Tracking',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.attach_money),
-      label: 'Expenses',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.settings),
-      label: 'Settings',
-    ),
-  ];
-
-  final List<Widget> pages = [
-    const HomePage(),
-    const WeatherPage(),
-    const CalendarPage(),
-    const TrackingPage(),
-    const ExpensePage(),
-    BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
-      return BlocProvider.value(
-        value: context.read<WeatherCubit>(),
-        child: const SettingsPage(),
-      );
-    }),
-  ];
 
   final AdaptiveThemeMode? savedThemeMode;
 

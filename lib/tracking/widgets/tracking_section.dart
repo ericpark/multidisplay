@@ -10,7 +10,8 @@ class TrackingSectionWidget extends StatelessWidget {
   Widget getTrackingWidget(
       {required int index,
       required TrackingSummary data,
-      required ColorScheme colorScheme}) {
+      required ColorScheme colorScheme,
+      required TrackingCubit trackingCubit}) {
     final main =
         data.metrics[data.mainMetric] ?? {"display_name": "", "value": ""};
     final left = data.metrics[data.leftMetric];
@@ -28,6 +29,9 @@ class TrackingSectionWidget extends StatelessWidget {
           leftMetric: left,
           rightMetric: right,
           lastDate: data.records.last.date,
+          onDoubleTap: () async => await trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
+          //dialogChoices: ["Leg", "chest"],
         );
       case "last_seven":
         color = colorScheme.secondary;
@@ -39,17 +43,22 @@ class TrackingSectionWidget extends StatelessWidget {
           leftMetric: left,
           rightMetric: right,
           color: color,
+          onDoubleTap: () async => await trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
         );
       case "fixed_week":
         color = colorScheme.secondary;
         return FixedWeekTrackingWidget(
-            id: index,
-            section: data.section,
-            trackingName: data.name,
-            mainMetric: main,
-            leftMetric: left,
-            rightMetric: right,
-            remaining: int.tryParse(main["value"] ?? "") ?? 0);
+          id: index,
+          section: data.section,
+          trackingName: data.name,
+          mainMetric: main,
+          leftMetric: left,
+          rightMetric: right,
+          remaining: int.tryParse(main["value"] ?? "") ?? 0,
+          onDoubleTap: () => trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
+        );
       default:
         return SimpleTrackingWidget(
           id: index,
@@ -58,6 +67,8 @@ class TrackingSectionWidget extends StatelessWidget {
           mainMetric: main,
           leftMetric: left,
           rightMetric: right,
+          onDoubleTap: () async => await trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
         );
     }
   }
@@ -65,6 +76,7 @@ class TrackingSectionWidget extends StatelessWidget {
   Widget sectionHeader({
     required String sectionHeader,
     required TextStyle? textStyle,
+    required bool reorderable,
   }) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -72,19 +84,24 @@ class TrackingSectionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(sectionHeader, style: textStyle),
-          const Icon(Icons.menu),
+          reorderable ? const Icon(Icons.menu) : Container(),
         ],
       ),
     );
   }
 
   Widget sectionWidgets(
-      {required List<TrackingSummary> data, required ColorScheme colorScheme}) {
+      {required List<TrackingSummary> data,
+      required ColorScheme colorScheme,
+      required TrackingCubit trackingCubit}) {
     List<Widget> trackingWidgets = [];
 
     for (int i = 0; i < data.length; i++) {
-      trackingWidgets.add(
-          getTrackingWidget(index: i, data: data[i], colorScheme: colorScheme));
+      trackingWidgets.add(getTrackingWidget(
+          index: i,
+          data: data[i],
+          colorScheme: colorScheme,
+          trackingCubit: trackingCubit));
     }
     return SizedBox(
       height: 200,
@@ -104,6 +121,7 @@ class TrackingSectionWidget extends StatelessWidget {
     final sectionHeaderStyle = Theme.of(context).textTheme.titleLarge;
     return BlocBuilder<TrackingCubit, TrackingState>(
       builder: (context, state) {
+        TrackingCubit trackingCubit = context.read<TrackingCubit>();
         switch (state.status) {
           case TrackingStatus.initial:
             return const TrackingEmpty();
@@ -116,12 +134,13 @@ class TrackingSectionWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 sectionHeader(
-                  sectionHeader: sectionHeaderString,
-                  textStyle: sectionHeaderStyle,
-                ),
+                    sectionHeader: sectionHeaderString,
+                    textStyle: sectionHeaderStyle,
+                    reorderable: state.reorderable),
                 sectionWidgets(
                     data: state.trackingGroups[sectionName]?.data ?? [],
-                    colorScheme: Theme.of(context).colorScheme)
+                    colorScheme: Theme.of(context).colorScheme,
+                    trackingCubit: trackingCubit)
               ],
             );
           case TrackingStatus.failure:

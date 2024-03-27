@@ -10,6 +10,7 @@ class SimpleTrackingWidget extends StatelessWidget {
     required this.section,
     required this.trackingName,
     required this.mainMetric,
+    required this.onDoubleTap,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     this.color,
@@ -24,13 +25,15 @@ class SimpleTrackingWidget extends StatelessWidget {
   final Map<String, String> leftMetric;
   final Map<String, String> rightMetric;
   final Color? color;
-  void _handleDoubleTap({required TrackingCubit trackingCubit}) {
+  final void Function()? onDoubleTap;
+
+  void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
     trackingCubit.handleWidgetDoubleTap(section: section, index: id);
   }
 
-  void _handleLongPress(buildContext, widget) async {
+  /*void _handleLongPress(buildContext, widget) async {
     await showDismissableModal(buildContext, widget);
-  }
+  }*/
 
   void _handleOnTap(buildContext, widget) async {
     await showDismissableModal(buildContext, widget);
@@ -64,8 +67,17 @@ class SimpleTrackingWidget extends StatelessWidget {
     final String rightValue = rightMetric["value"] ?? "-";
 
     return GestureDetector(
-      onDoubleTap: () => _handleDoubleTap(trackingCubit: trackingCubit),
-      onLongPress: () => _handleLongPress(context, Container()),
+      onDoubleTap: () {
+        if (onDoubleTap != null) {
+          onDoubleTap!();
+        } else {
+          _handleDefaultDoubleTap(trackingCubit: trackingCubit);
+        }
+      },
+      onLongPress: () {
+        _handleOnTap(context, TrackingDetailsView(id: id, section: section));
+        trackingCubit.transitionUI();
+      },
       onTap: () =>
           _handleOnTap(context, TrackingDetailsView(id: id, section: section)),
       child: Padding(
@@ -76,6 +88,7 @@ class SimpleTrackingWidget extends StatelessWidget {
           shadowColor: Colors.black,
           borderRadius: BorderRadius.circular(10),
           child: SizedBox(
+            //TODO: Make this dynamic
             height: 200,
             width: 200,
             child: Column(

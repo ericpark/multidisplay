@@ -32,6 +32,8 @@ _$TrackingStateImpl _$$TrackingStateImplFromJson(Map<String, dynamic> json) =>
               (v) =>
                   (v as List<dynamic>?)?.map((e) => e as String).toList() ??
                   const []),
+          reorderable:
+              $checkedConvert('reorderable', (v) => v as bool? ?? false),
         );
         return val;
       },
@@ -47,6 +49,7 @@ Map<String, dynamic> _$$TrackingStateImplToJson(_$TrackingStateImpl instance) =>
       'tracking_groups':
           instance.trackingGroups.map((k, e) => MapEntry(k, e.toJson())),
       'tracking_sections': instance.trackingSections,
+      'reorderable': instance.reorderable,
     };
 
 const _$TrackingStatusEnumMap = {

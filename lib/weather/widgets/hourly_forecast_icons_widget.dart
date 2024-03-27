@@ -17,6 +17,7 @@ class HourlyForecastIconsWidget extends StatelessWidget {
 
     for (var i = 0; i < filterHours.length; i++) {
       // Show an icon for every three hours and the last one for a 24 hour period
+      //TODO: dynamically determine the number of hours based on width
       if ((i % 3 == 0) || (i == filterHours.length - 1)) {
         forecastWidgets.add(
           Expanded(

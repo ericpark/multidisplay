@@ -150,9 +150,10 @@ class TrackingRepository {
               TrackingRecord data = docSnapshot.data();
               if (data.id == null || data.id == "") {
                 // If ID is empty, update it in firebase
-                /*updateTrackingSummary(
-                    trackingSummaryId: docSnapshot.id,
-                    data: {"id": docSnapshot.id});*/
+                updateTrackingRecord(
+                    trackingSummaryId: trackingSummaryId,
+                    trackingRecordId: docSnapshot.id,
+                    data: {"id": docSnapshot.id});
                 data = data.copyWith(id: docSnapshot.id);
               }
 
@@ -183,7 +184,71 @@ class TrackingRepository {
       final trackingRecordId = await trackingRecordsCollectionRef
           .add(trackingData)
           .then((documentSnapshot) => documentSnapshot.id);
+      updateTrackingRecord(
+          trackingSummaryId: trackingSummaryId,
+          trackingRecordId: trackingRecordId,
+          data: {"id": trackingRecordId});
       return trackingData.copyWith(id: trackingRecordId);
+    }
+  }
+
+  Future<TrackingRecord?> updateTrackingRecord({
+    required String trackingSummaryId,
+    required String trackingRecordId,
+    required data,
+  }) async {
+    if (trackingSummaryId == "") {
+      return null;
+    }
+    if (trackingRecordId == "") {
+      return null;
+    } else {
+      final trackingRecRef = trackingRecordDoc(
+          path: "tracking/$trackingSummaryId/records", docId: trackingRecordId);
+
+      final query = trackingRecRef;
+      try {
+        return await query.update(data).then(
+          (_) async {
+            final trackingRecord = await query.get().then((doc) {
+              return doc.data();
+            });
+            return trackingRecord;
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
+      } catch (err) {
+        print("Error while retrieving tracking summaries: $err");
+        return null;
+      }
+    }
+  }
+
+  Future<String> deleteTrackingRecord({
+    required String trackingSummaryId,
+    required String trackingRecordId,
+  }) async {
+    if (trackingSummaryId == "") {
+      return "Missing Tracking Summary Id";
+    }
+    if (trackingRecordId == "") {
+      return "Missing Tracking Record Id";
+    } else {
+      final trackingRecRef = trackingRecordDoc(
+          path: "tracking/$trackingSummaryId/records", docId: trackingRecordId);
+
+      final query = trackingRecRef;
+      try {
+        return await query.delete().then(
+          (querySnapshot) {
+            return "Successfully deleted";
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
+      } catch (err) {
+        print("Error while retrieving tracking summaries: $err");
+        return "Error: $err";
+      }
     }
   }
 }

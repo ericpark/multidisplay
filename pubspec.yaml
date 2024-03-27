@@ -60,6 +60,12 @@ dependencies:
   flutter_form_bloc: ^0.31.0
   adaptive_theme: ^3.6.0
   freezed_annotation: ^2.4.1
+  flutter_calendar_heatmap: ^0.1.1
+  adaptive_dialog: ^2.1.0
+  shimmer: ^3.0.0
+  expandable_widgets: ^1.0.3+1
+  google_fonts: ^4.0.4
+
   
 dev_dependencies:
   flutter_test:
@@ -121,3 +127,40 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+   - family: RobotoMono
+     fonts:
+      - asset: assets/fonts/Roboto_Mono/static/RobotoMono-Regular.ttf     
+   - family: SFMono
+     fonts:
+      - asset: assets/fonts/SF Mono/SF-Mono-Light.otf
+        weight: 100 
+      - asset: assets/fonts/SF Mono/SF-Mono-LightItalic.otf
+        weight: 100 
+        style: italic 
+      - asset: assets/fonts/SF Mono/SF-Mono-Medium.otf 
+        weight: 400
+      - asset: assets/fonts/SF Mono/SF-Mono-MediumItalic.otf
+        weight: 400
+        style: italic
+      - asset: assets/fonts/SF Mono/SF-Mono-Regular.otf 
+        weight: 500
+      - asset: assets/fonts/SF Mono/SF-Mono-RegularItalic.otf 
+        weight: 500
+        style: italic
+      - asset: assets/fonts/SF Mono/SF-Mono-Semibold.otf 
+        weight: 600
+      - asset: assets/fonts/SF Mono/SF-Mono-SemiboldItalic.otf
+        weight: 600
+        style: italic
+      - asset: assets/fonts/SF Mono/SF-Mono-Bold.otf 
+        weight: 700
+      - asset: assets/fonts/SF Mono/SF-Mono-BoldItalic.otf 
+        weight: 700
+        style: italic
+      - asset: assets/fonts/SF Mono/SF-Mono-Heavy.otf 
+        weight: 900
+      - asset: assets/fonts/SF Mono/SF-Mono-HeavyItalic.otf 
+        weight: 900
+        style: italic

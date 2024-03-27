@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:multidisplay/app/widgets/placeholders.dart'
+    show WidgetPlaceholder, TitlePlaceholder;
+import 'package:shimmer/shimmer.dart';
 
 class TrackingLoading extends StatelessWidget {
   const TrackingLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.track_changes),
-          Text(
-            'Loading...',
-            style: theme.textTheme.headlineSmall,
+    return Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        enabled: true,
+        child: const SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              TitlePlaceholder(
+                width: 100,
+              ),
+              Row(
+                children: [
+                  WidgetPlaceholder(),
+                  WidgetPlaceholder(),
+                  WidgetPlaceholder(),
+                  WidgetPlaceholder(),
+                ],
+              ),
+            ],
           ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

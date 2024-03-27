@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class FixedWeekTrackingWidget extends StatelessWidget {
   const FixedWeekTrackingWidget({
@@ -9,6 +11,7 @@ class FixedWeekTrackingWidget extends StatelessWidget {
     required this.trackingName,
     required this.mainMetric,
     required this.remaining,
+    required this.onDoubleTap,
     List<int>? threshold,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
@@ -24,6 +27,34 @@ class FixedWeekTrackingWidget extends StatelessWidget {
   final Map<String, String> leftMetric;
   final Map<String, String> rightMetric;
   final List<int> threshold;
+  final void Function()? onDoubleTap;
+
+  void _showDefaultDialog(BuildContext context) async {
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: 'Track Event',
+      message: 'Do you want to add this event?',
+      okLabel: 'Yes',
+      cancelLabel: 'No',
+      isDestructiveAction: false,
+      builder: (context, child) => Theme(
+        data: ThemeData(
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(foregroundColor: Colors.blue),
+          ),
+
+          // If this is commented out, the color for cupertino will be default blue/red.
+          cupertinoOverrideTheme: const CupertinoThemeData(
+            primaryColor: CupertinoColors.systemBlue,
+          ),
+        ),
+        child: child,
+      ),
+    );
+    if (result == OkCancelResult.ok) {
+      onDoubleTap!();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +76,7 @@ class FixedWeekTrackingWidget extends StatelessWidget {
       leftMetric: leftMetric,
       rightMetric: rightMetric,
       color: color,
+      onDoubleTap: () => _showDefaultDialog(context),
     );
   }
 }

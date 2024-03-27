@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:collection/collection.dart';
 
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/intl.dart';
@@ -95,28 +94,36 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
     return trackingGroup.data[index];
   }
 
-  Future<void> addTrackingRecord(
+  Future<TrackingRecord> addTrackingRecord(
       {required String trackingSummaryId, DateTime? date}) async {
     final newRecord = TrackingRecord(date: date ?? DateTime.now());
     final trackingData = newRecord.toRepository();
-    await _trackingRepository.addTrackingRecordsForTrackingSummary(
-        trackingSummaryId: trackingSummaryId, trackingData: trackingData);
+    final createdRecord =
+        await _trackingRepository.addTrackingRecordsForTrackingSummary(
+            trackingSummaryId: trackingSummaryId, trackingData: trackingData);
+    return createdRecord != null
+        ? TrackingRecord.fromJson(createdRecord.toJson())
+        : newRecord; //TODO: Does this work?
   }
 
   Future<void> refreshTrackingSummariesOnNewDay() async {
     //emit(state.copyWith(status: TrackingStatus.loading));
-
     bool requiresUpdate = false;
 
     DateTime now = DateTime.now();
     Map<String, TrackingGroup> updatedTrackingGroups = {
       ...state.trackingGroups
     };
+    //print("$updatedTrackingGroups");
+
     for (int index = 0; index < state.trackingSections.length; index++) {
       var section = state.trackingSections[index];
+      // print("$section");
+
       List<TrackingSummary> trackingSummaries = [
         ...(state.trackingGroups[section]?.data ?? [])
       ];
+      //print("$trackingSummaries");
 
       if (trackingSummaries.isEmpty) {
         break;
@@ -219,6 +226,84 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
         status: TrackingStatus.success, trackingGroups: updatedTrackingGroups));
   }
 
+  Future<void> deleteTrackingRecord({
+    required String trackingSummaryId,
+    required String trackingRecordId,
+    required String section,
+  }) async {
+    if (trackingSummaryId == "") {
+      return;
+    }
+    if (trackingRecordId == "") {
+      return;
+    }
+    _trackingRepository.deleteTrackingRecord(
+        trackingSummaryId: trackingSummaryId,
+        trackingRecordId: trackingRecordId);
+
+    Map<String, TrackingGroup> updatedTrackingGroups = {
+      ...state.trackingGroups
+    };
+    updatedTrackingGroups.update(
+        section,
+        (trackingGroup) => trackingGroup.copyWith(
+            data: trackingGroup.data
+                .where((record) => record.id != trackingRecordId)
+                .toList()));
+    emit(state.copyWith(
+        status: TrackingStatus.success, trackingGroups: updatedTrackingGroups));
+  }
+
+  Future<void> updateTrackingRecord({
+    required TrackingSummary trackingSummary,
+    required TrackingRecord trackingRecord,
+    required data,
+  }) async {
+    if (trackingSummary.id == "") {
+      return;
+    }
+    if (trackingRecord.id == "") {
+      return;
+    }
+    final updated = await _trackingRepository.updateTrackingRecord(
+      trackingSummaryId: trackingSummary.id,
+      trackingRecordId: trackingRecord.id,
+      data: data,
+    );
+    if (updated == null) {
+      return;
+    }
+    Map<String, TrackingGroup> updatedTrackingGroups = {
+      ...state.trackingGroups
+    };
+    TrackingGroup updatedTrackingGroup =
+        updatedTrackingGroups[trackingSummary.section]!;
+
+    TrackingSummary updatedTrackingSummary = updatedTrackingGroup.data
+        .where((summary) => summary.id == trackingSummary.id)
+        .toList()[0];
+
+    List<TrackingRecord> updatedTrackingRecords = trackingSummary.records
+        .where((record) => record.id != trackingRecord.id)
+        .toList()
+      ..add(TrackingRecord.fromJson(updated.toJson()))
+      ..sort((a, b) => a.date.isBefore(b.date) ? -1 : 1);
+
+    updatedTrackingSummary =
+        updatedTrackingSummary.copyWith(records: updatedTrackingRecords);
+
+    List<TrackingSummary> updatedTrackingSummaries = updatedTrackingGroup.data
+        .where((summary) => summary.id != trackingSummary.id)
+        .toList()
+      ..add(updatedTrackingSummary);
+    updatedTrackingGroups.update(
+        trackingSummary.section,
+        (trackingGroup) =>
+            trackingGroup.copyWith(data: [...updatedTrackingSummaries]));
+    emit(state.copyWith(
+        status: TrackingStatus.success, trackingGroups: updatedTrackingGroups));
+  }
+
   Future<void> reorderSections({
     required int oldIndex,
     required int newIndex,
@@ -274,6 +359,24 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
 
     emit(state.copyWith(
         status: TrackingStatus.success, trackingSections: newOrder));
+  }
+
+  Future<void> toggleReorder() async {
+    emit(state.copyWith(reorderable: !state.reorderable));
+  }
+
+  Future<void> transitionUI() async {
+    emit(state.copyWith(status: TrackingStatus.transitioning));
+    await Future.delayed(const Duration(milliseconds: 500));
+    emit(state.copyWith(status: TrackingStatus.success));
+  }
+
+  @override
+  void onChange(Change<TrackingState> change) {
+    // TODO: implement onChange
+    super.onChange(change);
+    print(
+        "${change.currentState.status} => ${change.nextState.status} ${change.hashCode}");
   }
 
   @override

@@ -17,7 +17,7 @@ class TrackingRecord with _$TrackingRecord {
     //required String name,
     String? id,
     //@Default('') String location,
-    //@Default('') String description,
+    String? description,
     //@Default(0) int count,
     //@Default(true) bool? active,
     @DateTimeNullableConverter() DateTime? createdAt,

@@ -25,8 +25,8 @@ mixin _$TrackingRecord {
       throw _privateConstructorUsedError; //required String name,
   String? get id =>
       throw _privateConstructorUsedError; //@Default('') String location,
-//@Default('') String description,
-//@Default(0) int count,
+  String? get description =>
+      throw _privateConstructorUsedError; //@Default(0) int count,
 //@Default(true) bool? active,
   @DateTimeNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -46,6 +46,7 @@ abstract class $TrackingRecordCopyWith<$Res> {
   $Res call(
       {@DateTimeConverter() DateTime date,
       String? id,
+      String? description,
       @DateTimeNullableConverter() DateTime? createdAt});
 }
 
@@ -64,6 +65,7 @@ class _$TrackingRecordCopyWithImpl<$Res, $Val extends TrackingRecord>
   $Res call({
     Object? date = null,
     Object? id = freezed,
+    Object? description = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -74,6 +76,10 @@ class _$TrackingRecordCopyWithImpl<$Res, $Val extends TrackingRecord>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -94,6 +100,7 @@ abstract class _$$TrackingRecordImplCopyWith<$Res>
   $Res call(
       {@DateTimeConverter() DateTime date,
       String? id,
+      String? description,
       @DateTimeNullableConverter() DateTime? createdAt});
 }
 
@@ -110,6 +117,7 @@ class __$$TrackingRecordImplCopyWithImpl<$Res>
   $Res call({
     Object? date = null,
     Object? id = freezed,
+    Object? description = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_$TrackingRecordImpl(
@@ -120,6 +128,10 @@ class __$$TrackingRecordImplCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -135,6 +147,7 @@ class _$TrackingRecordImpl implements _TrackingRecord {
   _$TrackingRecordImpl(
       {@DateTimeConverter() required this.date,
       this.id,
+      this.description,
       @DateTimeNullableConverter() this.createdAt});
 
   factory _$TrackingRecordImpl.fromJson(Map<String, dynamic> json) =>
@@ -147,7 +160,8 @@ class _$TrackingRecordImpl implements _TrackingRecord {
   @override
   final String? id;
 //@Default('') String location,
-//@Default('') String description,
+  @override
+  final String? description;
 //@Default(0) int count,
 //@Default(true) bool? active,
   @override
@@ -156,7 +170,7 @@ class _$TrackingRecordImpl implements _TrackingRecord {
 
   @override
   String toString() {
-    return 'TrackingRecord(date: $date, id: $id, createdAt: $createdAt)';
+    return 'TrackingRecord(date: $date, id: $id, description: $description, createdAt: $createdAt)';
   }
 
   @override
@@ -166,13 +180,16 @@ class _$TrackingRecordImpl implements _TrackingRecord {
             other is _$TrackingRecordImpl &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, date, id, createdAt);
+  int get hashCode =>
+      Object.hash(runtimeType, date, id, description, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -193,6 +210,7 @@ abstract class _TrackingRecord implements TrackingRecord {
   factory _TrackingRecord(
           {@DateTimeConverter() required final DateTime date,
           final String? id,
+          final String? description,
           @DateTimeNullableConverter() final DateTime? createdAt}) =
       _$TrackingRecordImpl;
 
@@ -205,8 +223,8 @@ abstract class _TrackingRecord implements TrackingRecord {
   @override //required String name,
   String? get id;
   @override //@Default('') String location,
-//@Default('') String description,
-//@Default(0) int count,
+  String? get description;
+  @override //@Default(0) int count,
 //@Default(true) bool? active,
   @DateTimeNullableConverter()
   DateTime? get createdAt;

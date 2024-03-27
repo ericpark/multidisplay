@@ -17,6 +17,7 @@ _$TrackingRecordImpl _$$TrackingRecordImplFromJson(Map<String, dynamic> json) =>
           date: $checkedConvert(
               'date', (v) => const DateTimeConverter().fromJson(v)),
           id: $checkedConvert('id', (v) => v as String?),
+          description: $checkedConvert('description', (v) => v as String?),
           createdAt: $checkedConvert('created_at',
               (v) => const DateTimeNullableConverter().fromJson(v)),
         );
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$TrackingRecordImplToJson(
     <String, dynamic>{
       'date': const DateTimeConverter().toJson(instance.date),
       'id': instance.id,
+      'description': instance.description,
       'created_at':
           const DateTimeNullableConverter().toJson(instance.createdAt),
     };

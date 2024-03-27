@@ -6,7 +6,6 @@ Future<dynamic> showDismissableModal(
     BuildContext buildContext, Widget widget) async {
   CalendarCubit cubit = buildContext.read<CalendarCubit>();
   cubit.startLoading();
-
   await showCupertinoModalPopup(
     barrierDismissible: true,
     context: buildContext,

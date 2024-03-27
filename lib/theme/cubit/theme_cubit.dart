@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const primaryColor = Color(0xFFC3EFF2);
 const secondaryColor = Color(0xFF6AD996);
@@ -21,7 +22,12 @@ class ThemeCubit extends HydratedCubit<ThemeData> {
       surfaceTint: tealGreenColor,
     ),
     useMaterial3: true,
-  ).copyWith(scaffoldBackgroundColor: Colors.grey[50]);
+  ).copyWith(
+    scaffoldBackgroundColor: Colors.grey[50],
+    textTheme: GoogleFonts.courierPrimeTextTheme(ThemeData.light().textTheme),
+    primaryTextTheme:
+        GoogleFonts.courierPrimeTextTheme(ThemeData.light().primaryTextTheme),
+  );
   static ThemeData darkTheme = ThemeData.dark(useMaterial3: true);
 
   bool get isLight => state == lightTheme;

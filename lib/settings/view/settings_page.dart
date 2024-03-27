@@ -5,6 +5,7 @@ import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/search/search.dart';
 import 'package:multidisplay/theme/theme.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage._();
@@ -179,6 +180,33 @@ class SettingsPage extends StatelessWidget {
                   value: state.autoRefresh,
                   onChanged: (_) =>
                       context.read<WeatherCubit>().toggleAutoRefresh(),
+                ),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: Text(
+              "Tracking",
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          BlocBuilder<TrackingCubit, TrackingState>(
+            buildWhen: (previous, current) =>
+                previous.reorderable != current.reorderable,
+            builder: (context, state) {
+              return ListTile(
+                title: const Text('Allow Reordering'),
+                isThreeLine: true,
+                subtitle: const Text(
+                  'Allow Tracking Sections to be reordered',
+                ),
+                trailing: Switch(
+                  value: state.reorderable,
+                  onChanged: (_) =>
+                      context.read<TrackingCubit>().toggleReorder(),
                 ),
               );
             },

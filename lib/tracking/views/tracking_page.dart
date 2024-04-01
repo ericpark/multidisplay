@@ -17,49 +17,13 @@ class TrackingPage extends StatelessWidget {
         //buildWhen: (previous, current) => previous.events != current.events,
         builder: (context, state) {
       return BlocProvider.value(
-        value: trackingCubit,
-        child: const TrackingViewContainer(),
-      );
+          value: trackingCubit,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth < 400) {}
+              return const TrackingLayoutTablet();
+            },
+          ));
     });
-  }
-}
-
-class TrackingViewContainer extends StatelessWidget {
-  const TrackingViewContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    TrackingCubit trackingCubit = context.read<TrackingCubit>();
-
-    return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          elevation: 1,
-          scrolledUnderElevation: 5.0,
-          shadowColor: Colors.black,
-          backgroundColor: Theme.of(context).secondaryHeaderColor,
-          clipBehavior: Clip.antiAlias,
-          /*leading: IconButton(
-            icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
-            onPressed: () async {},
-          ),*/
-          actions: [
-            /*IconButton(
-              icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
-              onPressed: () async {},
-            ),*/
-            IconButton(
-              icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
-              onPressed: () async {
-                await trackingCubit.fetchTrackingGroups();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-              onPressed: () async {},
-            ),
-          ],
-        ),
-        body: const TrackingLayout());
   }
 }

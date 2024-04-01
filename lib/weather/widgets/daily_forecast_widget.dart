@@ -26,40 +26,12 @@ class DailyForecastPopulated extends StatelessWidget {
       );
     }
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-      return Stack(
-        children: [
-          RefreshIndicator(
-            onRefresh: onRefresh ?? () async => {},
-            child: SingleChildScrollView(
-              physics: onRefresh != null
-                  ? const AlwaysScrollableScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
-              clipBehavior: Clip.none,
-              child: SizedBox(
-                height: viewportConstraints.maxHeight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PhysicalModel(
-                    color: Theme.of(context).dialogBackgroundColor,
-                    elevation: 10,
-                    shadowColor: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Center(
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: forecastWidgets,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      );
-    });
+    return Center(
+      child: Flex(
+        direction: Axis.horizontal,
+        children: forecastWidgets,
+      ),
+    );
   }
 }
 

@@ -59,6 +59,18 @@ class TrackingSectionWidget extends StatelessWidget {
           onDoubleTap: () => trackingCubit.handleWidgetDoubleTap(
               section: data.section, index: index),
         );
+      case "test":
+        color = colorScheme.secondary;
+        return HorizontalTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingName: data.name,
+          mainMetric: main,
+          leftMetric: left,
+          rightMetric: right,
+          onDoubleTap: () => trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
+        );
       default:
         return SimpleTrackingWidget(
           id: index,

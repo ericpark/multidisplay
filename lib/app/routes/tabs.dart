@@ -9,7 +9,7 @@ import 'package:multidisplay/settings/settings.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/expenses/expenses_page.dart';
+import 'package:multidisplay/experimental/experimental.dart';
 
 const List<BottomNavigationBarItem> bottomTabs = <BottomNavigationBarItem>[
   BottomNavigationBarItem(
@@ -29,8 +29,8 @@ const List<BottomNavigationBarItem> bottomTabs = <BottomNavigationBarItem>[
     label: 'Tracking',
   ),
   BottomNavigationBarItem(
-    icon: Icon(Icons.attach_money),
-    label: 'Expenses',
+    icon: Icon(Icons.now_widgets),
+    label: 'Experimental',
   ),
   BottomNavigationBarItem(
     icon: Icon(Icons.settings),
@@ -43,7 +43,7 @@ final List<Widget> pages = [
   const WeatherPage(),
   const CalendarPage(),
   const TrackingPage(),
-  const ExpensePage(),
+  const ExperimentalPage(),
   BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
     return BlocProvider.value(
       value: context.read<WeatherCubit>(),

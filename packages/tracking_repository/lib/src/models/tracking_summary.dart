@@ -20,7 +20,7 @@ class TrackingSummary with _$TrackingSummary {
     @Default(0) int total,
     @Default('') String description,
     @Default('') String trackingType,
-    @Default('') String trackingSubtitle,
+    //@Default('') String trackingSubtitle,
     @Default('') String mainMetric,
     @Default('') String leftMetric,
     @Default('') String rightMetric,

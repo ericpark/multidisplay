@@ -18,7 +18,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
     await getCalendarsList();
     await getCalendarDetails();
-    fetchEvents(state.calendars);
+    fetchEvents(calendarIDs: state.calendars);
   }
 
   Future<void> getCalendarsList() async {
@@ -50,7 +50,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   Future<void> refreshCalendar() async {
     await getCalendarDetails();
 
-    await fetchEvents(state.calendars);
+    await fetchEvents(calendarIDs: state.calendars);
     return;
   }
 
@@ -102,7 +102,8 @@ class CalendarCubit extends Cubit<CalendarState> {
         status: CalendarStatus.success, events: updatedListOfEvents));
   }
 
-  Future<void> fetchEvents(List<String> calendarIDs) async {
+  Future<void> fetchEvents({List<String>? calendarIDs}) async {
+    calendarIDs ??= state.calendars;
     if (calendarIDs.isEmpty) return;
     emit(state.copyWith(status: CalendarStatus.loading));
     try {

@@ -1,2 +1,2 @@
 export 'bloc/timer_bloc.dart';
-export 'ticker.dart';
+export 'timer_ticker.dart';

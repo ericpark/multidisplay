@@ -13,6 +13,11 @@ extension WeatherStatusX on WeatherStatus {
 class WeatherState extends Equatable {
   WeatherState(
       {this.status = WeatherStatus.initial,
+      this.forecastStatus = const {
+        "current": WeatherStatus.initial,
+        "hourly": WeatherStatus.initial,
+        "daily": WeatherStatus.initial,
+      },
       this.temperatureUnits = TemperatureUnits.fahrenheit,
       this.autoRefresh = true,
       Weather? weather,
@@ -26,15 +31,19 @@ class WeatherState extends Equatable {
       _$WeatherStateFromJson(json);
 
   final WeatherStatus status;
+
+  /// Used to track individual data refreshes
+  final Map<String, WeatherStatus> forecastStatus;
   final TemperatureUnits temperatureUnits;
   final Weather weather; // Current Weather
 
   final bool autoRefresh;
   final List<Weather> dailyForecast; // Daily Forecast
-  final List<Weather> hourlyForecast; // Daily Forecast
+  final List<Weather> hourlyForecast; // Hourly Forecast
 
   WeatherState copyWith({
     WeatherStatus? status,
+    Map<String, WeatherStatus>? forecastStatus,
     TemperatureUnits? temperatureUnits,
     bool? autoRefresh,
     Weather? weather,
@@ -43,6 +52,7 @@ class WeatherState extends Equatable {
   }) {
     return WeatherState(
       status: status ?? this.status,
+      forecastStatus: forecastStatus ?? this.forecastStatus,
       temperatureUnits: temperatureUnits ?? this.temperatureUnits,
       autoRefresh: autoRefresh ?? this.autoRefresh,
       weather: weather ?? this.weather,
@@ -56,6 +66,7 @@ class WeatherState extends Equatable {
   @override
   List<Object?> get props => [
         status,
+        forecastStatus,
         temperatureUnits,
         autoRefresh,
         weather,

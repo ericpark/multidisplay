@@ -91,45 +91,58 @@ class SimpleTrackingWidget extends StatelessWidget {
             //TODO: Make this dynamic
             height: 200,
             width: 200,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Text(trackingName, style: primaryTextStyle),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                  child: Text(mainValue, style: centerStyle),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
-                  child: Text(mainMetricName, style: tertiaryStyle),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(leftValue, style: secondaryTextStyle),
-                          const SizedBox(height: 5),
-                          Text(leftMetricName, style: tertiaryStyle),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(rightValue, style: secondaryTextStyle),
-                          const SizedBox(height: 5),
-                          Text(rightMetricName, style: tertiaryStyle),
-                        ],
-                      ),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: const [0, 1],
+                    colors: [
+                      Colors.white.withOpacity(0.1),
+                      Colors.black.withOpacity(0.2)
                     ],
+                  )),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Text(trackingName, style: primaryTextStyle),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                    child: Text(mainValue, style: centerStyle),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
+                    child: Text(mainMetricName, style: tertiaryStyle),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(leftValue, style: secondaryTextStyle),
+                            const SizedBox(height: 5),
+                            Text(leftMetricName, style: tertiaryStyle),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(rightValue, style: secondaryTextStyle),
+                            const SizedBox(height: 5),
+                            Text(rightMetricName, style: tertiaryStyle),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

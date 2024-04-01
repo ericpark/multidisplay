@@ -1,112 +1,123 @@
 import 'package:flutter/material.dart';
+
+// Packages
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project
 import 'package:multidisplay/weather/weather.dart';
 
 class CurrentWeatherWidget extends StatelessWidget {
   const CurrentWeatherWidget({
-    required this.weather,
-    required this.units,
     this.onRefresh,
     super.key,
   });
 
-  final Weather weather;
-  final TemperatureUnits units;
   final ValueGetter<Future<void>>? onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-      return Stack(
+    return BlocConsumer<WeatherCubit, WeatherState>(
+      listener: (context, state) {
+        if (state.status.isSuccess) {
+          //context.read<ThemeCubit>().updateTheme(state.weather);
+        }
+      },
+      builder: (context, state) {
+        switch (state.forecastStatus["current"]!) {
+          case WeatherStatus.initial:
+            return const WeatherEmpty();
+          case WeatherStatus.loading:
+            return const SizedBox(
+                width: double.infinity, child: WeatherLoading());
+          case WeatherStatus.success:
+            return CurrentWeatherWidgetPopulated(
+                weather: state.weather,
+                theme: theme,
+                units: state.temperatureUnits,
+                onRefresh: onRefresh);
+          case WeatherStatus.failure:
+            return const WeatherError();
+        }
+      },
+    );
+  }
+}
+
+class CurrentWeatherWidgetPopulated extends StatelessWidget {
+  const CurrentWeatherWidgetPopulated({
+    super.key,
+    required this.weather,
+    required this.theme,
+    required this.units,
+    required this.onRefresh,
+  });
+
+  final Weather weather;
+  final ThemeData theme;
+  final TemperatureUnits units;
+  final ValueGetter<Future<void>>? onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Center(
-            child: RefreshIndicator(
-              onRefresh: onRefresh ?? () async => {},
-              child: SingleChildScrollView(
-                physics: onRefresh != null
-                    ? const AlwaysScrollableScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
-                child: SizedBox(
-                  height: viewportConstraints.maxHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PhysicalModel(
-                      color: Theme.of(context).dialogBackgroundColor,
-                      elevation: 10,
-                      shadowColor: Colors.black,
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Flex(
-                          direction: Axis.vertical,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    weather.location,
-                                    style:
-                                        theme.textTheme.displaySmall?.copyWith(
-                                      fontWeight: FontWeight.w200,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                    child: _WeatherIcon(
-                                        condition: weather.condition),
-                                  ),
-                                  Text(
-                                    weather.condition.toWeatherDescription,
-                                    style: theme.textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  Text(
-                                    weather.formattedTemperature(units),
-                                    style:
-                                        theme.textTheme.displayMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
-                                  ),
-                                  onRefresh != null
-                                      ? IconButton(
-                                          icon: const Icon(Icons.refresh),
-                                          iconSize: 20,
-                                          onPressed: onRefresh,
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  weather.location,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w200,
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: _WeatherIcon(condition: weather.condition),
+                ),
+                Text(
+                  weather.condition.toWeatherDescription,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  weather.formattedTemperature(units),
+                  style: theme.textTheme.displayMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
+                ),
+                onRefresh != null
+                    ? IconButton(
+                        icon: const Icon(Icons.refresh),
+                        iconSize: 20,
+                        onPressed: onRefresh,
+                      )
+                    : Container(),
+              ],
             ),
           ),
         ],
-      );
-    });
+      ),
+    );
   }
 }
 

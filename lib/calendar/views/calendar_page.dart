@@ -16,87 +16,15 @@ class CalendarPage extends StatelessWidget {
         //buildWhen: (previous, current) => previous.events != current.events,
         builder: (context, state) {
       return BlocProvider.value(
-        value: calCubit,
-        child: const CalendarViewContainer(),
-      );
+          value: calCubit,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth < 400) {
+                return const CalendarLayoutTablet();
+              }
+              return const CalendarLayoutTablet();
+            },
+          ));
     });
   }
 }
-
-class CalendarViewContainer extends StatelessWidget {
-  const CalendarViewContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    CalendarCubit calendarCubit = context.read<CalendarCubit>();
-
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 10,
-          shadowColor: Colors.black,
-          backgroundColor: Theme.of(context).secondaryHeaderColor,
-          clipBehavior: Clip.antiAlias,
-          leading: IconButton(
-            icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
-            onPressed: () async {
-              await context
-                  .read<CalendarCubit>()
-                  .fetchEvents(calendarCubit.state.calendars);
-
-              if (context.mounted) {
-                await showDismissableModal(context, const CalendarFilterView());
-              }
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
-              onPressed: () async {
-                /*calendarCubit.emit(calendarCubit.state
-                    .copyWith(status: CalendarStatus.loading));*/
-                await showDismissableModal(context, Container());
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
-              onPressed: () async {
-                await calendarCubit.refreshCalendar();
-                await calendarCubit.refreshCalendarUI();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-              onPressed: () async {
-                if (!context.mounted) {
-                  return;
-                }
-                await showDismissableModal(
-                    context, const CalendarNewEventView());
-
-                //await calendarCubit.refreshCalendarUI();
-              },
-            ),
-          ],
-        ),
-        body: const SafeArea(child: CalendarLayout()));
-  }
-}
-/*
-Future<dynamic> showPopupModal(BuildContext buildContext, Widget widget) {
-  return showCupertinoModalPopup(
-    semanticsDismissible: true,
-    context: buildContext,
-    builder: (BuildContext context) {
-      return CupertinoPopupSurface(
-        child: Container(
-          color: CupertinoColors.lightBackgroundGray,
-          alignment: Alignment.topCenter,
-          width: double.infinity, //double.infinity,
-          height: 700,
-          child: widget,
-        ),
-      );
-    },
-  );
-}*/

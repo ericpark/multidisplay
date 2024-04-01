@@ -1,3 +1,3 @@
 export 'tracking_page.dart';
-export 'tracking_layout.dart';
+export 'layouts/tracking_layout_tablet.dart';
 export 'tracking_details_view.dart';

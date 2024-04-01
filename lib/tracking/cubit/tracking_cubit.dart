@@ -371,13 +371,14 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
     emit(state.copyWith(status: TrackingStatus.success));
   }
 
+  /*
   @override
   void onChange(Change<TrackingState> change) {
     // TODO: implement onChange
     super.onChange(change);
     print(
         "${change.currentState.status} => ${change.nextState.status} ${change.hashCode}");
-  }
+  }*/
 
   @override
   TrackingState fromJson(Map<String, dynamic> json) =>

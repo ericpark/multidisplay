@@ -4,9 +4,8 @@ import 'package:multidisplay/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarMonthWidget extends StatelessWidget {
-  const CalendarMonthWidget({super.key, this.events});
+  const CalendarMonthWidget({super.key});
 
-  final List<CalendarEvent>? events;
   void onSelectionChanged(details) {}
 
   Widget monthCellBuilder(context, details) {
@@ -91,43 +90,48 @@ class CalendarMonthWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarCubit calendarCubit = context.read<CalendarCubit>();
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: PhysicalModel(
-        color: Theme.of(context).dialogBackgroundColor,
-        elevation: 10,
-        shadowColor: Colors.black,
-        borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.hardEdge,
-        child: SfCalendar(
-          view: CalendarView.month,
-          viewNavigationMode: ViewNavigationMode.snap,
-          monthViewSettings: const MonthViewSettings(
-            navigationDirection: MonthNavigationDirection.vertical,
-            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-            appointmentDisplayCount: 4,
-            dayFormat: 'EEEE',
-          ),
-          /*monthCellBuilder: (context, details) =>
-              monthCellBuilder(context, details),
-          appointmentBuilder: (context, eventDetails) =>
-              appointmentBuilder(context, eventDetails),*/
-          dataSource: CalendarEventDataSource(events ?? []),
-          onTap: (CalendarTapDetails calendarTapDetails) async {
-            if (calendarTapDetails.targetElement ==
-                CalendarElement.calendarCell) {
-              final selectedDate = calendarTapDetails.date ?? DateTime.now();
-              await calendarCubit.focusOnDate(selectedDate);
-            }
-          },
-          showTodayButton: true,
-          showNavigationArrow: true,
-          showDatePickerButton: true,
-          initialSelectedDate: calendarCubit.state.selectedDate,
-          initialDisplayDate: calendarCubit.state.selectedDate,
-        ),
-      ),
+    return BlocBuilder<CalendarCubit, CalendarState>(
+      builder: (context, state) {
+        CalendarCubit calendarCubit = context.read<CalendarCubit>();
+
+        switch (state.status) {
+          case CalendarStatus.initial:
+            return const CalendarEmpty();
+          case CalendarStatus.loading:
+            return const CalendarLoading();
+          case CalendarStatus.success || CalendarStatus.transitioning:
+            return SfCalendar(
+              view: CalendarView.month,
+              viewNavigationMode: ViewNavigationMode.snap,
+              monthViewSettings: const MonthViewSettings(
+                navigationDirection: MonthNavigationDirection.vertical,
+                appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                appointmentDisplayCount: 4,
+                dayFormat: 'EEEE',
+              ),
+              /*monthCellBuilder: (context, details) =>
+                  monthCellBuilder(context, details),
+              appointmentBuilder: (context, eventDetails) =>
+                  appointmentBuilder(context, eventDetails),*/
+              dataSource: CalendarEventDataSource(state.events),
+              onTap: (CalendarTapDetails calendarTapDetails) async {
+                if (calendarTapDetails.targetElement ==
+                    CalendarElement.calendarCell) {
+                  final selectedDate =
+                      calendarTapDetails.date ?? DateTime.now();
+                  await calendarCubit.focusOnDate(selectedDate);
+                }
+              },
+              showTodayButton: true,
+              showNavigationArrow: true,
+              showDatePickerButton: true,
+              initialSelectedDate: state.selectedDate,
+              initialDisplayDate: state.selectedDate,
+            );
+          case CalendarStatus.failure:
+            return const CalendarError();
+        }
+      },
     );
   }
 }

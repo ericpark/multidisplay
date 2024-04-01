@@ -7,10 +7,8 @@ class WeatherWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WeatherCubit weatherCubit = context.read<WeatherCubit>();
-    return CurrentWeatherWidget(
-      weather: weatherCubit.state.weather,
-      units: weatherCubit.state.temperatureUnits,
-    );
+    context.read<WeatherCubit>().refreshWeather(current: true);
+
+    return const CurrentWeatherWidget();
   }
 }

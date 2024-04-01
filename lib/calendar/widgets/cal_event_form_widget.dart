@@ -15,7 +15,7 @@ class CalendarEventForm extends StatelessWidget {
     return Builder(
       builder: (context) {
         final formBloc = context.read<CalendarFormBloc>();
-        final calendarCubit = context.read<CalendarCubit>();
+        final calendarState = context.read<CalendarCubit>().state;
 
         if (event != null) {
           CalendarEvent eventData = event!;
@@ -25,6 +25,9 @@ class CalendarEventForm extends StatelessWidget {
           formBloc.calendar.updateInitialValue(eventData.calendarId);
           formBloc.startDate.updateInitialValue(eventData.start);
           formBloc.endDate.updateInitialValue(eventData.end);
+        }
+        if (event == null) {
+          formBloc.startDate.updateInitialValue(calendarState.selectedDate);
         }
 
         return FormBlocListener<CalendarFormBloc, String, String>(
@@ -67,8 +70,7 @@ class CalendarEventForm extends StatelessWidget {
                     child: Flex(direction: Axis.horizontal, children: [
                       Expanded(
                         flex: 9,
-                        child: Text(
-                            calendarCubit.state.calendarDetails[value]!.name),
+                        child: Text(calendarState.calendarDetails[value]!.name),
                       ),
                       Expanded(flex: 5, child: Container()),
                       Padding(
@@ -77,8 +79,8 @@ class CalendarEventForm extends StatelessWidget {
                           width: 10,
                           height: 10,
                           child: Container(
-                              color: calendarCubit
-                                  .state.calendarDetails[value]?.color),
+                              color:
+                                  calendarState.calendarDetails[value]?.color),
                         ),
                       ),
                     ]),

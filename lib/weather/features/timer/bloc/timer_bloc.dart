@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:multidisplay/constants.dart';
-import 'package:multidisplay/timer/timer.dart';
+import 'package:multidisplay/weather/features/timer/timer.dart';
 import 'package:equatable/equatable.dart';
 
 part 'timer_event.dart';
@@ -11,7 +11,7 @@ part 'timer_state.dart';
 const defaultDuration = DEFAULT_TICKER_DURATION;
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  TimerBloc({required Ticker ticker})
+  TimerBloc({required TimerTicker ticker})
       : _ticker = ticker,
         super(const TimerInitial(_duration)) {
     on<TimerUpdated>(_onUpdated);
@@ -22,8 +22,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<_TimerTicked>(_onTicked);
   }
 
-  final Ticker _ticker;
-  static const int _duration = defaultDuration;
+  final TimerTicker _ticker;
+  static const int _duration = DEFAULT_TICKER_DURATION;
+  static const int defaultDuration = DEFAULT_TICKER_DURATION;
   int customDuration = -1;
 
   StreamSubscription<int>? _tickerSubscription;

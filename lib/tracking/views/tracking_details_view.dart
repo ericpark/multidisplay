@@ -101,7 +101,6 @@ class TrackingDetailsView extends StatelessWidget {
                     (previous.status == TrackingStatus.transitioning &&
                         current.status == TrackingStatus.success),
                 builder: (context, state) {
-                  print("REBUILT");
                   final trackingSummary =
                       state.trackingGroups[section]!.data[id];
                   final records = state
@@ -130,7 +129,7 @@ class TrackingDetailsView extends StatelessWidget {
                         slivers: <Widget>[
                           SliverAppBar(
                             stretch: true,
-                            leading: Text(""),
+                            leading: const Text(""),
                             onStretchTrigger: () async {
                               // Triggers when stretching
                             },
@@ -138,7 +137,7 @@ class TrackingDetailsView extends StatelessWidget {
                             // to trigger [onStretchTrigger]
                             //
                             // Setting [stretchTriggerOffset] to a value of 300.0 will trigger
-                            // [onStretchTrigger] when the user has overscrolled by 300.0 pixels.
+                            // [onStretchTrigger] when the user has over scrolled by 300.0 pixels.
                             floating: true,
                           ),
                           SliverList(
@@ -219,7 +218,6 @@ class TrackingDetailsView extends StatelessWidget {
                                           ),
                                         ))
                                     .toList();
-                                print(index);
                                 return Expandable(
                                   initiallyExpanded:
                                       state.status == TrackingStatus.success

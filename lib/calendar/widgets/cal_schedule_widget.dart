@@ -19,36 +19,23 @@ class CalendarSchedule extends StatelessWidget {
           case CalendarStatus.loading || CalendarStatus.transitioning:
             return const CalendarLoading();
           case CalendarStatus.success:
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: PhysicalModel(
-                color: Theme.of(context).dialogBackgroundColor,
-                elevation: 10,
-                shadowColor: Colors.black,
-                borderRadius: BorderRadius.circular(20),
-                clipBehavior: Clip.antiAlias,
-                child: SfCalendar(
-                  view: CalendarView.schedule,
-                  headerHeight: 0,
-                  scheduleViewSettings: ScheduleViewSettings(
-                      hideEmptyScheduleWeek: true,
-                      monthHeaderSettings: MonthHeaderSettings(
-                          height: 70,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary),
-                      weekHeaderSettings: const WeekHeaderSettings(height: 10)),
-                  dataSource:
-                      CalendarEventDataSource(calendarCubit.state.events),
-                  initialSelectedDate: calendarCubit.state.selectedDate,
-                  initialDisplayDate: calendarCubit.state.selectedDate,
-                  onTap: (calendarTapDetails) async {
-                    CalendarEvent event =
-                        calendarTapDetails.appointments?.first;
-                    Widget container = CalendarEditEventView(event: event);
-                    await showDismissableModal(context, container);
-                  },
-                ),
-              ),
+            return SfCalendar(
+              view: CalendarView.schedule,
+              headerHeight: 0,
+              scheduleViewSettings: ScheduleViewSettings(
+                  hideEmptyScheduleWeek: true,
+                  monthHeaderSettings: MonthHeaderSettings(
+                      height: 70,
+                      backgroundColor: Theme.of(context).colorScheme.primary),
+                  weekHeaderSettings: const WeekHeaderSettings(height: 10)),
+              dataSource: CalendarEventDataSource(calendarCubit.state.events),
+              initialSelectedDate: calendarCubit.state.selectedDate,
+              initialDisplayDate: calendarCubit.state.selectedDate,
+              onTap: (calendarTapDetails) async {
+                CalendarEvent event = calendarTapDetails.appointments?.first;
+                Widget container = CalendarEditEventView(event: event);
+                await showDismissableModal(context, container);
+              },
             );
           case CalendarStatus.failure:
             return const CalendarError();

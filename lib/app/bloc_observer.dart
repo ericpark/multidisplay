@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
-import 'package:multidisplay/timer/timer.dart';
+import 'package:multidisplay/weather/features/timer/timer.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -30,6 +30,8 @@ class AppBlocObserver extends BlocObserver {
     super.onChange(bloc, change);
     if (change.currentState is TimerRunInProgress &&
         change.nextState is TimerRunInProgress) {
+      //print('CHANGE: $change');
+
       return;
     }
     if (change.currentState is TextFieldBlocState &&

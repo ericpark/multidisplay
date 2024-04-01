@@ -1,60 +1,39 @@
 import 'package:flutter/material.dart';
+
+// Packages
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:equatable/equatable.dart';
 
-const primaryColor = Color(0xFFC3EFF2);
-const secondaryColor = Color(0xFF6AD996);
-const accentColor = Color.fromRGBO(217, 132, 106, 1);
-const deepPrimaryColor = Color(0xFF6A8CD9);
-const tealGreenColor = Color(0xFF6AD9BB);
-const darkGreenColor = Color.fromARGB(255, 2, 145, 0);
-const darkerBlueColor = Color(0xFF6C6AD9);
+part 'theme_state.dart';
 
-class ThemeCubit extends HydratedCubit<ThemeData> {
-  ThemeCubit() : super(lightTheme);
+class ThemeCubit extends HydratedCubit<ThemeState> {
+  ThemeCubit() : super(ThemeStateInitial());
 
-  static ThemeData lightTheme = ThemeData.from(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-      primary: deepPrimaryColor,
-      secondary: secondaryColor,
-      tertiary: accentColor,
-      surfaceTint: tealGreenColor,
-    ),
-    useMaterial3: true,
-  ).copyWith(
-    scaffoldBackgroundColor: Colors.grey[50],
-    textTheme: GoogleFonts.courierPrimeTextTheme(ThemeData.light().textTheme),
-    primaryTextTheme:
-        GoogleFonts.courierPrimeTextTheme(ThemeData.light().primaryTextTheme),
-  );
-  static ThemeData darkTheme = ThemeData.dark(useMaterial3: true);
+  void toggleTheme() => emit(state.selectedTheme == AppTheme.light
+      ? state.copyWith(selectedTheme: AppTheme.dark)
+      : state.copyWith(selectedTheme: AppTheme.light));
 
-  bool get isLight => state == lightTheme;
+  void toggleToTheme(ThemeData theme) => emit(theme == state.lightThemeData
+      ? state.copyWith(selectedTheme: AppTheme.light)
+      : state.copyWith(selectedTheme: AppTheme.dark));
 
-  bool get isDark => state == darkTheme;
+  ThemeData currentThemeData() => state.selectedTheme == AppTheme.light
+      ? state.lightThemeData
+      : state.darkThemeData;
 
-  void toggleTheme() {
-    emit(state == lightTheme ? darkTheme : lightTheme);
-  }
+  @Deprecated("Use state.selectedTheme instead")
+  String getTheme() => "${state.selectedTheme.name}Theme";
 
-  void toggleToTheme(ThemeData theme) {
-    emit(theme == lightTheme ? lightTheme : darkTheme);
-  }
-
-  String getTheme() {
-    return state == lightTheme ? "lightTheme" : "darkTheme";
+  @override
+  ThemeState fromJson(Map<String, dynamic> json) {
+    return json['theme'] == "lightTheme"
+        ? ThemeState(selectedTheme: AppTheme.light)
+        : ThemeState(selectedTheme: AppTheme.dark);
   }
 
   @override
-  ThemeData fromJson(Map<String, dynamic> json) {
-    return json['theme'] == "lightTheme" ? lightTheme : darkTheme;
-  }
-
-  @override
-  Map<String, dynamic> toJson(ThemeData state) {
-    return <String, String>{
-      'theme': state == lightTheme ? "lightTheme" : "darkTheme"
-    };
+  Map<String, dynamic> toJson(ThemeState state) {
+    return <String, String>{'theme': "${state.selectedTheme.name}Theme"};
   }
 }

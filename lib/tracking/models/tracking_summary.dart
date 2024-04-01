@@ -14,7 +14,7 @@ abstract class TrackingSummary with _$TrackingSummary {
     required String name,
     required String section,
     @JsonKey(name: 'total') @JsonKey(name: 'count') @Default(0) int count,
-    @JsonKey(name: 'tracking_subtitle') String? subtitle,
+    @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
     required String id,
     required String ownerId,
     @Default('') String mainMetric,

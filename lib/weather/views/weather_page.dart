@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/timer/timer.dart';
 import 'package:multidisplay/weather/weather.dart';
 
 class WeatherPage extends StatelessWidget {
@@ -8,51 +7,16 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TimerBloc timerBloc = context.read<TimerBloc>();
-    WeatherCubit weatherCubit = context.read<WeatherCubit>();
+    final TimerBloc timerBloc = context.read<TimerBloc>();
+    final WeatherCubit weatherCubit = context.read<WeatherCubit>();
 
     weatherCubit.refreshWeather(current: true, hourly: true, daily: true);
-    timerBloc.add(TimerStarted(duration: timerBloc.getDefaultDuration()));
-    return const WeatherContainerView();
-  }
-}
+    timerBloc.add(const TimerStarted(duration: TimerBloc.defaultDuration));
 
-class WeatherContainerView extends StatelessWidget {
-  const WeatherContainerView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    //Removed BlocBuilder that returned BlocProvider.value so there isn't two instances
-
-    // Possibly wrap WeatherView in bloc consumer and handle setup tasks here?
-    return SafeArea(
-      child: Scaffold(
-          body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: BlocConsumer<WeatherCubit, WeatherState>(
-            listener: (context, state) {
-              if (state.status.isSuccess) {
-                //context.read<ThemeCubit>().updateTheme(state.weather);
-              }
-            },
-            builder: (context, state) {
-              switch (state.status) {
-                case WeatherStatus.initial:
-                  return const WeatherEmpty();
-                case WeatherStatus.loading:
-                  return const WeatherLoading();
-                case WeatherStatus.success:
-                  return SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: const WeatherView());
-                case WeatherStatus.failure:
-                  return const WeatherError();
-              }
-            },
-          ),
-        ),
-      )),
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      if (constraints.maxWidth < 400) {}
+      return const WeatherLayoutTablet();
+    });
   }
 }

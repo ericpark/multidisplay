@@ -1,16 +1,54 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+class HourlyForecastWidget extends StatelessWidget {
+  const HourlyForecastWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<WeatherCubit, WeatherState>(
+      listener: (context, state) {
+        if (state.status.isSuccess) {
+          //context.read<ThemeCubit>().updateTheme(state.weather);
+        }
+      },
+      builder: (context, state) {
+        switch (state.forecastStatus["hourly"]!) {
+          case WeatherStatus.initial:
+            return const WeatherEmpty();
+          case WeatherStatus.loading:
+            return const SizedBox(
+                width: double.infinity, child: WeatherLoading());
+          case WeatherStatus.success:
+            final sunriseAndSunset =
+                context.read<WeatherCubit>().getNextSunriseAndSunset();
+
+            return HourlyForecastPopulated(
+              forecast: state.hourlyForecast,
+              units: state.temperatureUnits,
+              sunrise: sunriseAndSunset["sunrise"],
+              sunset: sunriseAndSunset["sunset"],
+            );
+          case WeatherStatus.failure:
+            return const WeatherError();
+        }
+      },
+    );
+  }
+}
+
 class HourlyForecastPopulated extends StatelessWidget {
   const HourlyForecastPopulated({
     required this.forecast,
     required this.units,
-    this.onRefresh,
     this.sunrise,
     this.sunset,
     super.key,
@@ -20,7 +58,6 @@ class HourlyForecastPopulated extends StatelessWidget {
   final TemperatureUnits units;
   final DateTime? sunrise;
   final DateTime? sunset;
-  final ValueGetter<Future<void>>? onRefresh;
 
   LinearGradient? _getHourlyGradientTransition(
       {required List<Weather> filterHours}) {
@@ -290,57 +327,28 @@ class HourlyForecastPopulated extends StatelessWidget {
     final plotBands =
         _getPlotBands(filterHours: filterHours, height: maximumXValue);
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-      return Stack(
+    return Center(
+      child: Column(
         children: [
-          RefreshIndicator(
-            onRefresh: onRefresh ?? () async => {},
-            child: SingleChildScrollView(
-              physics: onRefresh != null
-                  ? const AlwaysScrollableScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
-              clipBehavior: Clip.none,
-              child: SizedBox(
-                height: viewportConstraints.maxHeight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PhysicalModel(
-                    color: Theme.of(context).dialogBackgroundColor,
-                    elevation: 10,
-                    shadowColor: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          HourlyForecastIconsWidget(
-                              filterHours: filterHours, units: units),
-                          Expanded(
-                            child: SfCartesianChart(
-                              primaryXAxis: DateTimeAxis(
-                                dateFormat: DateFormat('h a'),
-                                intervalType: DateTimeIntervalType.hours,
-                                interval: 1,
-                                plotBands: plotBands,
-                              ),
-                              axes: const [precipitationAxis],
-                              primaryYAxis: temperatureAxis,
-                              series: <CartesianSeries<ChartData, DateTime>>[
-                                temperatureSeries,
-                                precipitationSeries
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+          HourlyForecastIconsWidget(filterHours: filterHours, units: units),
+          Expanded(
+            child: SfCartesianChart(
+              primaryXAxis: DateTimeAxis(
+                dateFormat: DateFormat('h a'),
+                intervalType: DateTimeIntervalType.hours,
+                interval: 1,
+                plotBands: plotBands,
               ),
+              axes: const [precipitationAxis],
+              primaryYAxis: temperatureAxis,
+              series: <CartesianSeries<ChartData, DateTime>>[
+                temperatureSeries,
+                precipitationSeries
+              ],
             ),
-          )
+          ),
         ],
-      );
-    });
+      ),
+    );
   }
 }

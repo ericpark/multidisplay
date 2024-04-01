@@ -27,12 +27,16 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       List<Weather> dailyForecast = await getDailyWeather();
 
       emit(state.copyWith(
-        status: WeatherStatus.success,
-        temperatureUnits: units,
-        weather: currentWeather,
-        dailyForecast: dailyForecast,
-        hourlyForecast: hourlyForecast,
-      ));
+          status: WeatherStatus.success,
+          temperatureUnits: units,
+          weather: currentWeather,
+          dailyForecast: dailyForecast,
+          hourlyForecast: hourlyForecast,
+          forecastStatus: {
+            "current": WeatherStatus.success,
+            "hourly": WeatherStatus.success,
+            "daily": WeatherStatus.success,
+          }));
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
@@ -138,16 +142,34 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     try {
       final units = state.temperatureUnits;
 
+      var forecastStatus = {
+        "current": (current || all)
+            ? WeatherStatus.loading
+            : state.forecastStatus["current"] ?? WeatherStatus.failure,
+        "hourly": (hourly || all)
+            ? WeatherStatus.loading
+            : state.forecastStatus["hourly"] ?? WeatherStatus.failure,
+        "daily": (daily || all)
+            ? WeatherStatus.loading
+            : state.forecastStatus["daily"] ?? WeatherStatus.failure,
+      };
+      emit(state.copyWith(forecastStatus: forecastStatus));
+      print("hello");
       Weather currentWeather =
           current || all ? await getCurrentWeather() : state.weather;
       List<Weather> hourlyForecast =
           hourly || all ? await getHourlyWeather() : state.hourlyForecast;
       List<Weather> dailyForecast =
           daily || all ? await getDailyWeather() : state.dailyForecast;
-
+      forecastStatus = {
+        "current": WeatherStatus.success,
+        "hourly": WeatherStatus.success,
+        "daily": WeatherStatus.success,
+      };
       emit(
         state.copyWith(
           status: WeatherStatus.success,
+          forecastStatus: forecastStatus,
           temperatureUnits: units,
           weather: currentWeather,
           dailyForecast: dailyForecast,

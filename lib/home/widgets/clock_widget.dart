@@ -14,8 +14,9 @@ class ClockWidget extends StatefulWidget {
 
 class _ClockWidgetState extends State<ClockWidget> {
   late Timer timer;
-
-  var now = DateTime.now();
+  late HomeCubit homeCubit;
+  late String timePattern;
+  DateTime now = DateTime.now();
 
   @override
   void initState() {
@@ -26,6 +27,9 @@ class _ClockWidgetState extends State<ClockWidget> {
         now = DateTime.now();
       });
     });
+
+    homeCubit = context.read<HomeCubit>();
+    timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
   }
 
   @override
@@ -38,8 +42,39 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final homeCubit = context.read<HomeCubit>();
-    return Padding(
+    String timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            children: [
+              const Text("Today is"),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Text(
+                    DateFormat('MMMMEEEEd').format(now),
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                ),
+              ),
+              FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  DateFormat(timePattern).format(now),
+                  style: theme.textTheme.displayLarge,
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+
+    /* Padding(
         padding: const EdgeInsets.all(8.0),
         child: PhysicalModel(
             color: Theme.of(context).dialogBackgroundColor,
@@ -47,37 +82,54 @@ class _ClockWidgetState extends State<ClockWidget> {
             shadowColor: Colors.black,
             borderRadius: BorderRadius.circular(20),
             clipBehavior: Clip.hardEdge,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(children: [
-                    const Text("Today is"),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: Text(
-                          DateFormat('MMMMEEEEd').format(now),
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                      ),
-                    ),
-                    FittedBox(
-                      fit: BoxFit.cover,
-                      child: homeCubit.state.clockType.isMilitary
-                          ? Text(
-                              DateFormat('Hms').format(now),
-                              style: theme.textTheme.displayLarge,
-                            )
-                          : Text(
-                              DateFormat('jms').format(now),
-                              style: theme.textTheme.displayLarge,
-                            ),
-                    )
-                  ])
-                ],
+            child: ClockContent(now: now, theme: theme, homeCubit: homeCubit)));*/
+  }
+}
+
+class ClockContent extends StatelessWidget {
+  const ClockContent({
+    super.key,
+    required this.now,
+    required this.theme,
+    required this.homeCubit,
+  });
+
+  final DateTime now;
+  final ThemeData theme;
+  final HomeCubit homeCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    String timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            children: [
+              const Text("Today is"),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Text(
+                    DateFormat('MMMMEEEEd').format(now),
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                ),
               ),
-            )));
+              FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  DateFormat(timePattern).format(now),
+                  style: theme.textTheme.displayLarge,
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

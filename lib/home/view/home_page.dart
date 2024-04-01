@@ -6,21 +6,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: LayoutBuilder(
+    return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        return const Flex(
-          direction: Axis.horizontal,
-          children: [
-            Expanded(
-                flex: 50,
-                child: Flex(direction: Axis.vertical, children: [
-                  Expanded(flex: 50, child: ClockWidget()),
-                  Expanded(flex: 50, child: WeatherWidget())
-                ])),
-            Expanded(flex: 50, child: CalendarWidget()),
-          ],
-        );
+        if (constraints.maxWidth < 400) {
+          return const HomeLayoutMobile();
+        }
+        return const HomeLayoutTablet();
       },
-    ));
+    );
   }
 }

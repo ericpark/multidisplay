@@ -154,7 +154,6 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
             : state.forecastStatus["daily"] ?? WeatherStatus.failure,
       };
       emit(state.copyWith(forecastStatus: forecastStatus));
-      print("hello");
       Weather currentWeather =
           current || all ? await getCurrentWeather() : state.weather;
       List<Weather> hourlyForecast =

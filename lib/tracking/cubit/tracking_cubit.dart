@@ -32,7 +32,7 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
 
     //await Future.delayed(const Duration(milliseconds: 1));
     sections = state.trackingSections;
-    sections = ["Meeko", "Gym", "Home", "Money", "Health"];
+    //sections = ["Meeko", "Gym", "Home", "Money", "Health"];
 
     if (sections.isEmpty) {
       //TODO: GET Tracking groups
@@ -370,15 +370,6 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
     await Future.delayed(const Duration(milliseconds: 500));
     emit(state.copyWith(status: TrackingStatus.success));
   }
-
-  /*
-  @override
-  void onChange(Change<TrackingState> change) {
-    // TODO: implement onChange
-    super.onChange(change);
-    print(
-        "${change.currentState.status} => ${change.nextState.status} ${change.hashCode}");
-  }*/
 
   @override
   TrackingState fromJson(Map<String, dynamic> json) =>

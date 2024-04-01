@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multidisplay/app/widgets/placeholders.dart'
+import 'package:custom_components/custom_components.dart'
     show WidgetPlaceholder, TitlePlaceholder;
 import 'package:shimmer/shimmer.dart';
 

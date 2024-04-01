@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 
-class TitlePlaceholder extends StatelessWidget {
+/*class TitlePlaceholder extends StatelessWidget {
   final double width;
 
   const TitlePlaceholder({
@@ -134,3 +134,4 @@ class WidgetPlaceholder extends StatelessWidget {
                 ))));
   }
 }
+*/

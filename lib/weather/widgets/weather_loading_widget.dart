@@ -1,8 +1,6 @@
-import 'package:custom_components/src/placeholders/title_placeholder.dart';
 import 'package:flutter/material.dart';
 
 // Packages
-// TODO: Use custom components package
 import 'package:custom_components/custom_components.dart';
 
 class WeatherLoading extends StatelessWidget {
@@ -17,7 +15,6 @@ class WeatherLoading extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // TODO: Update Placeholders
           CenterCardPlaceholder(
             contentColor: loadingColor,
           ),

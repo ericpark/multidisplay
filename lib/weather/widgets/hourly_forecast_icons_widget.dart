@@ -12,16 +12,25 @@ class HourlyForecastIconsWidget extends StatelessWidget {
   final List<Weather> filterHours;
   final TemperatureUnits units;
 
-  List<Widget> _getForecastWidgetsRow() {
+  List<Widget> _getForecastWidgetsRow({required double width}) {
     List<Widget> forecastWidgets = [];
 
+    int hourInterval = 3;
+    int maxWidgets = (filterHours.length / hourInterval).floor() + 1;
+    double widgetSize = width / maxWidgets;
+
+    if (width < 400) {
+      hourInterval = 1;
+      widgetSize = width / 5;
+    }
+
     for (var i = 0; i < filterHours.length; i++) {
-      // Show an icon for every three hours and the last one for a 24 hour period
-      //TODO: dynamically determine the number of hours based on width
-      if ((i % 3 == 0) || (i == filterHours.length - 1)) {
+      /// Show an icon for every three hours and the last one for a 24 hour period
+      /// Or show all 24 hours in a scrollable row with 5 showing at once.
+      if ((i % hourInterval == 0) || (i == filterHours.length - 1)) {
         forecastWidgets.add(
-          Expanded(
-              flex: 1, // Evenly Distribute in size
+          SizedBox(
+              width: widgetSize, // Evenly Distribute in size
               child: HourlyForecastCell(weather: filterHours[i], units: units)),
         );
       }
@@ -31,11 +40,25 @@ class HourlyForecastIconsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final forecastWidgets = _getForecastWidgetsRow();
-    return Padding(
-      padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-      child: Flex(direction: Axis.horizontal, children: forecastWidgets),
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final width = constraints.maxWidth;
+      ScrollPhysics scrollable = width > 400
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics();
+
+      final forecastWidgets = _getForecastWidgetsRow(width: width);
+
+      return Padding(
+        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: scrollable,
+            child: Row(
+              children: forecastWidgets,
+            )),
+      );
+    });
   }
 }
 

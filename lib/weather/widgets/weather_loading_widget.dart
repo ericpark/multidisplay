@@ -11,19 +11,27 @@ class WeatherLoading extends StatelessWidget {
     final theme = Theme.of(context);
     final loadingColor = theme.scaffoldBackgroundColor;
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CenterCardPlaceholder(
-            contentColor: loadingColor,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      ),
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      Widget placeholder = constraints.maxHeight > 200
+          ? CenterCardPlaceholder(
+              contentColor: loadingColor,
+            )
+          : VerticalCardPlaceholder(
+              contentColor: loadingColor,
+            );
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            placeholder,
+            /*const Padding(
+              padding: EdgeInsets.all(16),
+              child: CircularProgressIndicator(),
+            ),*/
+          ],
+        ),
+      );
+    });
   }
 }

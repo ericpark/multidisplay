@@ -137,6 +137,7 @@ class HourlyForecastPopulated extends StatelessWidget {
   List<PlotBand> _getPlotBands({
     required List<Weather> filterHours,
     required double height,
+    bool showDayNight = true,
   }) {
     final firstTransition = sunset!.isBefore(sunrise!) ? sunset! : sunrise!;
     final secondTransition = sunset!.isBefore(sunrise!) ? sunrise! : sunset!;
@@ -205,7 +206,7 @@ class HourlyForecastPopulated extends StatelessWidget {
       end: firstTransition,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: sunset!.isBefore(sunrise!) ? "day" : "night",
+      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "day" : "night") : "",
       color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -233,7 +234,7 @@ class HourlyForecastPopulated extends StatelessWidget {
       end: secondTransition,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: sunset!.isBefore(sunrise!) ? "night" : "day",
+      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "night" : "day") : "",
       color: sunset!.isBefore(sunrise!) ? nightColor : dayColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -262,7 +263,7 @@ class HourlyForecastPopulated extends StatelessWidget {
       end: filterHours.last.date,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: sunset!.isBefore(sunrise!) ? "day" : "night",
+      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "day" : "night") : "",
       color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -284,7 +285,7 @@ class HourlyForecastPopulated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final currentHour = now.subtract(Duration(
+    final previousHour = now.subtract(Duration(
       hours: 1,
       minutes: now.minute,
       seconds: now.second,
@@ -293,7 +294,7 @@ class HourlyForecastPopulated extends StatelessWidget {
     ));
 
     final List<Weather> filterHours = forecast
-        .where((hourly) => hourly.date.isAfter(currentHour))
+        .where((hourly) => hourly.date.isAfter(previousHour))
         .take(25)
         .toList();
 
@@ -324,31 +325,40 @@ class HourlyForecastPopulated extends StatelessWidget {
         maximum: 1,
         majorGridLines: MajorGridLines(width: 0));
 
-    final plotBands =
-        _getPlotBands(filterHours: filterHours, height: maximumXValue);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        bool isMobile = constraints.maxWidth < 400;
 
-    return Center(
-      child: Column(
-        children: [
-          HourlyForecastIconsWidget(filterHours: filterHours, units: units),
-          Expanded(
-            child: SfCartesianChart(
-              primaryXAxis: DateTimeAxis(
-                dateFormat: DateFormat('h a'),
-                intervalType: DateTimeIntervalType.hours,
-                interval: 1,
-                plotBands: plotBands,
+        final plotBands = _getPlotBands(
+            filterHours: filterHours,
+            height: maximumXValue,
+            showDayNight: !isMobile);
+        return Center(
+          child: Column(
+            children: [
+              HourlyForecastIconsWidget(filterHours: filterHours, units: units),
+              Expanded(
+                child: SfCartesianChart(
+                  primaryXAxis: DateTimeAxis(
+                    dateFormat: isMobile ? DateFormat('ha') : DateFormat('h a'),
+                    intervalType: DateTimeIntervalType.hours,
+                    //minimum: currentHour,
+                    interval: isMobile ? 2 : 1,
+                    minorTicksPerInterval: isMobile ? 1 : 0,
+                    plotBands: plotBands,
+                  ),
+                  axes: const [precipitationAxis],
+                  primaryYAxis: temperatureAxis,
+                  series: <CartesianSeries<ChartData, DateTime>>[
+                    temperatureSeries,
+                    precipitationSeries
+                  ],
+                ),
               ),
-              axes: const [precipitationAxis],
-              primaryYAxis: temperatureAxis,
-              series: <CartesianSeries<ChartData, DateTime>>[
-                temperatureSeries,
-                precipitationSeries
-              ],
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

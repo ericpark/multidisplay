@@ -60,82 +60,174 @@ class CurrentWeatherWidgetPopulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Flex(
-        direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  weather.location,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w200,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  child: _WeatherIcon(condition: weather.condition),
-                ),
-                Text(
-                  weather.condition.toWeatherDescription,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  weather.formattedTemperature(units),
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
-                ),
-                onRefresh != null
-                    ? IconButton(
-                        icon: const Icon(Icons.refresh),
-                        iconSize: 20,
-                        onPressed: onRefresh,
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-        ],
+    final locationText = Text(weather.location,
+        style: theme.textTheme.displaySmall?.copyWith(
+          fontWeight: FontWeight.w200,
+        ));
+
+    final weatherIconAndDetail =
+        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: _WeatherIcon(condition: weather.condition),
       ),
+      Text(
+        weather.condition.toWeatherDescription,
+        style: theme.textTheme.labelLarge?.copyWith(
+          fontWeight: FontWeight.normal,
+        ),
+      )
+    ]);
+
+    final temperatureText = Text(
+      weather.formattedTemperature(units),
+      style: theme.textTheme.displayMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    final updatedAtText = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
+        ),
+        onRefresh != null
+            ? IconButton(
+                icon: const Icon(Icons.refresh),
+                iconSize: 20,
+                onPressed: onRefresh,
+              )
+            : Container(),
+      ],
+    );
+    return SizedBox(
+        width: double.infinity,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxHeight < 200) {
+              return _CurrentWeatherSmallLayout(
+                  locationText: locationText,
+                  weatherIconAndDetail: weatherIconAndDetail,
+                  temperatureText: temperatureText,
+                  updatedAtText: updatedAtText);
+            }
+            return _CurrentWeatherLargeLayout(
+                locationText: locationText,
+                weatherIconAndDetail: weatherIconAndDetail,
+                temperatureText: temperatureText,
+                updatedAtText: updatedAtText);
+          },
+        ));
+  }
+}
+
+class _CurrentWeatherLargeLayout extends StatelessWidget {
+  const _CurrentWeatherLargeLayout({
+    required this.locationText,
+    required this.weatherIconAndDetail,
+    required this.temperatureText,
+    required this.updatedAtText,
+  });
+
+  final Text locationText;
+  final Column weatherIconAndDetail;
+  final Text temperatureText;
+  final Row updatedAtText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              locationText,
+              weatherIconAndDetail,
+              temperatureText,
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: updatedAtText,
+        ),
+      ],
+    );
+  }
+}
+
+class _CurrentWeatherSmallLayout extends StatelessWidget {
+  const _CurrentWeatherSmallLayout({
+    required this.locationText,
+    required this.weatherIconAndDetail,
+    required this.temperatureText,
+    required this.updatedAtText,
+  });
+
+  final Text locationText;
+  final Column weatherIconAndDetail;
+  final Text temperatureText;
+  final Row updatedAtText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Flex(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  flex: 40,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: weatherIconAndDetail)),
+              Expanded(
+                  flex: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [const Text(""), locationText, temperatureText],
+                  ))
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: updatedAtText,
+        ),
+      ],
     );
   }
 }
 
 class _WeatherIcon extends StatelessWidget {
-  const _WeatherIcon({required this.condition});
+  const _WeatherIcon({required this.condition, double? iconSize})
+      : iconSize = iconSize ?? _defaultIconSize;
 
-  static const _iconSize = 100.0;
+  static const _defaultIconSize = 100.0;
 
   final WeatherCondition condition;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _iconSize,
-      height: _iconSize,
+      width: iconSize ?? _defaultIconSize,
+      height: iconSize ?? _defaultIconSize,
       child: Icon(
         condition.toWeatherIcon,
-        size: _iconSize,
+        size: iconSize ?? _defaultIconSize,
         applyTextScaling: true,
       ),
     );

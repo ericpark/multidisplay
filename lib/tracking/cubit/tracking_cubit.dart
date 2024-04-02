@@ -33,9 +33,11 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
     //await Future.delayed(const Duration(milliseconds: 1));
     sections = state.trackingSections;
     //sections = ["Meeko", "Gym", "Home", "Money", "Health"];
+    sections = (await _trackingRepository.getAllTrackingGroups())
+        .map((trackingGroup) => trackingGroup.name)
+        .toList();
 
     if (sections.isEmpty) {
-      //TODO: GET Tracking groups
       sections = ["Meeko", "Gym", "Home", "Money", "Health"];
     }
 
@@ -103,7 +105,7 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
             trackingSummaryId: trackingSummaryId, trackingData: trackingData);
     return createdRecord != null
         ? TrackingRecord.fromJson(createdRecord.toJson())
-        : newRecord; //TODO: Does this work?
+        : newRecord;
   }
 
   Future<void> refreshTrackingSummariesOnNewDay() async {

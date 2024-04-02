@@ -1,4 +1,3 @@
-import 'package:custom_components/custom_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/tracking/tracking.dart';
@@ -52,6 +51,17 @@ class TrackingLayoutTablet extends StatelessWidget {
             TrackingCubit trackingCubit = context.read<TrackingCubit>();
 
             List<Widget> sections = getSections(state.trackingSections);
+
+            List<Widget> sectionWidgets = [];
+
+            sectionWidgets.addAll([
+              for (int index = 0; index < sections.length; index += 1)
+                Padding(
+                  key: Key('$index'),
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: sections[index]),
+                ),
+            ]);
             return ReorderableListView(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               onReorder: (int oldIndex, int newIndex) async {
@@ -59,16 +69,7 @@ class TrackingLayoutTablet extends StatelessWidget {
                     oldIndex: oldIndex, newIndex: newIndex);
               },
               buildDefaultDragHandles: state.reorderable,
-              children: <Widget>[
-                for (int index = 0; index < sections.length; index += 1)
-                  Padding(
-                      key: Key('$index'),
-                      padding: const EdgeInsets.all(8.0),
-                      child: SimpleCard(
-                        gradientPreset: GradientPreset.lighten,
-                        child: ListTile(title: sections[index]),
-                      )),
-              ],
+              children: sectionWidgets,
             );
           },
         ));

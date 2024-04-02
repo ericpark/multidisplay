@@ -3,3 +3,4 @@ export 'content_placeholder.dart';
 export 'title_placeholder.dart';
 export 'widget_placeholder.dart';
 export 'center_card_placeholder.dart';
+export 'vertical_small_card_placeholder.dart';

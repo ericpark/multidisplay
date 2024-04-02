@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ExpensePage extends StatelessWidget {
-  const ExpensePage({super.key});
+// Project
+import 'package:multidisplay/expenses/expenses.dart';
+
+class ExpensesWasteView extends StatelessWidget {
+  const ExpensesWasteView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +13,7 @@ class ExpensePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Expense Page Placeholder',
+            'This Page should track spending waste.',
           ),
         ],
       ),

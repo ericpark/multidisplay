@@ -23,10 +23,22 @@ class TrackingLoading extends StatelessWidget {
               ),
               Row(
                 children: [
-                  WidgetPlaceholder(),
-                  WidgetPlaceholder(),
-                  WidgetPlaceholder(),
-                  WidgetPlaceholder(),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: WidgetPlaceholder(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: WidgetPlaceholder(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: WidgetPlaceholder(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: WidgetPlaceholder(),
+                  ),
                 ],
               ),
             ],

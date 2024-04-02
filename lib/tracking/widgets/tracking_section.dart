@@ -7,11 +7,12 @@ class TrackingSectionWidget extends StatelessWidget {
 
   final String sectionName;
 
-  Widget getTrackingWidget(
-      {required int index,
-      required TrackingSummary data,
-      required ColorScheme colorScheme,
-      required TrackingCubit trackingCubit}) {
+  Widget getTrackingWidget({
+    required int index,
+    required TrackingSummary data,
+    required ColorScheme colorScheme,
+    required TrackingCubit trackingCubit,
+  }) {
     final main =
         data.metrics[data.mainMetric] ?? {"display_name": "", "value": ""};
     final left = data.metrics[data.leftMetric];
@@ -24,18 +25,14 @@ class TrackingSectionWidget extends StatelessWidget {
         return ConsecutiveTrackingWidget(
           id: index,
           section: data.section,
-          trackingName: data.name,
-          mainMetric: main,
-          leftMetric: left,
-          rightMetric: right,
-          lastDate: data.records.last.date,
+          trackingSummary: data,
           onDoubleTap: () async => await trackingCubit.handleWidgetDoubleTap(
               section: data.section, index: index),
           //dialogChoices: ["Leg", "chest"],
         );
       case "last_seven":
         color = colorScheme.secondary;
-        return SimpleTrackingWidget(
+        return OutlinedTrackingWidget(
           id: index,
           section: data.section,
           trackingName: data.name,
@@ -61,7 +58,7 @@ class TrackingSectionWidget extends StatelessWidget {
         );
       case "test":
         color = colorScheme.secondary;
-        return HorizontalTrackingWidget(
+        return OutlinedTrackingWidget(
           id: index,
           section: data.section,
           trackingName: data.name,
@@ -72,7 +69,7 @@ class TrackingSectionWidget extends StatelessWidget {
               section: data.section, index: index),
         );
       default:
-        return SimpleTrackingWidget(
+        return OutlinedTrackingWidget(
           id: index,
           section: data.section,
           trackingName: data.name,
@@ -149,10 +146,11 @@ class TrackingSectionWidget extends StatelessWidget {
                     sectionHeader: sectionHeaderString,
                     textStyle: sectionHeaderStyle,
                     reorderable: state.reorderable),
+                const Divider(),
                 sectionWidgets(
                     data: state.trackingGroups[sectionName]?.data ?? [],
                     colorScheme: Theme.of(context).colorScheme,
-                    trackingCubit: trackingCubit)
+                    trackingCubit: trackingCubit),
               ],
             );
           case TrackingStatus.failure:

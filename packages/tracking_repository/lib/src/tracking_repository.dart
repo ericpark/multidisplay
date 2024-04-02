@@ -10,6 +10,34 @@ class TrackingRepository {
   // ignore: unused_field
   final FirebaseFirestore _firebaseDB;
 
+  Future<List<TrackingGroup>> getAllTrackingGroups() async {
+    final trackingGroupRef = trackingGroupCollection();
+    List<TrackingGroup> allTrackingGroups = [];
+
+    try {
+      allTrackingGroups = await trackingGroupRef.get().then(
+        (querySnapshot) {
+          List<TrackingGroup> trackingGroups = [];
+          for (var docSnapshot in querySnapshot.docs) {
+            TrackingGroup data = docSnapshot.data();
+            if (data.id == null || data.id == "") {
+              print("${data.id} => ${docSnapshot.id} ");
+              data = data.copyWith(id: docSnapshot.id);
+            }
+
+            trackingGroups.add(data);
+          }
+          return trackingGroups;
+        },
+        onError: (e) => print("Error completing: $e"),
+      );
+      return allTrackingGroups;
+    } catch (err) {
+      print("Error while retrieving tracking summaries: $err");
+      return [];
+    }
+  }
+
   Future<List<TrackingSummary>> getAllTrackingSummariesByOwnerId(
       {required String userId}) async {
     if (userId == "") {

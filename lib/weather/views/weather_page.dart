@@ -15,7 +15,9 @@ class WeatherPage extends StatelessWidget {
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      if (constraints.maxWidth < 400) {}
+      if (constraints.maxWidth < 400) {
+        return const WeatherLayoutMobile();
+      }
       return const WeatherLayoutTablet();
     });
   }

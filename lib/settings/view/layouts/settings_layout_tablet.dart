@@ -1,6 +1,11 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+
+// Packages
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project
+import 'package:multidisplay/experimental/experimental.dart';
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/theme/theme.dart';
@@ -226,6 +231,32 @@ class SettingsLayoutTablet extends StatelessWidget {
                 ),
               );
             },
+          ),
+          const Divider(),
+          ListTile(
+            title: Text(
+              "Experimental",
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('View Widgets'),
+            isThreeLine: true,
+            subtitle: const Text(
+              'Widget Library',
+            ),
+            onTap: () async {
+              Navigator.of(context).push(ExperimentalPage.route());
+            },
+            trailing: const SizedBox(
+              height: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                child: Icon(Icons.widgets, semanticLabel: 'Experimental'),
+              ),
+            ),
           ),
         ],
       ),

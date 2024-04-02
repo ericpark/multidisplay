@@ -11,6 +11,7 @@ class HorizontalTrackingWidget extends StatelessWidget {
     required this.trackingName,
     required this.mainMetric,
     required this.onDoubleTap,
+    this.clipBehavior,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     this.color,
@@ -26,6 +27,7 @@ class HorizontalTrackingWidget extends StatelessWidget {
   final Map<String, String> rightMetric;
   final Color? color;
   final void Function()? onDoubleTap;
+  final Clip? clipBehavior;
 
   void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
     trackingCubit.handleWidgetDoubleTap(section: section, index: id);
@@ -42,19 +44,24 @@ class HorizontalTrackingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TrackingCubit trackingCubit = context.read<TrackingCubit>();
+    final widgetColor = color ?? Theme.of(context).colorScheme.primary;
 
-    final TextStyle centerStyle =
-        Theme.of(context).primaryTextTheme.displayLarge!;
-    final TextStyle primaryTextStyle =
-        Theme.of(context).primaryTextTheme.headlineSmall!;
+    final TextStyle centerStyle = Theme.of(context)
+        .primaryTextTheme
+        .displayLarge!
+        .copyWith(color: widgetColor);
+    final TextStyle primaryTextStyle = Theme.of(context)
+        .primaryTextTheme
+        .headlineSmall!
+        .copyWith(color: widgetColor);
     final TextStyle secondaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
-        .copyWith(fontWeight: FontWeight.bold);
-    final TextStyle tertiaryStyle =
-        Theme.of(context).primaryTextTheme.labelSmall!;
-
-    final widgetColor = color ?? Theme.of(context).colorScheme.primary;
+        .copyWith(fontWeight: FontWeight.bold, color: widgetColor);
+    final TextStyle tertiaryStyle = Theme.of(context)
+        .primaryTextTheme
+        .labelSmall!
+        .copyWith(color: widgetColor);
 
     // Set Metrics
     final String mainMetricName = mainMetric["display_name"] ?? "Not Found";
@@ -82,27 +89,17 @@ class HorizontalTrackingWidget extends StatelessWidget {
           _handleOnTap(context, TrackingDetailsView(id: id, section: section)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PhysicalModel(
-          color: widgetColor,
-          elevation: 0,
-          shadowColor: Colors.black,
-          borderRadius: BorderRadius.circular(10),
+        child: Card(
+          color: Colors.white,
+          elevation: 5,
+          shadowColor: widgetColor,
+          clipBehavior: clipBehavior,
           child: SizedBox(
             //TODO: Make this dynamic
             height: 200,
             width: 400,
             child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0, 1],
-                    colors: [
-                      Colors.white.withOpacity(0.1),
-                      Colors.black.withOpacity(0.2)
-                    ],
-                  )),
+              color: Colors.white,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -114,36 +111,47 @@ class HorizontalTrackingWidget extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                    child: Text(mainValue, style: centerStyle),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
-                    child: Text(mainMetricName, style: tertiaryStyle),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                            child: Text(mainValue, style: centerStyle),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 0.0, bottom: 5.0),
+                            child: Text(mainMetricName, style: tertiaryStyle),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text(leftValue, style: secondaryTextStyle),
-                            const SizedBox(height: 5),
-                            Text(leftMetricName, style: tertiaryStyle),
+                            Column(
+                              children: [
+                                Text(leftValue, style: secondaryTextStyle),
+                                const SizedBox(height: 5),
+                                Text(leftMetricName, style: tertiaryStyle),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Text(rightValue, style: secondaryTextStyle),
+                                const SizedBox(height: 5),
+                                Text(rightMetricName, style: tertiaryStyle),
+                              ],
+                            ),
                           ],
                         ),
-                        Column(
-                          children: [
-                            Text(rightValue, style: secondaryTextStyle),
-                            const SizedBox(height: 5),
-                            Text(rightMetricName, style: tertiaryStyle),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

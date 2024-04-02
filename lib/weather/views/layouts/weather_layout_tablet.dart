@@ -8,7 +8,7 @@ class WeatherLayoutTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WeatherCubit weatherCubit = context.read<WeatherCubit>();
+    //WeatherCubit weatherCubit = context.read<WeatherCubit>();
 
     // The state is reevaluated every minute. This is to allow refresh rate
     // to be calculated based on timer constants.
@@ -21,7 +21,7 @@ class WeatherLayoutTablet extends StatelessWidget {
               (previous is TimerRunPause && current is TimerRunInProgress),
           listener: (timerContext, timerState) {
             TimerBloc timerBloc = timerContext.read<TimerBloc>();
-
+            WeatherCubit weatherCubit = timerContext.read<WeatherCubit>();
             switch (timerState) {
               case TimerInitial _:
                 weatherCubit.refreshWeather(current: true);
@@ -29,7 +29,6 @@ class WeatherLayoutTablet extends StatelessWidget {
                     const TimerStarted(duration: TimerBloc.defaultDuration));
 
               case TimerRunComplete _:
-                // TODO: Review getting state like this later.
                 if (!weatherCubit.state.autoRefresh) {
                   break; // Break if autoRefresh is disabled.
                 }
@@ -47,6 +46,7 @@ class WeatherLayoutTablet extends StatelessWidget {
           },
           builder: (timerContext, timerState) {
             TimerBloc timerBloc = timerContext.read<TimerBloc>();
+            WeatherCubit weatherCubit = timerContext.read<WeatherCubit>();
 
             final currentWeatherWidget = PullToRefreshCard(
               gradientPreset: GradientPreset.lighten,
@@ -81,7 +81,7 @@ class WeatherLayoutTablet extends StatelessWidget {
               ),
             );
 
-            return WeatherLayoutTabletView(
+            return _WeatherLayoutTabletView(
                 currentWeatherWidget: currentWeatherWidget,
                 hourlyWeatherWidget: hourlyWeatherWidget,
                 dailyWeatherWidget: dailyWeatherWidget);
@@ -90,9 +90,8 @@ class WeatherLayoutTablet extends StatelessWidget {
   }
 }
 
-class WeatherLayoutTabletView extends StatelessWidget {
-  const WeatherLayoutTabletView({
-    super.key,
+class _WeatherLayoutTabletView extends StatelessWidget {
+  const _WeatherLayoutTabletView({
     required this.currentWeatherWidget,
     required this.hourlyWeatherWidget,
     required this.dailyWeatherWidget,

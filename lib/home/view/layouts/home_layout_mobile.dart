@@ -6,12 +6,14 @@ class HomeLayoutMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Flex(
-      direction: Axis.vertical,
-      children: [
-        Expanded(flex: 40, child: WeatherWidget()),
-        Expanded(flex: 60, child: CalendarWidget()),
-      ],
+    return const SafeArea(
+      child: Flex(
+        direction: Axis.vertical,
+        children: [
+          Expanded(flex: 20, child: WeatherWidget()),
+          Expanded(flex: 60, child: CalendarWidget()),
+        ],
+      ),
     );
   }
 }

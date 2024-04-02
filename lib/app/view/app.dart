@@ -13,6 +13,7 @@ import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:multidisplay/expenses/expenses.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -70,6 +71,9 @@ class App extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => HomeCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ExpensesCubit(),
             ),
           ],
           child: AppView(savedThemeMode: savedThemeMode),

@@ -24,8 +24,6 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
               $checkedConvert('description', (v) => v as String? ?? ''),
           trackingType:
               $checkedConvert('tracking_type', (v) => v as String? ?? ''),
-          trackingSubtitle:
-              $checkedConvert('tracking_subtitle', (v) => v as String? ?? ''),
           mainMetric: $checkedConvert('main_metric', (v) => v as String? ?? ''),
           leftMetric: $checkedConvert('left_metric', (v) => v as String? ?? ''),
           rightMetric:
@@ -53,7 +51,6 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
       fieldKeyMap: const {
         'ownerId': 'owner_id',
         'trackingType': 'tracking_type',
-        'trackingSubtitle': 'tracking_subtitle',
         'mainMetric': 'main_metric',
         'leftMetric': 'left_metric',
         'rightMetric': 'right_metric',
@@ -72,7 +69,6 @@ Map<String, dynamic> _$$TrackingSummaryImplToJson(
       'total': instance.total,
       'description': instance.description,
       'tracking_type': instance.trackingType,
-      'tracking_subtitle': instance.trackingSubtitle,
       'main_metric': instance.mainMetric,
       'left_metric': instance.leftMetric,
       'right_metric': instance.rightMetric,

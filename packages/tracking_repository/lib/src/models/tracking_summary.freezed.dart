@@ -26,8 +26,8 @@ mixin _$TrackingSummary {
   String get section => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  String get trackingType => throw _privateConstructorUsedError;
-  String get trackingSubtitle => throw _privateConstructorUsedError;
+  String get trackingType =>
+      throw _privateConstructorUsedError; //@Default('') String trackingSubtitle,
   String get mainMetric => throw _privateConstructorUsedError;
   String get leftMetric => throw _privateConstructorUsedError;
   String get rightMetric => throw _privateConstructorUsedError;
@@ -59,7 +59,6 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       int total,
       String description,
       String trackingType,
-      String trackingSubtitle,
       String mainMetric,
       String leftMetric,
       String rightMetric,
@@ -90,7 +89,6 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? total = null,
     Object? description = null,
     Object? trackingType = null,
-    Object? trackingSubtitle = null,
     Object? mainMetric = null,
     Object? leftMetric = null,
     Object? rightMetric = null,
@@ -128,10 +126,6 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
       trackingType: null == trackingType
           ? _value.trackingType
           : trackingType // ignore: cast_nullable_to_non_nullable
-              as String,
-      trackingSubtitle: null == trackingSubtitle
-          ? _value.trackingSubtitle
-          : trackingSubtitle // ignore: cast_nullable_to_non_nullable
               as String,
       mainMetric: null == mainMetric
           ? _value.mainMetric
@@ -185,7 +179,6 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       int total,
       String description,
       String trackingType,
-      String trackingSubtitle,
       String mainMetric,
       String leftMetric,
       String rightMetric,
@@ -214,7 +207,6 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? total = null,
     Object? description = null,
     Object? trackingType = null,
-    Object? trackingSubtitle = null,
     Object? mainMetric = null,
     Object? leftMetric = null,
     Object? rightMetric = null,
@@ -252,10 +244,6 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
       trackingType: null == trackingType
           ? _value.trackingType
           : trackingType // ignore: cast_nullable_to_non_nullable
-              as String,
-      trackingSubtitle: null == trackingSubtitle
-          ? _value.trackingSubtitle
-          : trackingSubtitle // ignore: cast_nullable_to_non_nullable
               as String,
       mainMetric: null == mainMetric
           ? _value.mainMetric
@@ -304,7 +292,6 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       this.total = 0,
       this.description = '',
       this.trackingType = '',
-      this.trackingSubtitle = '',
       this.mainMetric = '',
       this.leftMetric = '',
       this.rightMetric = '',
@@ -336,9 +323,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   @override
   @JsonKey()
   final String trackingType;
-  @override
-  @JsonKey()
-  final String trackingSubtitle;
+//@Default('') String trackingSubtitle,
   @override
   @JsonKey()
   final String mainMetric;
@@ -379,7 +364,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
 
   @override
   String toString() {
-    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, trackingType: $trackingType, trackingSubtitle: $trackingSubtitle, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, autoUpdate: $autoUpdate, metrics: $metrics, active: $active, createdAt: $createdAt, tags: $tags)';
+    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, trackingType: $trackingType, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, autoUpdate: $autoUpdate, metrics: $metrics, active: $active, createdAt: $createdAt, tags: $tags)';
   }
 
   @override
@@ -396,8 +381,6 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
                 other.description == description) &&
             (identical(other.trackingType, trackingType) ||
                 other.trackingType == trackingType) &&
-            (identical(other.trackingSubtitle, trackingSubtitle) ||
-                other.trackingSubtitle == trackingSubtitle) &&
             (identical(other.mainMetric, mainMetric) ||
                 other.mainMetric == mainMetric) &&
             (identical(other.leftMetric, leftMetric) ||
@@ -424,7 +407,6 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       total,
       description,
       trackingType,
-      trackingSubtitle,
       mainMetric,
       leftMetric,
       rightMetric,
@@ -458,7 +440,6 @@ abstract class _TrackingSummary implements TrackingSummary {
       final int total,
       final String description,
       final String trackingType,
-      final String trackingSubtitle,
       final String mainMetric,
       final String leftMetric,
       final String rightMetric,
@@ -485,9 +466,7 @@ abstract class _TrackingSummary implements TrackingSummary {
   String get description;
   @override
   String get trackingType;
-  @override
-  String get trackingSubtitle;
-  @override
+  @override //@Default('') String trackingSubtitle,
   String get mainMetric;
   @override
   String get leftMetric;

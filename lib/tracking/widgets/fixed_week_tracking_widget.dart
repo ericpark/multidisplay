@@ -68,7 +68,7 @@ class FixedWeekTrackingWidget extends StatelessWidget {
       color = Colors.red[700];
     }
 
-    return SimpleTrackingWidget(
+    return OutlinedTrackingWidget(
       id: id,
       section: section,
       trackingName: trackingName,

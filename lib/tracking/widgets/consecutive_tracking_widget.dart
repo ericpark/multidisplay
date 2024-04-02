@@ -1,6 +1,10 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+// Packages
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+
+// Project
 import 'package:multidisplay/tracking/tracking.dart';
 
 class ConsecutiveTrackingWidget extends StatelessWidget {
@@ -8,23 +12,14 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
     super.key,
     required this.id,
     required this.section,
-    required this.trackingName,
-    required this.mainMetric,
-    required this.lastDate,
+    required this.trackingSummary,
     required this.onDoubleTap,
     this.dialogChoices,
-    Map<String, String>? leftMetric,
-    Map<String, String>? rightMetric,
-  })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
-        rightMetric = rightMetric ?? const {"display_name": "", "value": ""};
+  });
 
   final int id;
   final String section;
-  final String trackingName;
-  final DateTime lastDate;
-  final Map<String, String> mainMetric;
-  final Map<String, String> leftMetric;
-  final Map<String, String> rightMetric;
+  final TrackingSummary trackingSummary;
 
   final List<String>? dialogChoices;
   final void Function()? onDoubleTap;
@@ -78,6 +73,7 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color? color;
+    final lastDate = trackingSummary.records.last.date;
     int hoursSinceLastRecord = DateTime.now().difference(lastDate).inHours;
     int hoursRemainingToday = 24 - DateTime.now().hour;
 
@@ -89,7 +85,15 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
       color = Colors.red[700];
     }
 
-    return SimpleTrackingWidget(
+    final trackingName = trackingSummary.name;
+    final mainMetric = trackingSummary.metrics[trackingSummary.mainMetric] ??
+        {"display_name": "", "value": ""};
+    final leftMetric = trackingSummary.metrics[trackingSummary.leftMetric] ??
+        const {"display_name": "", "value": ""};
+    final rightMetric = trackingSummary.metrics[trackingSummary.rightMetric] ??
+        const {"display_name": "", "value": ""};
+
+    return OutlinedTrackingWidget(
       id: id,
       section: section,
       trackingName: trackingName,

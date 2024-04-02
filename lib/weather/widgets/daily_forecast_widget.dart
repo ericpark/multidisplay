@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+
+// Packages
 import 'package:intl/intl.dart';
+
+//Project
 import 'package:multidisplay/weather/weather.dart';
+import 'package:multidisplay/app/helpers/helpers.dart';
 
 class DailyForecastPopulated extends StatelessWidget {
   const DailyForecastPopulated({
@@ -18,20 +23,35 @@ class DailyForecastPopulated extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> forecastWidgets = [];
 
-    for (var i = 0; i < forecast.length; i++) {
-      forecastWidgets.add(
-        Expanded(
-            flex: 1,
-            child: DailyForecastCell(weather: forecast[i], units: units)),
-      );
-    }
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final width = constraints.maxWidth;
+      ScrollPhysics scrollable = width > 400
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics();
 
-    return Center(
-      child: Flex(
-        direction: Axis.horizontal,
-        children: forecastWidgets,
-      ),
-    );
+      double widgetSize = width / 7;
+
+      if (width < 400) {
+        widgetSize = width / 3;
+      }
+      for (var i = 0; i < forecast.length; i++) {
+        forecastWidgets.add(
+          SizedBox(
+              width: widgetSize, // Evenly Distribute in size
+              child: DailyForecastCell(weather: forecast[i], units: units)),
+        );
+      }
+      return Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: scrollable,
+          child: Row(
+            children: forecastWidgets,
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -48,6 +68,10 @@ class DailyForecastCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final dayString = weather.date.isToday
+        ? "Today"
+        : DateFormat('EEEE').format(weather.date);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -59,7 +83,7 @@ class DailyForecastCell extends StatelessWidget {
               children: [
                 // DAY OF WEEK
                 Text(
-                  DateFormat('EEEE').format(weather.date),
+                  dayString,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.normal,
                   ),

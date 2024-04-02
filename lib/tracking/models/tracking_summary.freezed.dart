@@ -25,6 +25,7 @@ mixin _$TrackingSummary {
   @JsonKey(name: 'total')
   @JsonKey(name: 'count')
   int get count => throw _privateConstructorUsedError;
+  @Deprecated("")
   @JsonKey(name: 'tracking_subtitle')
   String? get subtitle => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
@@ -58,7 +59,7 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       {String name,
       String section,
       @JsonKey(name: 'total') @JsonKey(name: 'count') int count,
-      @JsonKey(name: 'tracking_subtitle') String? subtitle,
+      @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
       String id,
       String ownerId,
       String mainMetric,
@@ -178,7 +179,7 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       {String name,
       String section,
       @JsonKey(name: 'total') @JsonKey(name: 'count') int count,
-      @JsonKey(name: 'tracking_subtitle') String? subtitle,
+      @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
       String id,
       String ownerId,
       String mainMetric,
@@ -291,7 +292,7 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
       {required this.name,
       required this.section,
       @JsonKey(name: 'total') @JsonKey(name: 'count') this.count = 0,
-      @JsonKey(name: 'tracking_subtitle') this.subtitle,
+      @Deprecated("") @JsonKey(name: 'tracking_subtitle') this.subtitle,
       required this.id,
       required this.ownerId,
       this.mainMetric = '',
@@ -319,6 +320,7 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
   @JsonKey(name: 'count')
   final int count;
   @override
+  @Deprecated("")
   @JsonKey(name: 'tracking_subtitle')
   final String? subtitle;
   @override
@@ -440,7 +442,9 @@ abstract class _TrackingSummary extends TrackingSummary {
           {required final String name,
           required final String section,
           @JsonKey(name: 'total') @JsonKey(name: 'count') final int count,
-          @JsonKey(name: 'tracking_subtitle') final String? subtitle,
+          @Deprecated("")
+          @JsonKey(name: 'tracking_subtitle')
+          final String? subtitle,
           required final String id,
           required final String ownerId,
           final String mainMetric,
@@ -467,6 +471,7 @@ abstract class _TrackingSummary extends TrackingSummary {
   @JsonKey(name: 'count')
   int get count;
   @override
+  @Deprecated("")
   @JsonKey(name: 'tracking_subtitle')
   String? get subtitle;
   @override

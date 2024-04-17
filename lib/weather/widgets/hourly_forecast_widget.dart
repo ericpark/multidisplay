@@ -26,7 +26,7 @@ class HourlyForecastWidget extends StatelessWidget {
             return const WeatherEmpty();
           case WeatherStatus.loading:
             return const SizedBox(
-                width: double.infinity, child: WeatherLoading());
+                width: double.infinity, child: WeatherHourlyLoading());
           case WeatherStatus.success:
             final sunriseAndSunset =
                 context.read<WeatherCubit>().getNextSunriseAndSunset();

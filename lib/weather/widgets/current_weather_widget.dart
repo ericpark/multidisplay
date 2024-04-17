@@ -29,7 +29,7 @@ class CurrentWeatherWidget extends StatelessWidget {
             return const WeatherEmpty();
           case WeatherStatus.loading:
             return const SizedBox(
-                width: double.infinity, child: WeatherLoading());
+                width: double.infinity, child: WeatherCurrentLoading());
           case WeatherStatus.success:
             return CurrentWeatherWidgetPopulated(
                 weather: state.weather,

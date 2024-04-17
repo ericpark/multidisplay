@@ -9,8 +9,16 @@ class WeatherRepository {
 
   final OpenMeteoApiClient _weatherApiClient;
 
-  Future<Weather> getWeather(String city) async {
-    final location = await _weatherApiClient.locationSearch(city);
+  Future<Weather> getWeather(String city,
+      {double? latitude, double? longitude}) async {
+    Location location;
+
+    if (latitude == null || longitude == null) {
+      location = await _weatherApiClient.locationSearch(city);
+    } else {
+      location =
+          Location(id: 0, name: city, latitude: latitude, longitude: longitude);
+    }
 
     final weather = await _weatherApiClient.getCurrentWeather(
       latitude: location.latitude,
@@ -18,18 +26,27 @@ class WeatherRepository {
     );
     DateTime now = DateTime.now();
     return Weather(
-      date: DateTime.parse(
-          '${now.year}-${now.month.toString().padLeft(2, "0")}-${now.day.toString().padLeft(2, "0")}'),
-      temperature: weather.temperature,
-      temperatureHigh: weather.temperature,
-      temperatureLow: weather.temperature,
-      location: location.name,
-      condition: weather.weatherCode.toInt().toCondition,
-    );
+        date: DateTime.parse(
+            '${now.year}-${now.month.toString().padLeft(2, "0")}-${now.day.toString().padLeft(2, "0")}'),
+        temperature: weather.temperature,
+        temperatureHigh: weather.temperature,
+        temperatureLow: weather.temperature,
+        location: location.name,
+        condition: weather.weatherCode.toInt().toCondition,
+        position: (location.latitude, location.longitude));
   }
 
-  Future<List<Weather>> getDailyWeatherForecast(String city) async {
-    final location = await _weatherApiClient.locationSearch(city);
+  Future<List<Weather>> getDailyWeatherForecast(String city,
+      {double? latitude, double? longitude}) async {
+    Location location;
+
+    if (latitude == null || longitude == null) {
+      location = await _weatherApiClient.locationSearch(city);
+    } else {
+      location =
+          Location(id: 0, name: city, latitude: latitude, longitude: longitude);
+    }
+
     final forecast = await _weatherApiClient.getDailyWeatherForecast(
       latitude: location.latitude,
       longitude: location.longitude,
@@ -53,8 +70,17 @@ class WeatherRepository {
     return weather_forecast;
   }
 
-  Future<List<Weather>> getHourlyWeatherForecast(String city) async {
-    final location = await _weatherApiClient.locationSearch(city);
+  Future<List<Weather>> getHourlyWeatherForecast(String city,
+      {double? latitude, double? longitude}) async {
+    Location location;
+
+    if (latitude == null || longitude == null) {
+      location = await _weatherApiClient.locationSearch(city);
+    } else {
+      location =
+          Location(id: 0, name: city, latitude: latitude, longitude: longitude);
+    }
+
     final forecast = await _weatherApiClient.getHourlyWeatherForecast(
       latitude: location.latitude,
       longitude: location.longitude,

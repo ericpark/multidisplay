@@ -24,6 +24,7 @@ mixin _$TrackingSummary {
   String get ownerId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get section => throw _privateConstructorUsedError;
+  @Deprecated('Use mainMetric')
   int get total => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get trackingType =>
@@ -33,6 +34,8 @@ mixin _$TrackingSummary {
   String get rightMetric => throw _privateConstructorUsedError;
   bool get autoUpdate => throw _privateConstructorUsedError;
   Map<String, Map<String, String>> get metrics =>
+      throw _privateConstructorUsedError;
+  Map<String, Map<String, Map<String, double>>> get thresholds =>
       throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
   @DateTimeNullableConverter()
@@ -56,7 +59,7 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       String ownerId,
       String name,
       String section,
-      int total,
+      @Deprecated('Use mainMetric') int total,
       String description,
       String trackingType,
       String mainMetric,
@@ -64,6 +67,7 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       String rightMetric,
       bool autoUpdate,
       Map<String, Map<String, String>> metrics,
+      Map<String, Map<String, Map<String, double>>> thresholds,
       bool? active,
       @DateTimeNullableConverter() DateTime? createdAt,
       List<String>? tags});
@@ -94,6 +98,7 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? rightMetric = null,
     Object? autoUpdate = null,
     Object? metrics = null,
+    Object? thresholds = null,
     Object? active = freezed,
     Object? createdAt = freezed,
     Object? tags = freezed,
@@ -147,6 +152,10 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.metrics
           : metrics // ignore: cast_nullable_to_non_nullable
               as Map<String, Map<String, String>>,
+      thresholds: null == thresholds
+          ? _value.thresholds
+          : thresholds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, Map<String, double>>>,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -176,7 +185,7 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       String ownerId,
       String name,
       String section,
-      int total,
+      @Deprecated('Use mainMetric') int total,
       String description,
       String trackingType,
       String mainMetric,
@@ -184,6 +193,7 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       String rightMetric,
       bool autoUpdate,
       Map<String, Map<String, String>> metrics,
+      Map<String, Map<String, Map<String, double>>> thresholds,
       bool? active,
       @DateTimeNullableConverter() DateTime? createdAt,
       List<String>? tags});
@@ -212,6 +222,7 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? rightMetric = null,
     Object? autoUpdate = null,
     Object? metrics = null,
+    Object? thresholds = null,
     Object? active = freezed,
     Object? createdAt = freezed,
     Object? tags = freezed,
@@ -265,6 +276,10 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value._metrics
           : metrics // ignore: cast_nullable_to_non_nullable
               as Map<String, Map<String, String>>,
+      thresholds: null == thresholds
+          ? _value._thresholds
+          : thresholds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, Map<String, double>>>,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -289,7 +304,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       required this.ownerId,
       required this.name,
       required this.section,
-      this.total = 0,
+      @Deprecated('Use mainMetric') this.total = 0,
       this.description = '',
       this.trackingType = '',
       this.mainMetric = '',
@@ -297,10 +312,12 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       this.rightMetric = '',
       this.autoUpdate = false,
       final Map<String, Map<String, String>> metrics = const {},
+      final Map<String, Map<String, Map<String, double>>> thresholds = const {},
       this.active = true,
       @DateTimeNullableConverter() this.createdAt,
       final List<String>? tags = const []})
       : _metrics = metrics,
+        _thresholds = thresholds,
         _tags = tags;
 
   factory _$TrackingSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -316,6 +333,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
   final String section;
   @override
   @JsonKey()
+  @Deprecated('Use mainMetric')
   final int total;
   @override
   @JsonKey()
@@ -345,6 +363,15 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
     return EqualUnmodifiableMapView(_metrics);
   }
 
+  final Map<String, Map<String, Map<String, double>>> _thresholds;
+  @override
+  @JsonKey()
+  Map<String, Map<String, Map<String, double>>> get thresholds {
+    if (_thresholds is EqualUnmodifiableMapView) return _thresholds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_thresholds);
+  }
+
   @override
   @JsonKey()
   final bool? active;
@@ -364,7 +391,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
 
   @override
   String toString() {
-    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, trackingType: $trackingType, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, autoUpdate: $autoUpdate, metrics: $metrics, active: $active, createdAt: $createdAt, tags: $tags)';
+    return 'TrackingSummary(id: $id, ownerId: $ownerId, name: $name, section: $section, total: $total, description: $description, trackingType: $trackingType, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, autoUpdate: $autoUpdate, metrics: $metrics, thresholds: $thresholds, active: $active, createdAt: $createdAt, tags: $tags)';
   }
 
   @override
@@ -390,6 +417,8 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
             (identical(other.autoUpdate, autoUpdate) ||
                 other.autoUpdate == autoUpdate) &&
             const DeepCollectionEquality().equals(other._metrics, _metrics) &&
+            const DeepCollectionEquality()
+                .equals(other._thresholds, _thresholds) &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -412,6 +441,7 @@ class _$TrackingSummaryImpl implements _TrackingSummary {
       rightMetric,
       autoUpdate,
       const DeepCollectionEquality().hash(_metrics),
+      const DeepCollectionEquality().hash(_thresholds),
       active,
       createdAt,
       const DeepCollectionEquality().hash(_tags));
@@ -437,7 +467,7 @@ abstract class _TrackingSummary implements TrackingSummary {
       required final String ownerId,
       required final String name,
       required final String section,
-      final int total,
+      @Deprecated('Use mainMetric') final int total,
       final String description,
       final String trackingType,
       final String mainMetric,
@@ -445,6 +475,7 @@ abstract class _TrackingSummary implements TrackingSummary {
       final String rightMetric,
       final bool autoUpdate,
       final Map<String, Map<String, String>> metrics,
+      final Map<String, Map<String, Map<String, double>>> thresholds,
       final bool? active,
       @DateTimeNullableConverter() final DateTime? createdAt,
       final List<String>? tags}) = _$TrackingSummaryImpl;
@@ -461,6 +492,7 @@ abstract class _TrackingSummary implements TrackingSummary {
   @override
   String get section;
   @override
+  @Deprecated('Use mainMetric')
   int get total;
   @override
   String get description;
@@ -476,6 +508,8 @@ abstract class _TrackingSummary implements TrackingSummary {
   bool get autoUpdate;
   @override
   Map<String, Map<String, String>> get metrics;
+  @override
+  Map<String, Map<String, Map<String, double>>> get thresholds;
   @override
   bool? get active;
   @override

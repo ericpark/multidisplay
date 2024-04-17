@@ -38,3 +38,21 @@ class DateTimeNullableConverter implements JsonConverter<DateTime?, dynamic> {
   String toJson(DateTime? object) =>
       DateFormat("yyyy-MM-dd").format(object ?? DateTime.now());
 }
+
+class TimestampNullableConverter implements JsonConverter<DateTime?, dynamic> {
+  const TimestampNullableConverter();
+
+  @override
+  DateTime fromJson(dynamic timestamp) {
+    if (timestamp is Timestamp) {
+      return timestamp.toDate();
+    }
+    if (timestamp is String) {
+      return DateTime.parse(timestamp);
+    }
+    return DateTime.now();
+  }
+
+  @override
+  String toJson(DateTime? object) => DateTime.now().toString();
+}

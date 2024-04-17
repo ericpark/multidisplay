@@ -38,6 +38,15 @@ WeatherState _$WeatherStateFromJson(Map<String, dynamic> json) =>
                   TemperatureUnits.fahrenheit),
           autoRefresh:
               $checkedConvert('auto_refresh', (v) => v as bool? ?? true),
+          position: $checkedConvert(
+              'position',
+              (v) => _$recordConvertNullable(
+                    v,
+                    ($jsonValue) => (
+                      ($jsonValue[r'$1'] as num).toDouble(),
+                      ($jsonValue[r'$2'] as num).toDouble(),
+                    ),
+                  )),
           weather: $checkedConvert(
               'weather',
               (v) => v == null
@@ -77,6 +86,12 @@ Map<String, dynamic> _$WeatherStateToJson(WeatherState instance) =>
       'daily_forecast': instance.dailyForecast.map((e) => e.toJson()).toList(),
       'hourly_forecast':
           instance.hourlyForecast.map((e) => e.toJson()).toList(),
+      'position': instance.position == null
+          ? null
+          : {
+              r'$1': instance.position!.$1,
+              r'$2': instance.position!.$2,
+            },
     };
 
 const _$WeatherStatusEnumMap = {
@@ -90,3 +105,9 @@ const _$TemperatureUnitsEnumMap = {
   TemperatureUnits.fahrenheit: 'fahrenheit',
   TemperatureUnits.celsius: 'celsius',
 };
+
+$Rec? _$recordConvertNullable<$Rec>(
+  Object? value,
+  $Rec Function(Map) convert,
+) =>
+    value == null ? null : convert(value as Map<String, dynamic>);

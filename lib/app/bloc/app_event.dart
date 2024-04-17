@@ -12,6 +12,10 @@ final class AppLoaded extends AppEvent {
   const AppLoaded();
 }
 
+final class AppAuthenticated extends AppEvent {
+  const AppAuthenticated();
+}
+
 final class AppPageChanged extends AppEvent {
   const AppPageChanged({required this.page});
   final int page;

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:multidisplay/expenses/expenses.dart';
+//import 'package:multidisplay/expenses/expenses.dart';
 
 /*import 'package:expenses_repository/expenses_repository.dart'
     as expenses_repository;*/

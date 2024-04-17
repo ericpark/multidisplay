@@ -18,8 +18,15 @@ class TrackingLoading extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              TitlePlaceholder(
-                width: 100,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: TitlePlaceholder(
+                  width: 100,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Divider(),
               ),
               Row(
                 children: [

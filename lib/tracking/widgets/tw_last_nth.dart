@@ -3,18 +3,20 @@ import 'package:flutter/cupertino.dart';
 
 // Packages
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:multidisplay/app/helpers/helpers.dart';
 
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
 
-class ConsecutiveTrackingWidget extends StatelessWidget {
-  const ConsecutiveTrackingWidget({
+class LastNthTrackingWidget extends StatelessWidget {
+  const LastNthTrackingWidget({
     super.key,
     required this.id,
     required this.section,
     required this.trackingSummary,
     required this.onDoubleTap,
     this.dialogChoices,
+    this.color,
   });
 
   final int id;
@@ -22,9 +24,10 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
   final TrackingSummary trackingSummary;
 
   final List<String>? dialogChoices;
+  final Color? color;
   final void Function()? onDoubleTap;
 
-  void _showChoiceDialog(BuildContext context) async {
+  Future<bool?> _showChoiceDialog(BuildContext context) async {
     final actions = dialogChoices!
         .map((choice) => AlertDialogAction(
             key: choice.toLowerCase().replaceAll(" ", "-"), label: choice))
@@ -38,10 +41,12 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
     );
     if (result == OkCancelResult.ok.toString()) {
       onDoubleTap!();
+      return true;
     }
+    return null;
   }
 
-  void _showDefaultDialog(BuildContext context) async {
+  Future<bool?> _showDefaultDialog(BuildContext context) async {
     final result = await showOkCancelAlertDialog(
       context: context,
       title: 'Track Event',
@@ -67,24 +72,13 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
     );
     if (result == OkCancelResult.ok) {
       onDoubleTap!();
+      return true;
     }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    Color? color;
-    final lastDate = trackingSummary.records.last.date;
-    int hoursSinceLastRecord = DateTime.now().difference(lastDate).inHours;
-    int hoursRemainingToday = 24 - DateTime.now().hour;
-
-    if (hoursSinceLastRecord < 24) {
-      color = Colors.green[700];
-    } else if (hoursSinceLastRecord < 48 && hoursRemainingToday > 0) {
-      color = Colors.amber[700];
-    } else {
-      color = Colors.red[700];
-    }
-
     final trackingName = trackingSummary.name;
     final mainMetric = trackingSummary.metrics[trackingSummary.mainMetric] ??
         {"display_name": "", "value": ""};
@@ -92,14 +86,19 @@ class ConsecutiveTrackingWidget extends StatelessWidget {
         const {"display_name": "", "value": ""};
     final rightMetric = trackingSummary.metrics[trackingSummary.rightMetric] ??
         const {"display_name": "", "value": ""};
+    final multipleToday = trackingSummary.records
+        .where((record) => record.date.isToday)
+        .isNotEmpty;
 
-    return OutlinedTrackingWidget(
+    final showConfetti = multipleToday;
+    return ConfettiOutlinedTrackingWidget(
       id: id,
       section: section,
       trackingName: trackingName,
       mainMetric: mainMetric,
       leftMetric: leftMetric,
       rightMetric: rightMetric,
+      showConfetti: showConfetti,
       color: color,
       onDoubleTap: () => dialogChoices != null
           ? _showChoiceDialog(context)

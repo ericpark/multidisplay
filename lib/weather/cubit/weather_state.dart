@@ -20,6 +20,7 @@ class WeatherState extends Equatable {
       },
       this.temperatureUnits = TemperatureUnits.fahrenheit,
       this.autoRefresh = true,
+      this.position,
       Weather? weather,
       List<Weather>? dailyForecast,
       List<Weather>? hourlyForecast})
@@ -40,6 +41,7 @@ class WeatherState extends Equatable {
   final bool autoRefresh;
   final List<Weather> dailyForecast; // Daily Forecast
   final List<Weather> hourlyForecast; // Hourly Forecast
+  final (double, double)? position; // Hourly Forecast
 
   WeatherState copyWith({
     WeatherStatus? status,
@@ -49,6 +51,7 @@ class WeatherState extends Equatable {
     Weather? weather,
     List<Weather>? dailyForecast,
     List<Weather>? hourlyForecast,
+    (double, double)? position,
   }) {
     return WeatherState(
       status: status ?? this.status,
@@ -58,6 +61,7 @@ class WeatherState extends Equatable {
       weather: weather ?? this.weather,
       dailyForecast: dailyForecast ?? this.dailyForecast,
       hourlyForecast: hourlyForecast ?? this.hourlyForecast,
+      position: position ?? this.position,
     );
   }
 
@@ -71,7 +75,8 @@ class WeatherState extends Equatable {
         autoRefresh,
         weather,
         dailyForecast,
-        hourlyForecast
+        hourlyForecast,
+        position
       ];
 }
 

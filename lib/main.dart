@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
 import 'package:tracking_repository/tracking_repository.dart';
+import 'package:auth_repository/auth_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ void main() async {
     weatherRepository: WeatherRepository(),
     calendarRepository: CalendarRepository(firebaseDB: db),
     trackingRepository: TrackingRepository(firebaseDB: db),
+    authRepository: AuthRepository(firebaseDB: db),
     savedThemeMode: savedThemeMode,
   ));
 }

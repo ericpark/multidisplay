@@ -8,27 +8,19 @@ class FixedWeekTrackingWidget extends StatelessWidget {
     super.key,
     required this.id,
     required this.section,
-    required this.trackingName,
-    required this.mainMetric,
-    required this.remaining,
+    required this.trackingSummary,
     required this.onDoubleTap,
-    List<int>? threshold,
-    Map<String, String>? leftMetric,
-    Map<String, String>? rightMetric,
-  })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
-        rightMetric = rightMetric ?? const {"display_name": "", "value": ""},
-        threshold = threshold ?? const [1, 0];
+    required this.remaining,
+    this.dialogChoices,
+  });
 
   final int id;
   final String section;
-  final String trackingName;
+  final TrackingSummary trackingSummary;
   final int remaining;
-  final Map<String, String> mainMetric;
-  final Map<String, String> leftMetric;
-  final Map<String, String> rightMetric;
-  final List<int> threshold;
-  final void Function()? onDoubleTap;
 
+  final List<String>? dialogChoices;
+  final void Function()? onDoubleTap;
   void _showDefaultDialog(BuildContext context) async {
     final result = await showOkCancelAlertDialog(
       context: context,
@@ -60,6 +52,14 @@ class FixedWeekTrackingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Color? color;
 
+    final trackingName = trackingSummary.name;
+    final mainMetric = trackingSummary.metrics[trackingSummary.mainMetric] ??
+        {"display_name": "", "value": ""};
+    final leftMetric = trackingSummary.metrics[trackingSummary.leftMetric] ??
+        const {"display_name": "", "value": ""};
+    final rightMetric = trackingSummary.metrics[trackingSummary.rightMetric] ??
+        const {"display_name": "", "value": ""};
+    final threshold = [1, 0];
     if (remaining >= threshold[0]) {
       color = Colors.green[700];
     } else if (remaining >= threshold[1]) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:multidisplay/tracking/widgets/tw_last_nth.dart';
+import 'package:multidisplay/tracking/widgets/tw_nth_ago.dart';
 
 class TrackingSectionWidget extends StatelessWidget {
   const TrackingSectionWidget({super.key, required this.sectionName});
@@ -31,28 +33,34 @@ class TrackingSectionWidget extends StatelessWidget {
           //dialogChoices: ["Leg", "chest"],
         );
       case "last_seven":
-        color = colorScheme.secondary;
-        return OutlinedTrackingWidget(
+        color = colorScheme.primary;
+
+        return LastNthTrackingWidget(
           id: index,
           section: data.section,
-          trackingName: data.name,
-          mainMetric: main,
-          leftMetric: left,
-          rightMetric: right,
-          color: color,
+          trackingSummary: data,
           onDoubleTap: () async => await trackingCubit.handleWidgetDoubleTap(
               section: data.section, index: index),
+          color: color,
+
+          //dialogChoices: ["Leg", "chest"],
         );
       case "fixed_week":
         color = colorScheme.secondary;
         return FixedWeekTrackingWidget(
           id: index,
           section: data.section,
-          trackingName: data.name,
-          mainMetric: main,
-          leftMetric: left,
-          rightMetric: right,
+          trackingSummary: data,
           remaining: int.tryParse(main["value"] ?? "") ?? 0,
+          onDoubleTap: () => trackingCubit.handleWidgetDoubleTap(
+              section: data.section, index: index),
+        );
+      case "days_ago":
+        color = colorScheme.secondary;
+        return NthAgoTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingSummary: data,
           onDoubleTap: () => trackingCubit.handleWidgetDoubleTap(
               section: data.section, index: index),
         );

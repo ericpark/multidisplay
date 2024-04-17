@@ -60,6 +60,7 @@ class Weather extends Equatable {
     required this.location,
     required this.condition,
     required this.temperature,
+    (double, double)? position,
     double? temperatureHigh,
     double? temperatureLow,
     double? precipitation,
@@ -75,12 +76,8 @@ class Weather extends Equatable {
         soilCondition = soilCondition ?? SoilCondition.unknown,
         sunrise = sunrise ?? DateTime.now(),
         sunset = sunset ?? DateTime.now(),
-        precipitationProbability = precipitationProbability ?? 0;
-
-  factory Weather.fromJson(Map<String, dynamic> json) =>
-      _$WeatherFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WeatherToJson(this);
+        precipitationProbability = precipitationProbability ?? 0,
+        position = position ?? (40.6501, -73.94958);
 
   @DateTimeConverter()
   final DateTime date;
@@ -95,6 +92,12 @@ class Weather extends Equatable {
   final DateTime sunrise;
   final DateTime sunset;
   final int precipitationProbability;
+  final (double, double) position;
+
+  factory Weather.fromJson(Map<String, dynamic> json) =>
+      _$WeatherFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WeatherToJson(this);
 
   @override
   List<Object> get props => [
@@ -110,6 +113,7 @@ class Weather extends Equatable {
         sunrise,
         sunset,
         precipitationProbability,
+        position,
       ];
 }
 
@@ -121,4 +125,14 @@ class DateTimeConverter implements JsonConverter<DateTime, String> {
 
   @override
   String toJson(DateTime object) => DateFormat("yyyy-MM-dd").format(object);
+}
+
+class Position extends Equatable {
+  const Position({required this.latitude, required this.longitude});
+
+  final double latitude;
+  final double longitude;
+
+  @override
+  List<Object> get props => [latitude, longitude];
 }

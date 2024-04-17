@@ -21,6 +21,8 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
           subtitle: $checkedConvert('tracking_subtitle', (v) => v as String?),
           id: $checkedConvert('id', (v) => v as String),
           ownerId: $checkedConvert('owner_id', (v) => v as String),
+          description:
+              $checkedConvert('description', (v) => v as String? ?? ''),
           mainMetric: $checkedConvert('main_metric', (v) => v as String? ?? ''),
           leftMetric: $checkedConvert('left_metric', (v) => v as String? ?? ''),
           rightMetric:
@@ -30,6 +32,21 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
               (v) =>
                   (v as Map<String, dynamic>?)?.map(
                     (k, e) => MapEntry(k, Map<String, String>.from(e as Map)),
+                  ) ??
+                  const {}),
+          thresholds: $checkedConvert(
+              'thresholds',
+              (v) =>
+                  (v as Map<String, dynamic>?)?.map(
+                    (k, e) => MapEntry(
+                        k,
+                        (e as Map<String, dynamic>).map(
+                          (k, e) => MapEntry(
+                              k,
+                              (e as Map<String, dynamic>).map(
+                                (k, e) => MapEntry(k, (e as num).toDouble()),
+                              )),
+                        )),
                   ) ??
                   const {}),
           autoUpdate:
@@ -74,10 +91,12 @@ Map<String, dynamic> _$$TrackingSummaryImplToJson(
       'tracking_subtitle': instance.subtitle,
       'id': instance.id,
       'owner_id': instance.ownerId,
+      'description': instance.description,
       'main_metric': instance.mainMetric,
       'left_metric': instance.leftMetric,
       'right_metric': instance.rightMetric,
       'metrics': instance.metrics,
+      'thresholds': instance.thresholds,
       'auto_update': instance.autoUpdate,
       'records': instance.records.map((e) => e.toJson()).toList(),
       'tracking_type': instance.trackingType,

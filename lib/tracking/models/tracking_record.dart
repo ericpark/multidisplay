@@ -13,7 +13,7 @@ class TrackingRecord with _$TrackingRecord {
   factory TrackingRecord({
     @DateTimeConverter() required DateTime date,
     @Default('') String id,
-    @DateTimeNullableConverter() DateTime? createdAt,
+    @TimestampNullableConverter() DateTime? createdAt,
     String? description,
   }) = _TrackingRecord;
 

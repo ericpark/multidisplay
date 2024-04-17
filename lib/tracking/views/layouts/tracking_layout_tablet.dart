@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:multidisplay/auth/auth.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 class TrackingLayoutTablet extends StatelessWidget {
@@ -18,51 +20,49 @@ class TrackingLayoutTablet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          elevation: 1,
-          scrolledUnderElevation: 5.0,
-          shadowColor: Colors.black,
-          backgroundColor: Theme.of(context).secondaryHeaderColor,
-          clipBehavior: Clip.antiAlias,
-          /*leading: IconButton(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        elevation: 1,
+        scrolledUnderElevation: 5.0,
+        shadowColor: Colors.black,
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
+        clipBehavior: Clip.antiAlias,
+        /*leading: IconButton(
             icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
             onPressed: () async {},
           ),*/
-          actions: [
-            /*IconButton(
-              icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
-              onPressed: () async {},
-            ),*/
-            IconButton(
-              icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
-              onPressed: () async {
-                await context.read<TrackingCubit>().fetchTrackingGroups();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-              onPressed: () async {},
-            ),
-          ],
-        ),
-        body: BlocBuilder<TrackingCubit, TrackingState>(
-          builder: (context, state) {
-            TrackingCubit trackingCubit = context.read<TrackingCubit>();
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
+            onPressed: () async {
+              await context.read<TrackingCubit>().refreshTrackingGroups(
+                  userId: context.read<AuthCubit>().state.user?.id);
+            },
+          ),
+        ],
+      ),
+      body: BlocBuilder<TrackingCubit, TrackingState>(
+        builder: (context, state) {
+          TrackingCubit trackingCubit = context.read<TrackingCubit>();
 
-            List<Widget> sections = getSections(state.trackingSections);
+          List<Widget> sections = getSections(state.trackingSections);
 
-            List<Widget> sectionWidgets = [];
+          List<Widget> sectionWidgets = [];
 
-            sectionWidgets.addAll([
-              for (int index = 0; index < sections.length; index += 1)
-                Padding(
-                  key: Key('$index'),
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: sections[index]),
-                ),
-            ]);
-            return ReorderableListView(
+          sectionWidgets.addAll([
+            for (int index = 0; index < sections.length; index += 1)
+              Padding(
+                key: Key('$index'),
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(title: sections[index]),
+              ),
+          ]);
+          return RefreshIndicator(
+            onRefresh: () async => await context
+                .read<TrackingCubit>()
+                .refreshTrackingGroups(
+                    userId: context.read<AuthCubit>().state.user?.id),
+            child: ReorderableListView(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               onReorder: (int oldIndex, int newIndex) async {
                 await trackingCubit.reorderSections(
@@ -70,8 +70,12 @@ class TrackingLayoutTablet extends StatelessWidget {
               },
               buildDefaultDragHandles: state.reorderable,
               children: sectionWidgets,
-            );
-          },
-        ));
+            ),
+          );
+        },
+      ),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: const AddTrackingFAB(),
+    );
   }
 }

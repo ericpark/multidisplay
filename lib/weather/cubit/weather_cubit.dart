@@ -13,11 +13,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
 
   final WeatherRepository _weatherRepository;
 
-  Future<void> fetchWeather(String? city) async {
+  Future<void> fetchWeatherWithCity(String? city,
+      {double? latitude, double? longitude}) async {
     if (city == null || city.isEmpty) return;
 
+    (double, double)? position;
+    if (latitude != null && longitude != null) {
+      position = (latitude, longitude);
+    } else {
+      position = state.position;
+    }
     emit(state.copyWith(
         status: WeatherStatus.loading,
+        position: position,
         weather: (Weather.empty.copyWith(location: city))));
 
     try {
@@ -45,7 +53,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
   Future<Weather> getCurrentWeather() async {
     try {
       final weather = Weather.fromRepository(
-        await _weatherRepository.getWeather(state.weather.location),
+        await _weatherRepository.getWeather(state.weather.location,
+            latitude: state.position?.$1, longitude: state.position?.$2),
       );
 
       final units = state.temperatureUnits;
@@ -80,7 +89,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
   Future<List<Weather>> getHourlyWeather() async {
     try {
       final fetchedHourlyForecasts = await _weatherRepository
-          .getHourlyWeatherForecast(state.weather.location);
+          .getHourlyWeatherForecast(state.weather.location,
+              latitude: state.position?.$1, longitude: state.position?.$2);
 
       // Convert temperatures from F to C if needed.
       final units = state.temperatureUnits;
@@ -107,7 +117,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
   Future<List<Weather>> getDailyWeather() async {
     try {
       final fetchedDailyForecasts = await _weatherRepository
-          .getDailyWeatherForecast(state.weather.location);
+          .getDailyWeatherForecast(state.weather.location,
+              latitude: state.position?.$1, longitude: state.position?.$2);
 
       final units = state.temperatureUnits;
 

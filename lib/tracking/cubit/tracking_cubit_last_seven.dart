@@ -18,7 +18,7 @@ TrackingSummary incrementLastSevenTracker(
             getLastSevenDayAverage(total: lastSevenDayTotal);
       case "days_since_last":
         updatedMetric["value"] = getDaysSinceLast(records: records);
-      case "last_7_days":
+      case "last_seven_days":
         updatedMetric["value"] = "$lastSevenDayTotal";
       default:
         updatedMetric["value"] = currentMetric["value"] ?? "-";

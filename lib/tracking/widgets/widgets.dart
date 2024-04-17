@@ -5,5 +5,7 @@ export 'tracking_section.dart';
 export 'simple_tracking_widget.dart';
 export 'outlined_tracking_widget.dart';
 export 'horizontal_tracking_widget.dart';
-export 'consecutive_tracking_widget.dart';
+export 'tw_consecutive.dart';
 export 'fixed_week_tracking_widget.dart';
+export 'add_tracking_fab.dart';
+export 'confetti_outlined_tracking_widget.dart';

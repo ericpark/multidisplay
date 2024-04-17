@@ -17,6 +17,7 @@ abstract class TrackingState with _$TrackingState {
     @Default({}) Map<String, TrackingGroup> trackingGroups,
     @Default([]) List<String> trackingSections,
     @Default(false) bool reorderable,
+    @Default(true) bool showOnlyPublic,
   }) = _TrackingState;
 
   factory TrackingState.fromJson(Map<String, dynamic> json) =>

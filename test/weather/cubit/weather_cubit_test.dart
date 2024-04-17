@@ -62,21 +62,21 @@ void main() {
       blocTest<WeatherCubit, WeatherState>(
         'emits nothing when city is null',
         build: () => weatherCubit,
-        act: (cubit) => cubit.fetchWeather(null),
+        act: (cubit) => cubit.fetchWeatherWithCity(null),
         expect: () => <WeatherState>[],
       );
 
       blocTest<WeatherCubit, WeatherState>(
         'emits nothing when city is empty',
         build: () => weatherCubit,
-        act: (cubit) => cubit.fetchWeather(''),
+        act: (cubit) => cubit.fetchWeatherWithCity(''),
         expect: () => <WeatherState>[],
       );
 
       blocTest<WeatherCubit, WeatherState>(
         'calls getWeather with correct city',
         build: () => weatherCubit,
-        act: (cubit) => cubit.fetchWeather(weatherLocation),
+        act: (cubit) => cubit.fetchWeatherWithCity(weatherLocation),
         verify: (_) {
           verify(() => weatherRepository.getWeather(weatherLocation)).called(1);
         },
@@ -90,7 +90,7 @@ void main() {
           ).thenThrow(Exception('oops'));
         },
         build: () => weatherCubit,
-        act: (cubit) => cubit.fetchWeather(weatherLocation),
+        act: (cubit) => cubit.fetchWeatherWithCity(weatherLocation),
         expect: () => <WeatherState>[
           WeatherState(status: WeatherStatus.loading),
           WeatherState(status: WeatherStatus.failure),
@@ -100,7 +100,7 @@ void main() {
       blocTest<WeatherCubit, WeatherState>(
         'emits [loading, success] when getWeather returns (celsius)',
         build: () => weatherCubit,
-        act: (cubit) => cubit.fetchWeather(weatherLocation),
+        act: (cubit) => cubit.fetchWeatherWithCity(weatherLocation),
         expect: () => <dynamic>[
           WeatherState(status: WeatherStatus.loading),
           isA<WeatherState>()
@@ -125,7 +125,7 @@ void main() {
         'emits [loading, success] when getWeather returns (fahrenheit)',
         build: () => weatherCubit,
         seed: () => WeatherState(temperatureUnits: TemperatureUnits.fahrenheit),
-        act: (cubit) => cubit.fetchWeather(weatherLocation),
+        act: (cubit) => cubit.fetchWeatherWithCity(weatherLocation),
         expect: () => <dynamic>[
           WeatherState(
             status: WeatherStatus.loading,

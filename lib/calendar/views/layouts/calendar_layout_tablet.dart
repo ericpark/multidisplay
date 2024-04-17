@@ -47,18 +47,9 @@ class CalendarLayoutTablet extends StatelessWidget {
                 //await calendarCubit.refreshCalendarUI();
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.add, semanticLabel: 'New Event'),
-              onPressed: () async {
-                if (!context.mounted) {
-                  return;
-                }
-                await showDismissableModal(
-                    context, const CalendarNewEventView());
-              },
-            ),
           ],
         ),
+        floatingActionButton: const AddEventFAB(),
         body: const CalendarLayoutTabletView());
   }
 }

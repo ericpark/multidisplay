@@ -34,12 +34,15 @@ _$TrackingStateImpl _$$TrackingStateImplFromJson(Map<String, dynamic> json) =>
                   const []),
           reorderable:
               $checkedConvert('reorderable', (v) => v as bool? ?? false),
+          showOnlyPublic:
+              $checkedConvert('show_only_public', (v) => v as bool? ?? true),
         );
         return val;
       },
       fieldKeyMap: const {
         'trackingGroups': 'tracking_groups',
-        'trackingSections': 'tracking_sections'
+        'trackingSections': 'tracking_sections',
+        'showOnlyPublic': 'show_only_public'
       },
     );
 
@@ -50,6 +53,7 @@ Map<String, dynamic> _$$TrackingStateImplToJson(_$TrackingStateImpl instance) =>
           instance.trackingGroups.map((k, e) => MapEntry(k, e.toJson())),
       'tracking_sections': instance.trackingSections,
       'reorderable': instance.reorderable,
+      'show_only_public': instance.showOnlyPublic,
     };
 
 const _$TrackingStatusEnumMap = {

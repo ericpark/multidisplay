@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 // Packages
@@ -10,6 +12,7 @@ import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:multidisplay/auth/auth.dart';
 
 class SettingsLayoutTablet extends StatelessWidget {
   const SettingsLayoutTablet({super.key});
@@ -21,26 +24,61 @@ class SettingsLayoutTablet extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          ListTile(
-            title: const Row(
-              children: [
-                Spacer(),
-                Icon(Icons.person, semanticLabel: 'login_profile'),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text('Login'),
+          BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              final icon = state.status == AuthStatus.authenticated
+                  ? const Icon(Icons.logout, semanticLabel: 'logout_profile')
+                  : const Icon(Icons.person, semanticLabel: 'login_profile');
+              final buttonText = Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: state.status == AuthStatus.authenticated
+                    ? const Text('Logout')
+                    : const Text('Login'),
+              );
+
+              return ListTile(
+                title: Row(
+                  children: [const Spacer(), icon, buttonText],
                 ),
-              ],
-            ),
-            onTap: () async {},
-            /* trailing: const SizedBox(
-              height: double.infinity,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
-                child:
-                    Icon(Icons.login_outlined, semanticLabel: 'login_button'),
-              ),
-            ),*/
+                onTap: () async {
+                  switch (state.status) {
+                    case AuthStatus.initial:
+                      String? userId =
+                          await Navigator.of(context).push(LoginPage.route());
+                      if (userId == null || userId == "") {
+                        userId = null;
+                      }
+                      if (context.mounted) {
+                        context.read<TrackingCubit>().init(userId: userId);
+                      }
+                    case AuthStatus.authenticated:
+                      await context.read<AuthCubit>().logout();
+                      if (context.mounted) {
+                        context.read<TrackingCubit>().init();
+                      }
+                    case AuthStatus.unauthenticated:
+                      String? userId =
+                          await Navigator.of(context).push(LoginPage.route());
+                      if (userId == null || userId == "") {
+                        userId = null;
+                      }
+                      if (context.mounted) {
+                        context.read<TrackingCubit>().init(userId: userId);
+                      }
+                    case AuthStatus.loading:
+                    //context.read<AuthCubit>().init();
+                  }
+                },
+                /* trailing: const SizedBox(
+                        height: double.infinity,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                          child:
+                              Icon(Icons.login_outlined, semanticLabel: 'login_button'),
+                        ),
+                      ),*/
+              );
+            },
           ),
           const Divider(),
           ListTile(
@@ -158,9 +196,16 @@ class SettingsLayoutTablet extends StatelessWidget {
               'Change City used for weather',
             ),
             onTap: () async {
-              final city = await Navigator.of(context).push(SearchPage.route());
+              final result =
+                  await Navigator.of(context).push(SearchPage.route());
+              if (result == null) return;
+              final location = jsonDecode(result) as Map<String, dynamic>;
+
               if (!context.mounted) return;
-              await context.read<WeatherCubit>().fetchWeather(city);
+              await context.read<WeatherCubit>().fetchWeatherWithCity(
+                  location["city"] as String,
+                  latitude: location["latitude"] as double?,
+                  longitude: location["longitude"] as double?);
             },
             trailing: const SizedBox(
               height: double.infinity,
@@ -230,6 +275,32 @@ class SettingsLayoutTablet extends StatelessWidget {
                       context.read<TrackingCubit>().toggleReorder(),
                 ),
               );
+            },
+          ),
+          BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return state.status == AuthStatus.authenticated
+                  ? BlocBuilder<TrackingCubit, TrackingState>(
+                      buildWhen: (previous, current) =>
+                          previous.showOnlyPublic != current.showOnlyPublic,
+                      builder: (context, state) {
+                        return ListTile(
+                          title: const Text('Show Only Public'),
+                          isThreeLine: true,
+                          subtitle: const Text(
+                            'Enabling this will show only public tracking',
+                          ),
+                          trailing: Switch(
+                            value: state.showOnlyPublic,
+                            onChanged: (_) => context
+                                .read<TrackingCubit>()
+                                .toggleShowOnlyPublic(),
+                          ),
+                        );
+                      },
+                    )
+                  : Container();
             },
           ),
           const Divider(),

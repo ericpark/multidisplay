@@ -10,4 +10,8 @@ extension DateHelpers on DateTime {
         yesterday.month == month &&
         yesterday.year == year;
   }
+
+  DateTime get midnight {
+    return DateTime(year, month, day);
+  }
 }

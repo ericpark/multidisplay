@@ -10,6 +10,31 @@ class TrackingRepository {
   // ignore: unused_field
   final FirebaseFirestore _firebaseDB;
 
+  /**
+  * Tracking Groups CRUD
+  */
+
+  /** CREATE */
+
+  ///
+  Future<TrackingGroup?> addTrackingGroup({
+    required TrackingGroup trackingGroup,
+  }) async {
+    final trackingGroupRef = trackingGroupCollection();
+
+    final trackingGroupId = await trackingGroupRef
+        .add(trackingGroup)
+        .then((documentSnapshot) => documentSnapshot.id);
+
+    updateTrackingGroup(
+        trackingGroupId: trackingGroupId, data: {"id": trackingGroupId});
+
+    return trackingGroup.copyWith(id: trackingGroupId);
+  }
+
+  /** READ */
+
+  ///
   Future<List<TrackingGroup>> getAllTrackingGroups() async {
     final trackingGroupRef = trackingGroupCollection();
     List<TrackingGroup> allTrackingGroups = [];
@@ -29,15 +54,65 @@ class TrackingRepository {
           }
           return trackingGroups;
         },
-        onError: (e) => print("Error completing: $e"),
+        onError: (e) => print("Error completing Tracking Groups Retrieval: $e"),
       );
       return allTrackingGroups;
     } catch (err) {
-      print("Error while retrieving tracking summaries: $err");
+      print("Error while retrieving Tracking Groups: $err");
       return [];
     }
   }
 
+  /**  UPDATE */
+
+  ///
+  Future<TrackingGroup?> updateTrackingGroup({
+    required String trackingGroupId,
+    required data,
+  }) async {
+    if (trackingGroupId == "") {
+      return null;
+    } else {
+      final query = trackingGroupDoc(docId: trackingGroupId);
+      try {
+        return await query.update(data).then(
+          (_) async {
+            final trackingGroup = await query.get().then((doc) {
+              return doc.data();
+            });
+            return trackingGroup;
+          },
+          onError: (e) => print("Error completing Tracking Group Update: $e"),
+        );
+      } catch (err) {
+        print("Error while retrieving Tracking Group: $err");
+        return null;
+      }
+    }
+  }
+
+  /**
+  * Tracking Summary CRUD
+  */
+
+  /** CREATE */
+  ///
+  Future<TrackingSummary?> addTrackingSummary({
+    required TrackingSummary trackingSummaryData,
+  }) async {
+    final TrackingSummaryRef = trackingSummaryCollection();
+
+    final trackingSummaryId = await TrackingSummaryRef.add(trackingSummaryData)
+        .then((documentSnapshot) => documentSnapshot.id);
+
+    updateTrackingSummary(
+        trackingSummaryId: trackingSummaryId, data: {"id": trackingSummaryId});
+
+    return trackingSummaryData.copyWith(id: trackingSummaryId);
+  }
+
+  /** READ */
+  ///
   Future<List<TrackingSummary>> getAllTrackingSummariesByOwnerId(
       {required String userId}) async {
     if (userId == "") {
@@ -78,9 +153,11 @@ class TrackingRepository {
     if (section == "") {
       return [];
     } else {
+      final ids = [userId, "default"];
       final trackingRef = trackingSummaryCollection();
       final query = trackingRef
           .where("active", isEqualTo: true)
+          .where("owner_id", whereIn: ids)
           .where("section", isEqualTo: section);
       List<TrackingSummary> allTrackingSummaries = [];
       try {
@@ -136,8 +213,11 @@ class TrackingRepository {
     }
   }
 
+  /** UPDATE */
+
   Future<String> updateTrackingSummary(
       {required String trackingSummaryId, required data}) async {
+    print(data);
     if (trackingSummaryId == "") {
       return "Error: No ID";
     } else {
@@ -157,6 +237,36 @@ class TrackingRepository {
     }
   }
 
+  /** 
+   * Tracking Record CRUD
+   */
+
+  /** CREATE */
+
+  Future<TrackingRecord?> addTrackingRecordsForTrackingSummary({
+    required String trackingSummaryId,
+    required TrackingRecord trackingData,
+  }) async {
+    if (trackingSummaryId == "") {
+      return null;
+    } else {
+      final trackingRecordsCollectionRef =
+          trackingRecordCollection("tracking/$trackingSummaryId/records");
+
+      final trackingRecordId = await trackingRecordsCollectionRef
+          .add(trackingData)
+          .then((documentSnapshot) => documentSnapshot.id);
+      updateTrackingRecord(
+          trackingSummaryId: trackingSummaryId,
+          trackingRecordId: trackingRecordId,
+          data: {"id": trackingRecordId});
+      return trackingData.copyWith(id: trackingRecordId);
+    }
+  }
+
+  /** READ */
+
+  ///
   Future<List<TrackingRecord>> getTrackingRecordsForTrackingSummary(
       {required String trackingSummaryId}) async {
     if (trackingSummaryId == "") {
@@ -199,26 +309,7 @@ class TrackingRepository {
     }
   }
 
-  Future<TrackingRecord?> addTrackingRecordsForTrackingSummary({
-    required String trackingSummaryId,
-    required TrackingRecord trackingData,
-  }) async {
-    if (trackingSummaryId == "") {
-      return null;
-    } else {
-      final trackingRecordsCollectionRef =
-          trackingRecordCollection("tracking/$trackingSummaryId/records");
-
-      final trackingRecordId = await trackingRecordsCollectionRef
-          .add(trackingData)
-          .then((documentSnapshot) => documentSnapshot.id);
-      updateTrackingRecord(
-          trackingSummaryId: trackingSummaryId,
-          trackingRecordId: trackingRecordId,
-          data: {"id": trackingRecordId});
-      return trackingData.copyWith(id: trackingRecordId);
-    }
-  }
+  /** UPDATE */
 
   Future<TrackingRecord?> updateTrackingRecord({
     required String trackingSummaryId,
@@ -251,6 +342,8 @@ class TrackingRepository {
       }
     }
   }
+
+  /** DELETE */
 
   Future<String> deleteTrackingRecord({
     required String trackingSummaryId,

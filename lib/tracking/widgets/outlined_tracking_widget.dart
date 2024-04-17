@@ -33,10 +33,6 @@ class OutlinedTrackingWidget extends StatelessWidget {
     trackingCubit.handleWidgetDoubleTap(section: section, index: id);
   }
 
-  /*void _handleLongPress(buildContext, widget) async {
-    await showDismissableModal(buildContext, widget);
-  }*/
-
   void _handleOnTap(buildContext, widget) async {
     await showDismissableModal(buildContext, widget);
   }

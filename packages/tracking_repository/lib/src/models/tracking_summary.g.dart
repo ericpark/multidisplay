@@ -37,6 +37,21 @@ _$TrackingSummaryImpl _$$TrackingSummaryImplFromJson(
                     (k, e) => MapEntry(k, Map<String, String>.from(e as Map)),
                   ) ??
                   const {}),
+          thresholds: $checkedConvert(
+              'thresholds',
+              (v) =>
+                  (v as Map<String, dynamic>?)?.map(
+                    (k, e) => MapEntry(
+                        k,
+                        (e as Map<String, dynamic>).map(
+                          (k, e) => MapEntry(
+                              k,
+                              (e as Map<String, dynamic>).map(
+                                (k, e) => MapEntry(k, (e as num).toDouble()),
+                              )),
+                        )),
+                  ) ??
+                  const {}),
           active: $checkedConvert('active', (v) => v as bool? ?? true),
           createdAt: $checkedConvert('created_at',
               (v) => const DateTimeNullableConverter().fromJson(v)),
@@ -74,6 +89,7 @@ Map<String, dynamic> _$$TrackingSummaryImplToJson(
       'right_metric': instance.rightMetric,
       'auto_update': instance.autoUpdate,
       'metrics': instance.metrics,
+      'thresholds': instance.thresholds,
       'active': instance.active,
       'created_at':
           const DateTimeNullableConverter().toJson(instance.createdAt),

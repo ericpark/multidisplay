@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+
 // Repositories
 import 'package:tracking_repository/tracking_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
+import 'package:auth_repository/auth_repository.dart';
+
 // Project
 import 'package:multidisplay/app/app.dart';
 import 'package:multidisplay/theme/theme.dart';
@@ -14,6 +17,7 @@ import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 import 'package:multidisplay/expenses/expenses.dart';
+import 'package:multidisplay/auth/auth.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -22,16 +26,19 @@ class App extends StatelessWidget {
     required WeatherRepository weatherRepository,
     required CalendarRepository calendarRepository,
     required TrackingRepository trackingRepository,
+    required AuthRepository authRepository,
     super.key,
     AdaptiveThemeMode? savedThemeMode,
   })  : _weatherRepository = weatherRepository,
         _calendarRepository = calendarRepository,
         _trackingRepository = trackingRepository,
+        _authRepository = authRepository,
         savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
 
   final WeatherRepository _weatherRepository;
   final CalendarRepository _calendarRepository;
   final TrackingRepository _trackingRepository;
+  final AuthRepository _authRepository;
   final AdaptiveThemeMode? savedThemeMode;
 
   @override
@@ -41,6 +48,7 @@ class App extends StatelessWidget {
           RepositoryProvider.value(value: _weatherRepository),
           RepositoryProvider.value(value: _calendarRepository),
           RepositoryProvider.value(value: _trackingRepository),
+          RepositoryProvider.value(value: _authRepository),
         ],
         child: MultiBlocProvider(
           /// These Blocs are provided early to allow for settings page that
@@ -59,7 +67,7 @@ class App extends StatelessWidget {
             ),
             BlocProvider<TrackingCubit>(
               create: (BuildContext context) =>
-                  TrackingCubit(context.read<TrackingRepository>())..init(),
+                  TrackingCubit(context.read<TrackingRepository>()),
             ),
             BlocProvider<TimerBloc>(
               create: (BuildContext context) =>
@@ -68,6 +76,10 @@ class App extends StatelessWidget {
             BlocProvider(
               create: (context) =>
                   WeatherCubit(context.read<WeatherRepository>()),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  AuthCubit(context.read<AuthRepository>())..init(),
             ),
             BlocProvider(
               create: (context) => HomeCubit(),

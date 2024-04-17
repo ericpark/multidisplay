@@ -30,10 +30,13 @@ mixin _$TrackingSummary {
   String? get subtitle => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get ownerId => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
   String get mainMetric => throw _privateConstructorUsedError;
   String get leftMetric => throw _privateConstructorUsedError;
   String get rightMetric => throw _privateConstructorUsedError;
   Map<String, Map<String, String>> get metrics =>
+      throw _privateConstructorUsedError;
+  Map<String, Map<String, Map<String, double>>> get thresholds =>
       throw _privateConstructorUsedError;
   bool get autoUpdate => throw _privateConstructorUsedError;
   List<TrackingRecord> get records => throw _privateConstructorUsedError;
@@ -62,10 +65,12 @@ abstract class $TrackingSummaryCopyWith<$Res> {
       @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
       String id,
       String ownerId,
+      String description,
       String mainMetric,
       String leftMetric,
       String rightMetric,
       Map<String, Map<String, String>> metrics,
+      Map<String, Map<String, Map<String, double>>> thresholds,
       bool autoUpdate,
       List<TrackingRecord> records,
       String trackingType,
@@ -92,10 +97,12 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
     Object? subtitle = freezed,
     Object? id = null,
     Object? ownerId = null,
+    Object? description = null,
     Object? mainMetric = null,
     Object? leftMetric = null,
     Object? rightMetric = null,
     Object? metrics = null,
+    Object? thresholds = null,
     Object? autoUpdate = null,
     Object? records = null,
     Object? trackingType = null,
@@ -127,6 +134,10 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.ownerId
           : ownerId // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
       mainMetric: null == mainMetric
           ? _value.mainMetric
           : mainMetric // ignore: cast_nullable_to_non_nullable
@@ -143,6 +154,10 @@ class _$TrackingSummaryCopyWithImpl<$Res, $Val extends TrackingSummary>
           ? _value.metrics
           : metrics // ignore: cast_nullable_to_non_nullable
               as Map<String, Map<String, String>>,
+      thresholds: null == thresholds
+          ? _value.thresholds
+          : thresholds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, Map<String, double>>>,
       autoUpdate: null == autoUpdate
           ? _value.autoUpdate
           : autoUpdate // ignore: cast_nullable_to_non_nullable
@@ -182,10 +197,12 @@ abstract class _$$TrackingSummaryImplCopyWith<$Res>
       @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
       String id,
       String ownerId,
+      String description,
       String mainMetric,
       String leftMetric,
       String rightMetric,
       Map<String, Map<String, String>> metrics,
+      Map<String, Map<String, Map<String, double>>> thresholds,
       bool autoUpdate,
       List<TrackingRecord> records,
       String trackingType,
@@ -210,10 +227,12 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
     Object? subtitle = freezed,
     Object? id = null,
     Object? ownerId = null,
+    Object? description = null,
     Object? mainMetric = null,
     Object? leftMetric = null,
     Object? rightMetric = null,
     Object? metrics = null,
+    Object? thresholds = null,
     Object? autoUpdate = null,
     Object? records = null,
     Object? trackingType = null,
@@ -245,6 +264,10 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value.ownerId
           : ownerId // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
       mainMetric: null == mainMetric
           ? _value.mainMetric
           : mainMetric // ignore: cast_nullable_to_non_nullable
@@ -261,6 +284,10 @@ class __$$TrackingSummaryImplCopyWithImpl<$Res>
           ? _value._metrics
           : metrics // ignore: cast_nullable_to_non_nullable
               as Map<String, Map<String, String>>,
+      thresholds: null == thresholds
+          ? _value._thresholds
+          : thresholds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, Map<String, double>>>,
       autoUpdate: null == autoUpdate
           ? _value.autoUpdate
           : autoUpdate // ignore: cast_nullable_to_non_nullable
@@ -295,16 +322,19 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
       @Deprecated("") @JsonKey(name: 'tracking_subtitle') this.subtitle,
       required this.id,
       required this.ownerId,
+      this.description = '',
       this.mainMetric = '',
       this.leftMetric = '',
       this.rightMetric = '',
       final Map<String, Map<String, String>> metrics = const {},
+      final Map<String, Map<String, Map<String, double>>> thresholds = const {},
       this.autoUpdate = false,
       final List<TrackingRecord> records = const [],
       this.trackingType = '',
       @DateTimeNullableConverter() this.createdAt,
       @DateTimeNullableConverter() this.fetchedAt})
       : _metrics = metrics,
+        _thresholds = thresholds,
         _records = records,
         super._();
 
@@ -329,6 +359,9 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
   final String ownerId;
   @override
   @JsonKey()
+  final String description;
+  @override
+  @JsonKey()
   final String mainMetric;
   @override
   @JsonKey()
@@ -343,6 +376,15 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
     if (_metrics is EqualUnmodifiableMapView) return _metrics;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_metrics);
+  }
+
+  final Map<String, Map<String, Map<String, double>>> _thresholds;
+  @override
+  @JsonKey()
+  Map<String, Map<String, Map<String, double>>> get thresholds {
+    if (_thresholds is EqualUnmodifiableMapView) return _thresholds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_thresholds);
   }
 
   @override
@@ -369,7 +411,7 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
 
   @override
   String toString() {
-    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, id: $id, ownerId: $ownerId, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, metrics: $metrics, autoUpdate: $autoUpdate, records: $records, trackingType: $trackingType, createdAt: $createdAt, fetchedAt: $fetchedAt)';
+    return 'TrackingSummary(name: $name, section: $section, count: $count, subtitle: $subtitle, id: $id, ownerId: $ownerId, description: $description, mainMetric: $mainMetric, leftMetric: $leftMetric, rightMetric: $rightMetric, metrics: $metrics, thresholds: $thresholds, autoUpdate: $autoUpdate, records: $records, trackingType: $trackingType, createdAt: $createdAt, fetchedAt: $fetchedAt)';
   }
 
   @override
@@ -384,6 +426,8 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
                 other.subtitle == subtitle) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.mainMetric, mainMetric) ||
                 other.mainMetric == mainMetric) &&
             (identical(other.leftMetric, leftMetric) ||
@@ -391,6 +435,8 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
             (identical(other.rightMetric, rightMetric) ||
                 other.rightMetric == rightMetric) &&
             const DeepCollectionEquality().equals(other._metrics, _metrics) &&
+            const DeepCollectionEquality()
+                .equals(other._thresholds, _thresholds) &&
             (identical(other.autoUpdate, autoUpdate) ||
                 other.autoUpdate == autoUpdate) &&
             const DeepCollectionEquality().equals(other._records, _records) &&
@@ -412,10 +458,12 @@ class _$TrackingSummaryImpl extends _TrackingSummary {
       subtitle,
       id,
       ownerId,
+      description,
       mainMetric,
       leftMetric,
       rightMetric,
       const DeepCollectionEquality().hash(_metrics),
+      const DeepCollectionEquality().hash(_thresholds),
       autoUpdate,
       const DeepCollectionEquality().hash(_records),
       trackingType,
@@ -447,10 +495,12 @@ abstract class _TrackingSummary extends TrackingSummary {
           final String? subtitle,
           required final String id,
           required final String ownerId,
+          final String description,
           final String mainMetric,
           final String leftMetric,
           final String rightMetric,
           final Map<String, Map<String, String>> metrics,
+          final Map<String, Map<String, Map<String, double>>> thresholds,
           final bool autoUpdate,
           final List<TrackingRecord> records,
           final String trackingType,
@@ -479,6 +529,8 @@ abstract class _TrackingSummary extends TrackingSummary {
   @override
   String get ownerId;
   @override
+  String get description;
+  @override
   String get mainMetric;
   @override
   String get leftMetric;
@@ -486,6 +538,8 @@ abstract class _TrackingSummary extends TrackingSummary {
   String get rightMetric;
   @override
   Map<String, Map<String, String>> get metrics;
+  @override
+  Map<String, Map<String, Map<String, double>>> get thresholds;
   @override
   bool get autoUpdate;
   @override

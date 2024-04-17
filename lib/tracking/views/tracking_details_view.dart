@@ -129,7 +129,12 @@ class TrackingDetailsView extends StatelessWidget {
                         slivers: <Widget>[
                           SliverAppBar(
                             stretch: true,
-                            leading: const Text(""),
+                            leading: Container(),
+                            title: Text(
+                              "(${trackingCubit.state.trackingGroups[section]!.data[id].trackingType}) ${trackingCubit.state.trackingGroups[section]!.data[id].description}",
+                              textScaler: const TextScaler.linear(0.5),
+                              maxLines: 1,
+                            ),
                             onStretchTrigger: () async {
                               // Triggers when stretching
                             },
@@ -139,28 +144,32 @@ class TrackingDetailsView extends StatelessWidget {
                             // Setting [stretchTriggerOffset] to a value of 300.0 will trigger
                             // [onStretchTrigger] when the user has over scrolled by 300.0 pixels.
                             floating: true,
+                            primary: false,
                           ),
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 if (index == 0) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0),
-                                    child: HeatMap(
-                                      aspectRatio: 4,
-                                      data: heatmap,
-                                      colors: [
-                                        Colors.white,
-                                        Colors.green.shade400,
-                                        Colors.green.shade800,
-                                      ],
-                                      strokeColor: Colors.blue,
-                                      itemSize: 30,
-                                      itemPadding: 5,
+                                  return Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: HeatMap(
+                                        aspectRatio: 4.4,
+                                        data: heatmap,
+                                        colors: [
+                                          Colors.white,
+                                          Colors.green.shade400,
+                                          Colors.green.shade800,
+                                        ],
+                                        strokeColor: Colors.blue,
+                                        itemSize: 30,
+                                        itemPadding: 5,
+                                      ),
                                     ),
                                   );
                                 }
+
                                 final item = heatmap.keys.toList()[index - 1];
                                 final expanded = records
                                     .where((record) =>

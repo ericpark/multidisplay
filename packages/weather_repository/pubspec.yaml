@@ -13,7 +13,6 @@ dependencies:
   json_annotation: ^4.6.0
   open_meteo_api:
     path: ../open_meteo_api
-    
   intl: ^0.18.0
 
 dev_dependencies:

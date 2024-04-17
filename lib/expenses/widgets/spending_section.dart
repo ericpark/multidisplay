@@ -65,7 +65,7 @@ class SpendingSection extends StatelessWidget {
     final sectionHeaderStyle = Theme.of(context).textTheme.titleLarge;
     return BlocBuilder<ExpensesCubit, ExpensesState>(
       builder: (context, state) {
-        ExpensesCubit expensesCubit = context.read<ExpensesCubit>();
+        //ExpensesCubit expensesCubit = context.read<ExpensesCubit>();
         switch (state.status) {
           //case ExpensesStatus.initial:
           //return const TrackingEmpty();

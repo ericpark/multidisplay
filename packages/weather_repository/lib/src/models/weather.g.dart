@@ -20,6 +20,15 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
               'condition', (v) => $enumDecode(_$WeatherConditionEnumMap, v)),
           temperature:
               $checkedConvert('temperature', (v) => (v as num).toDouble()),
+          position: $checkedConvert(
+              'position',
+              (v) => _$recordConvertNullable(
+                    v,
+                    ($jsonValue) => (
+                      ($jsonValue[r'$1'] as num).toDouble(),
+                      ($jsonValue[r'$2'] as num).toDouble(),
+                    ),
+                  )),
           temperatureHigh: $checkedConvert(
               'temperature_high', (v) => (v as num?)?.toDouble()),
           temperatureLow: $checkedConvert(
@@ -61,6 +70,10 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'sunrise': instance.sunrise.toIso8601String(),
       'sunset': instance.sunset.toIso8601String(),
       'precipitation_probability': instance.precipitationProbability,
+      'position': {
+        r'$1': instance.position.$1,
+        r'$2': instance.position.$2,
+      },
     };
 
 const _$WeatherConditionEnumMap = {
@@ -95,6 +108,12 @@ const _$WeatherConditionEnumMap = {
   WeatherCondition.thunderWithHeavyHail: 'thunderWithHeavyHail',
   WeatherCondition.unknown: 'unknown',
 };
+
+$Rec? _$recordConvertNullable<$Rec>(
+  Object? value,
+  $Rec Function(Map) convert,
+) =>
+    value == null ? null : convert(value as Map<String, dynamic>);
 
 const _$SoilConditionEnumMap = {
   SoilCondition.dry: 'dry',

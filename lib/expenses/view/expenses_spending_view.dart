@@ -1,9 +1,9 @@
 import 'package:custom_components/custom_components.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:multidisplay/expenses/widgets/add_expense_fab.dart';
 
 // Project
-import 'package:multidisplay/expenses/expenses.dart';
+//import 'package:multidisplay/expenses/expenses.dart';
 
 class ExpensesSpendingView extends StatelessWidget {
   const ExpensesSpendingView({super.key});
@@ -111,45 +111,39 @@ class ExpensesSpendingView extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(primary: false, actions: [
-        IconButton(
-          icon: const Icon(Icons.filter_alt_sharp,
-              semanticLabel: 'Filter Expenses'),
-          onPressed: () async {},
-        ),
-      ]),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              summaryHeader,
-              spacing,
-              sectionHeader,
-              spacing,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-              sectionHeader,
-              spacing,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-              transactionRow,
-            ],
+        appBar: AppBar(primary: false, actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_alt_sharp,
+                semanticLabel: 'Filter Expenses'),
+            onPressed: () async {},
+          ),
+        ]),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                summaryHeader,
+                spacing,
+                sectionHeader,
+                spacing,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+                sectionHeader,
+                spacing,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+                transactionRow,
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+        floatingActionButton: const AddExpenseFAB());
   }
 }

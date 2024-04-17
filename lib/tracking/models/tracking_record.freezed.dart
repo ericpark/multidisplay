@@ -23,7 +23,7 @@ mixin _$TrackingRecord {
   @DateTimeConverter()
   DateTime get date => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
-  @DateTimeNullableConverter()
+  @TimestampNullableConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
@@ -42,7 +42,7 @@ abstract class $TrackingRecordCopyWith<$Res> {
   $Res call(
       {@DateTimeConverter() DateTime date,
       String id,
-      @DateTimeNullableConverter() DateTime? createdAt,
+      @TimestampNullableConverter() DateTime? createdAt,
       String? description});
 }
 
@@ -96,7 +96,7 @@ abstract class _$$TrackingRecordImplCopyWith<$Res>
   $Res call(
       {@DateTimeConverter() DateTime date,
       String id,
-      @DateTimeNullableConverter() DateTime? createdAt,
+      @TimestampNullableConverter() DateTime? createdAt,
       String? description});
 }
 
@@ -143,7 +143,7 @@ class _$TrackingRecordImpl extends _TrackingRecord {
   _$TrackingRecordImpl(
       {@DateTimeConverter() required this.date,
       this.id = '',
-      @DateTimeNullableConverter() this.createdAt,
+      @TimestampNullableConverter() this.createdAt,
       this.description})
       : super._();
 
@@ -157,7 +157,7 @@ class _$TrackingRecordImpl extends _TrackingRecord {
   @JsonKey()
   final String id;
   @override
-  @DateTimeNullableConverter()
+  @TimestampNullableConverter()
   final DateTime? createdAt;
   @override
   final String? description;
@@ -204,7 +204,7 @@ abstract class _TrackingRecord extends TrackingRecord {
   factory _TrackingRecord(
       {@DateTimeConverter() required final DateTime date,
       final String id,
-      @DateTimeNullableConverter() final DateTime? createdAt,
+      @TimestampNullableConverter() final DateTime? createdAt,
       final String? description}) = _$TrackingRecordImpl;
   _TrackingRecord._() : super._();
 
@@ -217,7 +217,7 @@ abstract class _TrackingRecord extends TrackingRecord {
   @override
   String get id;
   @override
-  @DateTimeNullableConverter()
+  @TimestampNullableConverter()
   DateTime? get createdAt;
   @override
   String? get description;

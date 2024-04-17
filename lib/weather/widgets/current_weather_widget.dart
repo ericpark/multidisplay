@@ -102,24 +102,38 @@ class CurrentWeatherWidgetPopulated extends StatelessWidget {
             : Container(),
       ],
     );
-    return SizedBox(
-        width: double.infinity,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxHeight < 200) {
-              return _CurrentWeatherSmallLayout(
-                  locationText: locationText,
-                  weatherIconAndDetail: weatherIconAndDetail,
-                  temperatureText: temperatureText,
-                  updatedAtText: updatedAtText);
-            }
-            return _CurrentWeatherLargeLayout(
+    return SizedBox.expand(
+      //width: double.infinity,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          Widget weatherWidget;
+          if (constraints.maxHeight < 200) {
+            weatherWidget = _CurrentWeatherSmallLayout(
                 locationText: locationText,
                 weatherIconAndDetail: weatherIconAndDetail,
                 temperatureText: temperatureText,
                 updatedAtText: updatedAtText);
-          },
-        ));
+          } else {
+            weatherWidget = _CurrentWeatherLargeLayout(
+                locationText: locationText,
+                weatherIconAndDetail: weatherIconAndDetail,
+                temperatureText: temperatureText,
+                updatedAtText: updatedAtText);
+          }
+
+          return Stack(
+            children: [
+              _WeatherBackground(
+                weather: weather,
+                height: constraints.maxHeight,
+                width: constraints.maxWidth,
+              ),
+              Center(child: weatherWidget)
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -234,28 +248,30 @@ class _WeatherIcon extends StatelessWidget {
   }
 }
 
-/*
 class _WeatherBackground extends StatelessWidget {
+  const _WeatherBackground({
+    this.weather,
+    required this.height,
+    required this.width,
+  });
+
+  final Weather? weather;
+  final double height;
+  final double width;
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primaryContainer;
-    return SizedBox.expand(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0.25, 0.75, 0.90, 1.0],
-            colors: [
-              color,
-              color.brighten(),
-              color.brighten(33),
-              color.brighten(50),
-            ],
-          ),
+    if (weather != null) {
+      return SizedBox.expand(
+        child: Image.asset(
+          'assets/weather/${weather!.condition.name}.jpg',
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+          opacity: const AlwaysStoppedAnimation<double>(0.2),
         ),
-      ),
-    );
+      );
+    }
+    return SizedBox.expand(child: Container());
   }
 }
 
@@ -274,4 +290,3 @@ extension on Color {
     );
   }
 }
-*/

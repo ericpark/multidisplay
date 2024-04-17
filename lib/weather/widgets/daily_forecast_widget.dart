@@ -85,7 +85,9 @@ class DailyForecastCell extends StatelessWidget {
                 Text(
                   dayString,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.normal,
+                    fontWeight: weather.date.isToday
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
                 // DATE

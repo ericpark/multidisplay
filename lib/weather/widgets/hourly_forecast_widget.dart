@@ -150,6 +150,9 @@ class HourlyForecastPopulated extends StatelessWidget {
     const sunriseGradient =
         LinearGradient(colors: [nightColor, dayColor], stops: [0, 0.75]);
 
+    final labelsNotOverlapping =
+        firstTransition.difference(DateTime.now()).inMinutes > 30;
+
     final nowMarker = PlotBand(
       isVisible: true,
       start: DateTime.now(),
@@ -206,7 +209,9 @@ class HourlyForecastPopulated extends StatelessWidget {
       end: firstTransition,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "day" : "night") : "",
+      text: (showDayNight && labelsNotOverlapping)
+          ? (sunset!.isBefore(sunrise!) ? "day" : "night")
+          : "",
       color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
       //verticalTextPadding: '1%',
       textAngle: 0,

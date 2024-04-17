@@ -102,7 +102,12 @@ class HourlyForecastCell extends StatelessWidget {
                 Text(
                   weather.soilCondition.name,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.normal,
+                    fontWeight: weather.soilCondition.name == "muddy"
+                        ? FontWeight.bold
+                        : FontWeight.w300,
+                    color: weather.soilCondition.name == "muddy"
+                        ? const Color.fromARGB(255, 193, 110, 2)
+                        : theme.textTheme.bodyMedium!.color!.withOpacity(0.5),
                   ),
                 ),
                 Text(

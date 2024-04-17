@@ -123,7 +123,7 @@ class DailyForecastCell extends StatelessWidget {
                 // LOW TEXT SPAN
                 RichText(
                   text: TextSpan(
-                      text: "low:  ",
+                      text: "low:   ",
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -141,7 +141,7 @@ class DailyForecastCell extends StatelessWidget {
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   text: TextSpan(
-                      text: "precipitation: ",
+                      text: "precip: ",
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),

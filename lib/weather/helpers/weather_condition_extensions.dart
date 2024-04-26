@@ -8,7 +8,7 @@ extension WeatherConditionExtensions on WeatherCondition {
       case WeatherCondition.clear:
         return WeatherIcons.day_sunny;
       case WeatherCondition.mainlyClear:
-        return WeatherIcons.cloud;
+        return WeatherIcons.day_sunny;
       case WeatherCondition.partlyCloudy:
         return WeatherIcons.cloudy;
       case WeatherCondition.overcast:

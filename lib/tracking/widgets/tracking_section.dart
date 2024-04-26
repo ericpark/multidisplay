@@ -150,11 +150,17 @@ class TrackingSectionWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                sectionHeader(
-                    sectionHeader: sectionHeaderString,
-                    textStyle: sectionHeaderStyle,
-                    reorderable: state.reorderable),
-                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: sectionHeader(
+                      sectionHeader: sectionHeaderString,
+                      textStyle: sectionHeaderStyle,
+                      reorderable: state.reorderable),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Divider(),
+                ),
                 sectionWidgets(
                     data: state.trackingGroups[sectionName]?.data ?? [],
                     colorScheme: Theme.of(context).colorScheme,

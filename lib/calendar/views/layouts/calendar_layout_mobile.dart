@@ -1,62 +1,103 @@
-/*import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+// Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:custom_components/custom_components.dart';
+
+// Project
 import 'package:multidisplay/calendar/calendar.dart';
 
-class CalendarLayout extends StatelessWidget {
-  const CalendarLayout({super.key});
+class CalendarLayoutMobile extends StatelessWidget {
+  const CalendarLayoutMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: BlocBuilder<CalendarCubit, CalendarState>(
-        buildWhen: (previous, current) {
-          if (previous.selectedDate != current.selectedDate) {
-            return true;
-          }
-          if ((previous.events != current.events) ||
-              (previous.status != current.status)) {
-            return true;
-          }
-          return false;
-        },
-        builder: (context, state) {
-          switch (state.status) {
-            case CalendarStatus.initial:
-              return const CalendarEmpty();
-            case CalendarStatus.loading:
-              return const CalendarLoading();
-            case CalendarStatus.success || CalendarStatus.transitioning:
-              return LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  if (constraints.maxWidth < 400) {
-                    return Flex(
-                      direction: Axis.vertical,
-                      children: [
-                        Expanded(
-                            flex: 40,
-                            child: CalendarMonthWidget(events: state.events)),
-                        const Expanded(flex: 60, child: CalendarSchedule()),
-                      ],
-                    );
+    return BlocBuilder<CalendarCubit, CalendarState>(
+      builder: (context, state) {
+        CalendarCubit calendarCubit = context.read<CalendarCubit>();
+        return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              shadowColor: Colors.black,
+              backgroundColor: Theme.of(context).secondaryHeaderColor,
+              clipBehavior: Clip.antiAlias,
+              leading: IconButton(
+                icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
+                onPressed: () async {
+                  await calendarCubit.fetchEvents();
+
+                  if (!context.mounted) {
+                    return;
                   }
-                  return Flex(
-                    direction: Axis.horizontal,
-                    children: [
-                      Expanded(
-                          flex: 60,
-                          child: CalendarMonthWidget(events: state.events)),
-                      const Expanded(flex: 40, child: CalendarSchedule()),
-                    ],
-                  );
+
+                  await showDismissableModal(
+                      context, const CalendarFilterView());
                 },
-              );
-            case CalendarStatus.failure:
-              return const CalendarError();
-          }
-        },
+              ),
+              title: CalendarSegmentButton(
+                  selected: state.view,
+                  onChange: (CalendarView view) =>
+                      {calendarCubit.toggleCalendarView(view: view)}),
+              actions: [
+                /*IconButton(
+                  icon: const Icon(Icons.search, semanticLabel: 'Search Event'),
+                  onPressed: () async {
+                    await showDismissableModal(context, Container());
+                  },
+                ),*/
+                IconButton(
+                  icon: const Icon(Icons.refresh,
+                      semanticLabel: 'Refresh events'),
+                  onPressed: () async {
+                    //await calendarCubit.refreshCalendar();
+                    //await calendarCubit.refreshCalendarUI();
+                  },
+                ),
+              ],
+            ),
+            floatingActionButton: const AddEventFAB(),
+            body: CalendarLayoutMobileView(view: state.view));
+      },
+    );
+  }
+}
+
+class CalendarLayoutMobileView extends StatelessWidget {
+  const CalendarLayoutMobileView({super.key, this.view = CalendarView.month});
+
+  final CalendarView view;
+
+  @override
+  Widget build(BuildContext context) {
+    const calendarMonthWidget = CalendarMonthWidget();
+    const calendarScheduleWidget = CalendarSchedule();
+
+    /// Layout :
+    /// |---------------------|
+    /// |                     |
+    /// |                     |
+    /// |         100%        |
+    /// |                     |
+    /// |                     |
+    /// |---------------------|
+
+    final child = (view == CalendarView.month)
+        ? calendarMonthWidget
+        : calendarScheduleWidget;
+
+    return SafeArea(
+      child: Center(
+        child: Flex(
+          direction: Axis.horizontal,
+          children: [
+            Expanded(
+                flex: 100,
+                child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: Container(color: Colors.white, child: child))),
+          ],
+        ),
       ),
     );
   }
 }
-*/

@@ -6,3 +6,4 @@ export 'cal_schedule_widget.dart';
 export 'cal_event_form_widget.dart';
 export 'cal_filter_widget.dart';
 export 'add_event_fab.dart';
+export 'calendar_segment_button.dart';

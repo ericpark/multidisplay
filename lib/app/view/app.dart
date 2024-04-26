@@ -43,6 +43,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceType = DeviceType.getDeviceFormFactor(context);
+
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider.value(value: _weatherRepository),
@@ -56,15 +58,19 @@ class App extends StatelessWidget {
           /// be moved down further in the tree.
           providers: [
             BlocProvider<AppBloc>(
-              create: (BuildContext context) => AppBloc(),
+              create: (BuildContext context) => AppBloc(deviceType: deviceType),
             ),
             BlocProvider<ThemeCubit>(
               create: (BuildContext context) => ThemeCubit(),
             ),
             BlocProvider<CalendarCubit>(
-              create: (BuildContext context) =>
-                  CalendarCubit(context.read<CalendarRepository>())..init(),
-            ),
+                create: (BuildContext context) =>
+                    CalendarCubit(context.read<CalendarRepository>())
+                      ..init()
+                      ..toggleCalendarView(
+                          view: deviceType == FormFactor.mobile
+                              ? CalendarView.month
+                              : CalendarView.all)),
             BlocProvider<TrackingCubit>(
               create: (BuildContext context) =>
                   TrackingCubit(context.read<TrackingRepository>()),

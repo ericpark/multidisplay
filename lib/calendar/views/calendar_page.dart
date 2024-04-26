@@ -20,7 +20,7 @@ class CalendarPage extends StatelessWidget {
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               if (constraints.maxWidth < 400) {
-                return const CalendarLayoutTablet();
+                return const CalendarLayoutMobile();
               }
               return const CalendarLayoutTablet();
             },

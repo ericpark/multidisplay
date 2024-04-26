@@ -81,7 +81,13 @@ class TrackingDetailsView extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      primary: false,
       appBar: AppBar(
+        centerTitle: true,
+        primary: false,
+        bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(0.0),
+            child: SizedBox(height: 0, width: 0)),
         leading: IconButton(
             key: const Key('editWidget_close_iconButton'),
             icon: const Icon(Icons.close_outlined, semanticLabel: 'Close'),
@@ -130,6 +136,10 @@ class TrackingDetailsView extends StatelessWidget {
                           SliverAppBar(
                             stretch: true,
                             leading: Container(),
+                            bottom: PreferredSize(
+                              preferredSize: Size.zero,
+                              child: Container(),
+                            ),
                             title: Text(
                               "(${trackingCubit.state.trackingGroups[section]!.data[id].trackingType}) ${trackingCubit.state.trackingGroups[section]!.data[id].description}",
                               textScaler: const TextScaler.linear(0.5),

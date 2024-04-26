@@ -6,13 +6,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth < 400) {
-          return const HomeLayoutMobile();
-        }
-        return const HomeLayoutTablet();
-      },
+    return Scaffold(
+      appBar: AppBar(toolbarHeight: 0),
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 400) {
+            return const HomeLayoutMobile();
+          }
+          return const HomeLayoutTablet();
+        },
+      ),
     );
   }
 }

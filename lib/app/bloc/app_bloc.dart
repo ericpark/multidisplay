@@ -1,18 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:multidisplay/app/helpers/device_helper.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(const AppState.started()) {
+  AppBloc({required FormFactor deviceType})
+      : super(AppState.started(deviceType: deviceType)) {
     on<AppStarted>(onAppStarted);
     on<AppLoaded>(onAppLoaded);
     on<AppPageChanged>(onAppPageChanged);
   }
 
   void onAppStarted(AppStarted event, Emitter<AppState> emit) async {
-    emit(const AppState.started());
+    emit(AppState.started(deviceType: state.deviceType));
   }
 
   void onAppLoaded(AppLoaded event, Emitter<AppState> emit) async {

@@ -2,6 +2,8 @@ part of 'calendar_cubit.dart';
 
 enum CalendarStatus { initial, loading, transitioning, success, failure }
 
+enum CalendarView { all, month, schedule }
+
 extension CalendarStatusX on CalendarStatus {
   bool get isInitial => this == CalendarStatus.initial;
   bool get isLoading => this == CalendarStatus.loading;
@@ -16,6 +18,7 @@ class CalendarState extends Equatable {
     this.status = CalendarStatus.initial,
     this.calendars = const [],
     this.calendarDetails = const {},
+    this.view = CalendarView.all,
     List<CalendarEvent>? events,
     DateTime? selectedDate,
   })  : events = events ?? [],
@@ -29,6 +32,7 @@ class CalendarState extends Equatable {
   final Map<String, CalendarDetails> calendarDetails;
   final List<CalendarEvent> events;
   final DateTime selectedDate;
+  final CalendarView view;
 
   CalendarState copyWith({
     CalendarStatus? status,
@@ -36,6 +40,7 @@ class CalendarState extends Equatable {
     Map<String, CalendarDetails>? calendarDetails,
     List<CalendarEvent>? events,
     DateTime? selectedDate,
+    CalendarView? view,
   }) {
     return CalendarState(
       status: status ?? this.status,
@@ -43,6 +48,7 @@ class CalendarState extends Equatable {
       calendarDetails: calendarDetails ?? this.calendarDetails,
       events: events ?? this.events,
       selectedDate: selectedDate ?? this.selectedDate,
+      view: view ?? this.view,
     );
   }
 
@@ -50,7 +56,7 @@ class CalendarState extends Equatable {
 
   @override
   List<Object> get props =>
-      [status, events, calendars, calendarDetails, selectedDate];
+      [status, events, calendars, calendarDetails, selectedDate, view];
 }
 
 final class CalendarInitial extends CalendarState {}

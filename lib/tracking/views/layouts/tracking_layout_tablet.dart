@@ -54,7 +54,10 @@ class TrackingLayoutTablet extends StatelessWidget {
               Padding(
                 key: Key('$index'),
                 padding: const EdgeInsets.all(8.0),
-                child: ListTile(title: sections[index]),
+                child: ListTile(
+                  title: sections[index],
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
           ]);
           return RefreshIndicator(

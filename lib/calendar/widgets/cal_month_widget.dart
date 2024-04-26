@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/calendar/calendar.dart';
+import 'package:multidisplay/calendar/calendar.dart' hide CalendarView;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarMonthWidget extends StatelessWidget {

@@ -128,4 +128,17 @@ class CalendarCubit extends Cubit<CalendarState> {
     await Future.delayed(const Duration(milliseconds: 100));
     emit(state.copyWith(status: CalendarStatus.success, selectedDate: date));
   }
+
+  Future<void> toggleCalendarView({CalendarView? view}) async {
+    if (view != null) {
+      emit(state.copyWith(view: view));
+    } else {
+      if (state.view == CalendarView.month) {
+        emit(state.copyWith(view: CalendarView.schedule));
+      }
+      if (state.view == CalendarView.schedule) {
+        emit(state.copyWith(view: CalendarView.month));
+      }
+    }
+  }
 }

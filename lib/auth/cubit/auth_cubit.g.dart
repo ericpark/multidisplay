@@ -36,6 +36,7 @@ Map<String, dynamic> _$$AuthStateImplToJson(_$AuthStateImpl instance) =>
 
 const _$AuthStatusEnumMap = {
   AuthStatus.initial: 'initial',
+  AuthStatus.loading: 'loading',
   AuthStatus.unauthenticated: 'unauthenticated',
   AuthStatus.authenticated: 'authenticated',
 };

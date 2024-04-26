@@ -13,12 +13,17 @@ class WeatherPage extends StatelessWidget {
     weatherCubit.refreshWeather(current: true, hourly: true, daily: true);
     timerBloc.add(const TimerStarted(duration: TimerBloc.defaultDuration));
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      if (constraints.maxWidth < 400) {
-        return const WeatherLayoutMobile();
-      }
-      return const WeatherLayoutTablet();
-    });
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth < 400) {
+          return const WeatherLayoutMobile();
+        }
+        return const WeatherLayoutTablet();
+      }),
+    );
   }
 }

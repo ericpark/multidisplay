@@ -33,7 +33,9 @@ class TrackingPage extends StatelessWidget {
           builder: (context, state) {
             return LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                if (constraints.maxWidth < 400) {}
+                if (constraints.maxWidth < 400) {
+                  return const TrackingLayoutMobile();
+                }
                 return const TrackingLayoutTablet();
               },
             );

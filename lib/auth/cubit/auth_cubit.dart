@@ -4,8 +4,8 @@ import 'package:auth_repository/auth_repository.dart';
 import 'package:multidisplay/auth/auth.dart';
 
 part 'auth_state.dart';
-part 'auth_cubit.freezed.dart';
-part 'auth_cubit.g.dart';
+part 'generated/auth_cubit.freezed.dart';
+part 'generated/auth_cubit.g.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._authRepository)

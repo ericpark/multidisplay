@@ -7,7 +7,7 @@ import 'package:calendar_repository/calendar_repository.dart'
     show CalendarRepository;
 
 part 'calendar_state.dart';
-part 'calendar_cubit.g.dart';
+part 'generated/calendar_cubit.g.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
   CalendarCubit(this._calendarRepository) : super(CalendarInitial());

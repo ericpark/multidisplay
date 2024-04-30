@@ -1,4 +1,4 @@
-part of 'tracking_cubit.dart';
+part of '../tracking_cubit.dart';
 
 TrackingSummary incrementConsecutiveTracker({
   required TrackingSummary trackingSummary,
@@ -37,7 +37,7 @@ TrackingSummary incrementConsecutiveTracker({
   }
 
   TrackingSummary updatedTrackingSummary =
-      trackingSummary.copyWith(count: currentStreak, metrics: updatedMetrics);
+      trackingSummary.copyWith(metrics: updatedMetrics);
 
   return updatedTrackingSummary;
 }

@@ -5,9 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firestore_converter/firestore_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'tracking_record.g.dart';
-part 'tracking_record.firestore_converter.dart';
-part 'tracking_record.freezed.dart';
+part 'generated/tracking_record.g.dart';
+part 'generated/tracking_record.firestore_converter.dart';
+part 'generated/tracking_record.freezed.dart';
 
 @freezed
 @FirestoreConverter(defaultPath: 'records')

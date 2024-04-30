@@ -4,9 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:tracking_repository/tracking_repository.dart';
 
-part 'tracking_group.g.dart';
-part 'tracking_group.firestore_converter.dart';
-part 'tracking_group.freezed.dart';
+part 'generated/tracking_group.g.dart';
+part 'generated/tracking_group.firestore_converter.dart';
+part 'generated/tracking_group.freezed.dart';
 
 @freezed
 //@JsonSerializable(explicitToJson: true)

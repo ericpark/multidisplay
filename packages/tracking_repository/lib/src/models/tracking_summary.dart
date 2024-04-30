@@ -4,9 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:tracking_repository/tracking_repository.dart';
 
-part 'tracking_summary.g.dart';
-part 'tracking_summary.firestore_converter.dart';
-part 'tracking_summary.freezed.dart';
+part 'generated/tracking_summary.g.dart';
+part 'generated/tracking_summary.firestore_converter.dart';
+part 'generated/tracking_summary.freezed.dart';
 
 @freezed
 //@JsonSerializable(explicitToJson: true)
@@ -17,7 +17,7 @@ class TrackingSummary with _$TrackingSummary {
     required String ownerId,
     required String name,
     required String section,
-    @Deprecated('Use mainMetric') @Default(0) int total,
+    //@Deprecated('Use mainMetric') @Default(0) int total,
     @Default('') String description,
     @Default('') String trackingType,
     //@Default('') String trackingSubtitle,

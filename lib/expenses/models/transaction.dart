@@ -4,8 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 /*import 'package:expenses_repository/expenses_repository.dart'
     as expenses_repository;*/
 
-part 'transaction.g.dart';
-part 'transaction.freezed.dart';
+part 'generated/transaction.g.dart';
+part 'generated/transaction.freezed.dart';
 
 @freezed
 class Transaction with _$Transaction {

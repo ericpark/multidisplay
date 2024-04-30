@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
-part 'tracking_group.g.dart';
-part 'tracking_group.freezed.dart';
+part 'generated/tracking_group.g.dart';
+part 'generated/tracking_group.freezed.dart';
 
 @freezed
 class TrackingGroup with _$TrackingGroup {

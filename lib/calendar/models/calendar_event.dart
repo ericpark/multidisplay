@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:calendar_repository/calendar_repository.dart'
     as calendar_repository;
 
-part 'calendar_event.g.dart';
+part 'generated/calendar_event.g.dart';
 
 @JsonSerializable()
 class CalendarEvent extends Equatable {

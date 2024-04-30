@@ -1,4 +1,4 @@
-part of 'tracking_cubit.dart';
+part of '../tracking_cubit.dart';
 
 String getLastThirtyDayCount({required List<TrackingRecord> records}) {
   final now = DateTime.now();

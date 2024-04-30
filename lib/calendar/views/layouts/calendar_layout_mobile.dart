@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:custom_components/custom_components.dart';
 
 // Project
 import 'package:multidisplay/calendar/calendar.dart';

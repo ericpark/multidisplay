@@ -4,7 +4,7 @@ import 'package:weather_repository/weather_repository.dart' hide Weather;
 import 'package:weather_repository/weather_repository.dart'
     as weather_repository;
 
-part 'weather.g.dart';
+part 'generated/weather.g.dart';
 
 enum TemperatureUnits { fahrenheit, celsius }
 

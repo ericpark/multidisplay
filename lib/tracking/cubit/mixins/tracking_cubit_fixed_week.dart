@@ -1,10 +1,9 @@
-part of 'tracking_cubit.dart';
+part of '../tracking_cubit.dart';
 
-TrackingSummary incrementLastSevenTracker(
+TrackingSummary decrementFixedWeekTracker(
     {required TrackingSummary trackingSummary}) {
   Map<String, Map<String, String>> updatedMetrics = {};
   final List<TrackingRecord> records = trackingSummary.records;
-  int lastSevenDayTotal = getLastSevenDayCount(records: records);
 
   for (var key in trackingSummary.metrics.keys) {
     final currentMetric =
@@ -13,21 +12,23 @@ TrackingSummary incrementLastSevenTracker(
       "display_name": currentMetric["display_name"] ?? "",
     };
     switch (key) {
-      case "average":
-        updatedMetric["value"] =
-            getLastSevenDayAverage(total: lastSevenDayTotal);
+      case "remaining_week":
+        updatedMetric["value"] = getRemainingWeek(records: records);
       case "days_since_last":
         updatedMetric["value"] = getDaysSinceLast(records: records);
-      case "last_seven_days":
-        updatedMetric["value"] = "$lastSevenDayTotal";
+      case "last_thirty_days":
+        updatedMetric["value"] = getLastThirtyDayCount(records: records);
       default:
         updatedMetric["value"] = currentMetric["value"] ?? "-";
     }
     updatedMetrics[key] = updatedMetric;
   }
-
-  TrackingSummary updatedTrackingSummary = trackingSummary.copyWith(
-      count: lastSevenDayTotal, metrics: updatedMetrics);
+  /*  int mainMetric = int.tryParse(
+         trackingSummary.metrics[trackingSummary.mainMetric]?["value"] ??
+              "") ??
+      0;*/
+  TrackingSummary updatedTrackingSummary =
+      trackingSummary.copyWith(metrics: updatedMetrics);
 
   return updatedTrackingSummary;
 }

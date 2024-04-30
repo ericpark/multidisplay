@@ -275,7 +275,7 @@ class _WeatherBackground extends StatelessWidget {
   }
 }
 
-extension on Color {
+/*extension on Color {
   Color brighten([int percent = 10]) {
     assert(
       1 <= percent && percent <= 100,
@@ -288,5 +288,4 @@ extension on Color {
       green + ((255 - green) * p).round(),
       blue + ((255 - blue) * p).round(),
     );
-  }
-}
+  }*/

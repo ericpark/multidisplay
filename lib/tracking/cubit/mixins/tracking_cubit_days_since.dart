@@ -1,9 +1,9 @@
-part of 'tracking_cubit.dart';
+part of '../tracking_cubit.dart';
 
 TrackingSummary incrementDaysSince({required TrackingSummary trackingSummary}) {
   Map<String, Map<String, String>> updatedMetrics = {};
   final List<TrackingRecord> records = trackingSummary.records;
-  int currentStreak = getCurrentStreak(records: records);
+  //int currentStreak = getCurrentStreak(records: records);
 
   for (var key in trackingSummary.metrics.keys) {
     final currentMetric =
@@ -25,7 +25,7 @@ TrackingSummary incrementDaysSince({required TrackingSummary trackingSummary}) {
   }
 
   TrackingSummary updatedTrackingSummary =
-      trackingSummary.copyWith(count: currentStreak, metrics: updatedMetrics);
+      trackingSummary.copyWith(metrics: updatedMetrics);
 
   return updatedTrackingSummary;
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
-part 'calendar_details.g.dart';
-part 'calendar_details.freezed.dart';
+part 'generated/calendar_details.g.dart';
+part 'generated/calendar_details.freezed.dart';
 
 @freezed
 //@JsonSerializable(explicitToJson: true)

@@ -6,15 +6,15 @@ import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 import 'package:tracking_repository/tracking_repository.dart'
     show TrackingRepository;
-part 'tracking_cubit.freezed.dart';
-part 'tracking_cubit.g.dart';
+part 'generated/tracking_cubit.freezed.dart';
+part 'generated/tracking_cubit.g.dart';
 part 'tracking_state.dart';
-part 'tracking_cubit_consecutive.dart';
-part 'tracking_cubit_last_seven.dart';
-part 'tracking_cubit_days_since.dart';
-part 'tracking_cubit_fixed_week.dart';
-part 'tracking_cubit_tracking_widgets.dart';
-part 'tracking_cubit_tracking_group.dart';
+part 'mixins/tracking_cubit_consecutive.dart';
+part 'mixins/tracking_cubit_last_seven.dart';
+part 'mixins/tracking_cubit_days_since.dart';
+part 'mixins/tracking_cubit_fixed_week.dart';
+part 'mixins/tracking_cubit_tracking_widgets.dart';
+part 'mixins/tracking_cubit_tracking_group.dart';
 
 class TrackingCubit extends HydratedCubit<TrackingState> {
   TrackingCubit(this._trackingRepository)
@@ -154,6 +154,16 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
       {required String section, required int index}) {
     TrackingGroup trackingGroup = state.trackingGroups[section]!;
     return trackingGroup.data[index];
+  }
+
+  ///
+  Future<TrackingSummary> addNewTrackingSummary(
+      {required TrackingSummary trackingSummaryData}) async {
+    final trackingData = trackingSummaryData.toRepository();
+    final createdTrackingSummary = await _trackingRepository.addTrackingSummary(
+        trackingSummaryData: trackingData);
+
+    return TrackingSummary.fromRepository(createdTrackingSummary!);
   }
 
   /** 
@@ -328,6 +338,11 @@ class TrackingCubit extends HydratedCubit<TrackingState> {
                 trackingSummaryId: trackingSummary.id))
             .map((rec) => TrackingRecord.fromJson(rec.toJson()))
             .toList();
+
+    if (records.isEmpty) {
+      // There are no records so nothing to update.
+      return trackingSummary;
+    }
     switch (trackingSummary.trackingType) {
       case "consecutive":
         updatedTrackingSummary = incrementConsecutiveTracker(

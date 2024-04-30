@@ -3,8 +3,8 @@ import 'package:multidisplay/tracking/tracking.dart';
 import 'package:tracking_repository/tracking_repository.dart'
     as tracking_repository;
 
-part 'tracking_summary.freezed.dart';
-part 'tracking_summary.g.dart';
+part 'generated/tracking_summary.freezed.dart';
+part 'generated/tracking_summary.g.dart';
 
 @freezed
 abstract class TrackingSummary with _$TrackingSummary {
@@ -13,8 +13,8 @@ abstract class TrackingSummary with _$TrackingSummary {
   const factory TrackingSummary({
     required String name,
     required String section,
-    @JsonKey(name: 'total') @JsonKey(name: 'count') @Default(0) int count,
-    @Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
+    // @JsonKey(name: 'total') @JsonKey(name: 'count') @Default(0) int count,
+    //@Deprecated("") @JsonKey(name: 'tracking_subtitle') String? subtitle,
     required String id,
     required String ownerId,
     @Default('') String description,

@@ -3,8 +3,8 @@ import 'package:multidisplay/tracking/tracking.dart';
 import 'package:tracking_repository/tracking_repository.dart'
     as tracking_repository;
 
-part 'tracking_record.g.dart';
-part 'tracking_record.freezed.dart';
+part 'generated/tracking_record.g.dart';
+part 'generated/tracking_record.freezed.dart';
 
 @freezed
 class TrackingRecord with _$TrackingRecord {

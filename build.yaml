@@ -5,10 +5,13 @@ targets:
       - pubspec.*
       - $package$
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
+          enabled: true
           ignore_for_file:
             - implicit_dynamic_parameter
+          build_extensions:
+            'lib/{{path}}/{{file}}.dart': 'lib/{{path}}/generated/{{file}}.g.dart'
       json_serializable:
         options:
           field_rename: snake
@@ -16,12 +19,15 @@ targets:
           explicit_to_json: true
       freezed:
         options:
+          enabled: true
           copy_with: true
+          build_extensions:
+            'lib/{{path}}/{{file}}.dart': 'lib/{{path}}/generated/{{file}}.freezed.dart'
   open_meteo:
     sources:
       - packages/open_meteo_api/lib/src/models/**
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
           ignore_for_file:
             - implicit_dynamic_parameter
@@ -34,9 +40,9 @@ targets:
     sources:
       - packages/weather_repository/lib/src/models/**
     dependencies:
-      - :open_meteo
+      - open_meteo
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
           ignore_for_file:
             - implicit_dynamic_parameter
@@ -49,7 +55,7 @@ targets:
     sources:
       - packages/calendar_repository/lib/src/models/**
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
           ignore_for_file:
             - implicit_dynamic_parameter
@@ -63,10 +69,19 @@ targets:
       include:
         - packages/tracking_repository/lib/src/models/**
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
           ignore_for_file:
             - implicit_dynamic_parameter
+          build_extensions: {'lib/src/models/{{}}.dart': ['lib/src/models/generated/{{}}.g.dart']}
+      firestore_converter_generator:
+        enabled: true
+        options: 
+          build_extensions: {'lib/src/models/{{}}.dart': ['lib/src/models/generated/{{}}.firestore_converter.dart']}
+      freezed:freezed:
+        enabled: true
+        options: 
+          build_extensions: {'lib/src/models/{{}}.dart': ['lib/src/models/generated/{{}}.freezed.dart']}
       json_serializable:
         options:
           field_rename: snake

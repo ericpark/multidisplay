@@ -1,61 +1,39 @@
-import 'package:flutter/material.dart';
+///////////////////////////////////////////////////////////////////////////////
+/// DEPRECATED: DO NOT USE
+///////////////////////////////////////////////////////////////////////////////
+// ignore_for_file: dangling_library_doc_comments
+
 import 'package:flutter/cupertino.dart';
-
-// Packages
-import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:multidisplay/app/helpers/helpers.dart';
-
-// Project
+import 'package:flutter/material.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
-class LastNthTrackingWidget extends StatelessWidget {
-  const LastNthTrackingWidget({
+class FixedWeekTrackingWidget extends StatelessWidget {
+  const FixedWeekTrackingWidget({
     super.key,
     required this.id,
     required this.section,
     required this.trackingSummary,
     required this.onDoubleTap,
+    required this.remaining,
     this.dialogChoices,
-    this.color,
   });
 
   final int id;
   final String section;
   final TrackingSummary trackingSummary;
+  final int remaining;
 
   final List<String>? dialogChoices;
-  final Color? color;
   final void Function()? onDoubleTap;
-
-  Future<bool?> _showChoiceDialog(BuildContext context) async {
-    final actions = dialogChoices!
-        .map((choice) => AlertDialogAction(
-            key: choice.toLowerCase().replaceAll(" ", "-"), label: choice))
-        .toList();
-
-    final result = await showConfirmationDialog(
-      context: context,
-      title: 'Choices',
-      message: 'Please Select',
-      actions: actions,
-    );
-    if (result == OkCancelResult.ok.toString()) {
-      onDoubleTap!();
-      return true;
-    }
-    return null;
-  }
-
-  Future<bool?> _showDefaultDialog(BuildContext context) async {
+  void _showDefaultDialog(BuildContext context) async {
     final result = await showOkCancelAlertDialog(
       context: context,
       title: 'Track Event',
       message: 'Do you want to add this event?',
       okLabel: 'Yes',
       cancelLabel: 'No',
-
       isDestructiveAction: false,
-      //style: AdaptiveStyle.iOS,
       builder: (context, child) => Theme(
         data: ThemeData(
           textButtonTheme: TextButtonThemeData(
@@ -72,13 +50,13 @@ class LastNthTrackingWidget extends StatelessWidget {
     );
     if (result == OkCancelResult.ok) {
       onDoubleTap!();
-      return true;
     }
-    return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    Color? color;
+
     final trackingName = trackingSummary.name;
     final mainMetric = trackingSummary.metrics[trackingSummary.mainMetric] ??
         {"display_name": "", "value": ""};
@@ -86,23 +64,24 @@ class LastNthTrackingWidget extends StatelessWidget {
         const {"display_name": "", "value": ""};
     final rightMetric = trackingSummary.metrics[trackingSummary.rightMetric] ??
         const {"display_name": "", "value": ""};
-    final multipleToday = trackingSummary.records
-        .where((record) => record.date.isToday)
-        .isNotEmpty;
+    final threshold = [1, 0];
+    if (remaining >= threshold[0]) {
+      color = Colors.green[700];
+    } else if (remaining >= threshold[1]) {
+      color = Colors.amber[700];
+    } else {
+      color = Colors.red[700];
+    }
 
-    final showConfetti = multipleToday;
-    return ConfettiOutlinedTrackingWidget(
+    return OutlinedTrackingWidgetNonModular(
       id: id,
       section: section,
       trackingName: trackingName,
       mainMetric: mainMetric,
       leftMetric: leftMetric,
       rightMetric: rightMetric,
-      showConfetti: showConfetti,
       color: color,
-      onDoubleTap: () => dialogChoices != null
-          ? _showChoiceDialog(context)
-          : _showDefaultDialog(context),
+      onDoubleTap: () => _showDefaultDialog(context),
     );
   }
 }

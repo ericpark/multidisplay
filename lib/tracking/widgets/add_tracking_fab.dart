@@ -43,16 +43,16 @@ class _AddTrackingFABState extends State<AddTrackingFAB> {
         blur: 5,
       ),
       onOpen: () {
-        debugPrint('onOpen');
+        //debugPrint('onOpen');
       },
       afterOpen: () {
-        debugPrint('afterOpen');
+        //debugPrint('afterOpen');
       },
       onClose: () {
-        debugPrint('onClose');
+        //debugPrint('onClose');
       },
       afterClose: () {
-        debugPrint('afterClose');
+        //debugPrint('afterClose');
       },
       children: [
         FloatingActionButton.extended(

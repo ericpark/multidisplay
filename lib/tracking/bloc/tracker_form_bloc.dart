@@ -140,11 +140,11 @@ class TrackerFormBloc extends FormBloc<String, String> {
         mainMetric.metricType.value != "") {
       metrics[mainMetric.metricType.value!] = mainMetric.toMetrics();
     }
-    if (leftMetric.metricType.value != null ||
+    if (leftMetric.metricType.value != null &&
         leftMetric.metricType.value != "") {
       metrics[leftMetric.metricType.value!] = leftMetric.toMetrics();
     }
-    if (rightMetric.metricType.value != null ||
+    if (rightMetric.metricType.value != null &&
         rightMetric.metricType.value != "") {
       metrics[rightMetric.metricType.value!] = rightMetric.toMetrics();
     }

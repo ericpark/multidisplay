@@ -28,7 +28,9 @@ class TrackingPage extends StatelessWidget {
 
         // This is before the builder so that it checks if it needs to refresh
         // when the tab is changed.
-        context.read<TrackingCubit>().refreshTrackingSummariesOnNewDay();
+        context
+            .read<TrackingCubit>()
+            .refreshTrackingSummariesOnNewDay(userId: authState.user?.id);
         return BlocBuilder<TrackingCubit, TrackingState>(
           builder: (context, state) {
             return LayoutBuilder(

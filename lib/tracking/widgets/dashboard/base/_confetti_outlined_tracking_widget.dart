@@ -1,9 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+/// DEPRECATED: DO NOT USE
+///////////////////////////////////////////////////////////////////////////////
+// ignore_for_file: dangling_library_doc_comments
 import 'package:flutter/material.dart';
 import 'dart:math';
 
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:confetti/confetti.dart';
 
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
@@ -20,11 +23,13 @@ class ConfettiOutlinedTrackingWidget extends StatefulWidget {
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     bool? showConfetti,
+    String? confettiType,
     this.clipBehavior,
     this.color,
   })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
         rightMetric = rightMetric ?? const {"display_name": "", "value": ""},
-        showConfetti = showConfetti ?? false;
+        showConfetti = showConfetti ?? false,
+        confettiType = confettiType ?? "star";
 
   final int id;
   final String section;
@@ -37,6 +42,7 @@ class ConfettiOutlinedTrackingWidget extends StatefulWidget {
   final Future<bool?> Function()? onDoubleTap;
   final Clip? clipBehavior;
   final bool showConfetti;
+  final String confettiType;
 
   @override
   State<ConfettiOutlinedTrackingWidget> createState() =>
@@ -85,8 +91,25 @@ class _ConfettiOutlinedTrackingWidgetState
     return path;
   }
 
+  Path drawHeart(Size size) {
+    final path = Path();
+
+    double width = size.width;
+    double height = size.height;
+
+    // Modify the path to draw a heart shape
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.2 * width, height * 0.1, -0.05 * width, height * 0.6,
+        0.5 * width, height);
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.8 * width, height * 0.1, 1.05 * width, height * 0.6,
+        0.5 * width, height);
+
+    return path;
+  }
+
   void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
-    trackingCubit.handleWidgetDoubleTap(
+    trackingCubit.addTrackingRecordAndUpdateSummary(
         section: widget.section, index: widget.id);
   }
 
@@ -127,6 +150,25 @@ class _ConfettiOutlinedTrackingWidgetState
     final String rightMetricName = widget.rightMetric["display_name"] ?? "";
     final String rightValue = widget.rightMetric["value"] ?? "-";
 
+    final confettiColors = widget.confettiType == "star"
+        ? [
+            Colors.blue,
+            Colors.green,
+            Colors.red,
+            Colors.yellow,
+            Colors.purple,
+          ]
+        : widget.confettiType == "heart"
+            ? const [
+                Colors.pink,
+                Colors.red,
+              ]
+            : null;
+    final confettiShape = widget.confettiType == "star"
+        ? drawStar
+        : widget.confettiType == "heart"
+            ? drawHeart
+            : null;
     return GestureDetector(
       onDoubleTap: () async {
         bool? confirmTracking;
@@ -156,7 +198,6 @@ class _ConfettiOutlinedTrackingWidgetState
               shadowColor: widgetColor,
               clipBehavior: widget.clipBehavior,
               child: SizedBox(
-                //TODO: Make this dynamic
                 height: 200,
                 width: 200,
                 child: Container(
@@ -209,19 +250,28 @@ class _ConfettiOutlinedTrackingWidgetState
               ),
             ),
           ),
-          ConfettiWidget(
-            confettiController: _controllerCenter,
-            blastDirectionality: BlastDirectionality
-                .explosive, // don't specify a direction, blast randomly
-            shouldLoop: false,
-            colors: const [
-              Colors.green,
-              Colors.blue,
-              Colors.pink,
-              Colors.orange,
-              Colors.purple
-            ], // manually specify the colors to be used
-            createParticlePath: drawStar, // define a custom shape/path.
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Center(
+                child: ConfettiWidget(
+                  confettiController: _controllerCenter,
+                  blastDirectionality: BlastDirectionality
+                      .explosive, // don't specify a direction, blast randomly
+                  shouldLoop: false,
+                  minBlastForce: 20,
+                  maxBlastForce: 50,
+                  gravity: 0.01,
+                  particleDrag: 0.15,
+                  colors:
+                      confettiColors, // manually specify the colors to be used
+                  createParticlePath:
+                      confettiShape, // define a custom shape/path.
+                ),
+              ),
+            ),
           ),
         ],
       ),

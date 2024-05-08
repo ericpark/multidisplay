@@ -1,10 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+/// DEPRECATED: DO NOT USE
+///////////////////////////////////////////////////////////////////////////////
+// ignore_for_file: dangling_library_doc_comments
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 import 'package:multidisplay/calendar/helpers/dismissable_modal.dart';
 
-class SimpleTrackingWidget extends StatelessWidget {
-  const SimpleTrackingWidget({
+class OutlinedTrackingWidgetNonModular extends StatelessWidget {
+  const OutlinedTrackingWidgetNonModular({
     super.key,
     required this.id,
     required this.section,
@@ -13,6 +17,7 @@ class SimpleTrackingWidget extends StatelessWidget {
     required this.onDoubleTap,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
+    this.clipBehavior,
     this.color,
   })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
         rightMetric = rightMetric ?? const {"display_name": "", "value": ""};
@@ -26,14 +31,12 @@ class SimpleTrackingWidget extends StatelessWidget {
   final Map<String, String> rightMetric;
   final Color? color;
   final void Function()? onDoubleTap;
+  final Clip? clipBehavior;
 
   void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
-    trackingCubit.handleWidgetDoubleTap(section: section, index: id);
+    trackingCubit.addTrackingRecordAndUpdateSummary(
+        section: section, index: id);
   }
-
-  /*void _handleLongPress(buildContext, widget) async {
-    await showDismissableModal(buildContext, widget);
-  }*/
 
   void _handleOnTap(buildContext, widget) async {
     await showDismissableModal(buildContext, widget);
@@ -42,19 +45,24 @@ class SimpleTrackingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TrackingCubit trackingCubit = context.read<TrackingCubit>();
+    final widgetColor = color ?? Theme.of(context).colorScheme.primary;
 
-    final TextStyle centerStyle =
-        Theme.of(context).primaryTextTheme.displayLarge!;
-    final TextStyle primaryTextStyle =
-        Theme.of(context).primaryTextTheme.headlineSmall!;
+    final TextStyle centerStyle = Theme.of(context)
+        .primaryTextTheme
+        .displayLarge!
+        .copyWith(color: widgetColor);
+    final TextStyle primaryTextStyle = Theme.of(context)
+        .primaryTextTheme
+        .headlineSmall!
+        .copyWith(color: Colors.black);
     final TextStyle secondaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
-        .copyWith(fontWeight: FontWeight.bold);
-    final TextStyle tertiaryStyle =
-        Theme.of(context).primaryTextTheme.labelSmall!;
-
-    final widgetColor = color ?? Theme.of(context).colorScheme.primary;
+        .copyWith(fontWeight: FontWeight.bold, color: widgetColor);
+    final TextStyle tertiaryStyle = Theme.of(context)
+        .primaryTextTheme
+        .labelSmall!
+        .copyWith(color: Colors.black);
 
     // Set Metrics
     final String mainMetricName = mainMetric["display_name"] ?? "Not Found";
@@ -82,33 +90,26 @@ class SimpleTrackingWidget extends StatelessWidget {
           _handleOnTap(context, TrackingDetailsView(id: id, section: section)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PhysicalModel(
-          color: widgetColor,
-          elevation: 0,
-          shadowColor: Colors.black,
-          borderRadius: BorderRadius.circular(10),
+        child: Card(
+          color: Colors.white,
+          elevation: 5,
+          shadowColor: widgetColor,
+          clipBehavior: clipBehavior,
           child: SizedBox(
-            //TODO: Make this dynamic
             height: 200,
             width: 200,
             child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0, 1],
-                    colors: [
-                      Colors.white.withOpacity(0.1),
-                      Colors.black.withOpacity(0.2)
-                    ],
-                  )),
+              color: Colors.white,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
-                    child: Text(trackingName, style: primaryTextStyle),
+                    child: Text(
+                      trackingName,
+                      style: primaryTextStyle,
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),

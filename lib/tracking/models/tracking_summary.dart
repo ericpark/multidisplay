@@ -26,6 +26,7 @@ abstract class TrackingSummary with _$TrackingSummary {
     @Default(false) bool autoUpdate,
     @Default([]) List<TrackingRecord> records,
     @Default('') String trackingType,
+    @Default('') String mainThreshold,
     @DateTimeNullableConverter() DateTime? createdAt,
     @DateTimeNullableConverter() DateTime? fetchedAt,
   }) = _TrackingSummary;

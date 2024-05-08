@@ -1,0 +1,146 @@
+import 'package:flutter/material.dart';
+import 'dart:math';
+import 'package:multidisplay/app/helpers/helpers.dart';
+import 'package:multidisplay/tracking/tracking.dart';
+
+export 'package:confetti/confetti.dart';
+
+enum ConfettiType { star, heart }
+
+enum ConfettiMode { custom, always, never }
+
+mixin Confetti {
+  // This should be implemented on the widget itself.
+  // Provided too difficult to happen consistently
+  // late ConfettiController? controllerCenter;
+
+  final confettiColors = [
+    Colors.blue,
+    Colors.green,
+    Colors.red,
+    Colors.yellow,
+    Colors.purple
+  ];
+
+  final heartColors = [
+    Colors.pink,
+    Colors.red,
+  ];
+  ConfettiController defaultConfettiController() =>
+      ConfettiController(duration: const Duration(seconds: 15));
+
+  /// A custom Path to paint stars.
+  Path drawStar(Size size) {
+    // Method to convert degree to radians
+    double degToRad(double deg) => deg * (pi / 180.0);
+
+    const numberOfPoints = 5;
+    final halfWidth = size.width / 2;
+    final externalRadius = halfWidth;
+    final internalRadius = halfWidth / 2.5;
+    final degreesPerStep = degToRad(360 / numberOfPoints);
+    final halfDegreesPerStep = degreesPerStep / 2;
+    final path = Path();
+    final fullAngle = degToRad(360);
+    path.moveTo(size.width, halfWidth);
+
+    for (double step = 0; step < fullAngle; step += degreesPerStep) {
+      path.lineTo(halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step));
+      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    }
+    path.close();
+    return path;
+  }
+
+  /// A custom Path to paint hearts.
+  Path drawHeart(Size size) {
+    final path = Path();
+
+    double width = size.width;
+    double height = size.height;
+
+    // Modify the path to draw a heart shape
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.2 * width, height * 0.1, -0.05 * width, height * 0.6,
+        0.5 * width, height);
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.8 * width, height * 0.1, 1.05 * width, height * 0.6,
+        0.5 * width, height);
+
+    return path;
+  }
+
+  /// Determine if the confetti should be shown.
+  ///
+  /// Default will only use random. Random will only affect the confetti after
+  /// the celebration threshold is met if enabled. If multipleToday is enabled,
+  /// it will always supersede the random and celebration threshold.
+  bool showConfetti({
+    ConfettiMode mode = ConfettiMode.custom,
+    // Celebration Threshold
+    bool useCelebrationThreshold = false,
+    double celebrationThreshold = 30.0,
+    double? celebrationMetric,
+    bool thresholdHigherIsBetter = true, //Used to calculate direction
+    // Multiple Events in one day
+    bool useMultipleToday = false,
+    List<TrackingRecord> records = const [],
+    // Random Number
+    bool useRandom = true,
+    double randomThreshold = 0.50,
+    double randomMultiplier = 1, // Allows for random probability to be adjusted
+    bool debug = false,
+  }) {
+    // randomMultiplier subtracts a percentage of the random number from itself.
+    // randomMultiplier of 1 will not affect the random number
+    // randomMultiplier of 0 will always return 0
+    // Recommended range is 0.05 to 2.0 (~9% success to ~75% success)
+    double randomNumber = Random().nextDouble() * randomMultiplier;
+
+    if (debug) {
+      debugPrint("Mode: $mode");
+      debugPrint("useCelebrationThreshold: $useCelebrationThreshold");
+      debugPrint("celebrationThreshold: $celebrationThreshold");
+      debugPrint("celebrationMetric: $celebrationMetric");
+      debugPrint("useMultipleToday: $useMultipleToday");
+      debugPrint("records: $records");
+      debugPrint("useRandom: $useRandom");
+      debugPrint("randomOriginal: ${randomNumber / randomMultiplier}");
+      debugPrint("randomMultiplier: $randomMultiplier");
+      debugPrint("randomNumber: $randomNumber");
+      debugPrint("randomThreshold: $randomThreshold");
+    }
+
+    if (mode == ConfettiMode.always) return true;
+    if (mode == ConfettiMode.never) return false;
+
+    // If useMetricThreshold is false, it will not affect the confetti result
+    bool celebration = useCelebrationThreshold
+        ? (thresholdHigherIsBetter
+            ? ((celebrationMetric ?? 0) > celebrationThreshold)
+            : ((celebrationMetric ?? 0) < celebrationThreshold))
+        : true;
+    // If useRandom is false, it will not affect the confetti result
+    final random = useRandom ? randomNumber >= randomThreshold : true;
+
+    // If multipleToday is false or unset, it will not affect the confetti result
+    // If multipleToday is true, it will rely on the records.
+    bool multipleInOneDay = useMultipleToday &&
+        (records.where((record) => record.date.isToday).isNotEmpty);
+
+    return (random && celebration) || multipleInOneDay;
+  }
+
+  bool isConfettiEnabled({Map<String, Map<String, double>>? thresholds}) {
+    if (thresholds == null) return false;
+    if (thresholds.isEmpty) return false;
+    if (thresholds.isEmpty) return false;
+    if (thresholds["good"] == null) return false;
+    if (thresholds["warn"] == null) return false;
+    if (thresholds["poor"] == null) return false;
+
+    return true;
+  }
+}

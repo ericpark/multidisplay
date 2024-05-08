@@ -12,7 +12,6 @@ class TrackingForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final formBloc = context.read<TrackerFormBloc>();
     final formBloc = BlocProvider.of<TrackerFormBloc>(context, listen: true);
 
     if (trackingSummary != null) {

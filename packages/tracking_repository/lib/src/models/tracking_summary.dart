@@ -27,6 +27,7 @@ class TrackingSummary with _$TrackingSummary {
     @Default(false) bool autoUpdate,
     @Default({}) Map<String, Map<String, String>> metrics,
     @Default({}) Map<String, Map<String, Map<String, double>>> thresholds,
+    @Default('') String mainThreshold,
     @Default(true) bool? active,
     @DateTimeNullableConverter() DateTime? createdAt,
     @Default([]) List<String>? tags,

@@ -51,7 +51,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
         rightMetric: const {"display_name": "Right Metric", "value": "1"},
         onDoubleTap: () => {});
 
-    final outlineWidget = OutlinedTrackingWidget(
+    final outlineWidget = OutlinedTrackingWidgetNonModular(
         id: 0,
         section: "Meeko",
         trackingName: "Outlined",
@@ -60,7 +60,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
         rightMetric: const {"display_name": "Right Metric", "value": "1"},
         onDoubleTap: () => {});
 
-    final outlineRoundedWidget = OutlinedTrackingWidget(
+    final outlineRoundedWidget = OutlinedTrackingWidgetNonModular(
         id: 0,
         section: "Meeko",
         trackingName: "Outlined Rounded",

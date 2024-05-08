@@ -4,6 +4,11 @@ targets:
       - lib/**       
       - pubspec.*
       - $package$
+    dependencies:
+      - multidisplay:tracking_repo
+      - multidisplay:calendar_repo
+      - multidisplay:weather_repo
+      - multidisplay:open_meteo
     builders:
       source_gen:combining_builder:
         options:

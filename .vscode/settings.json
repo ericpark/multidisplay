@@ -14,6 +14,7 @@
         "LTRB",
         "Meeko",
         "meteo",
+        "MMMMEEE",
         "mocktail",
         "nodoc",
         "pptn",
@@ -36,5 +37,6 @@
             "*.build.yaml",
             "build.*.yaml"
         ]
-    }
+    },
+    "cmake.configureOnOpen": false
 }

@@ -26,6 +26,7 @@
         "sublist",
         "syncfusion",
         "tabbar",
+        "vsync",
         "weathercode"
     ],
     "[dart]": {

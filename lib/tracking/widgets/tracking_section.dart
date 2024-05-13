@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/tracking/widgets/dashboard/tw_last_nth.dart';
-import 'package:multidisplay/tracking/widgets/dashboard/tw_nth_ago.dart';
 
 class TrackingSectionWidget extends StatelessWidget {
-  const TrackingSectionWidget({super.key, required this.sectionName});
+  const TrackingSectionWidget({
+    super.key,
+    required this.sectionName,
+    this.fadeInCallback,
+  });
 
   final String sectionName;
+  final Function(String)? fadeInCallback;
 
   Widget getTrackingWidget({
     required int index,
@@ -17,15 +21,21 @@ class TrackingSectionWidget extends StatelessWidget {
   }) {
     Color? color;
 
+    void onDoubleTapWrapper() async {
+      await trackingCubit.addTrackingRecordAndUpdateSummary(
+          section: data.section, index: index);
+      if (DateTime.now().midnight == DateTime(2024, 5, 10).midnight) {
+        if (fadeInCallback != null) fadeInCallback!("Happy Birthday Soojee!");
+      }
+    }
+
     switch (data.trackingType) {
       case "consecutive":
         return ConsecutiveTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () async =>
-              await trackingCubit.addTrackingRecordAndUpdateSummary(
-                  section: data.section, index: index),
+          onDoubleTap: () async => onDoubleTapWrapper(),
         );
       case "last_seven":
         color = colorScheme.primary;
@@ -34,9 +44,7 @@ class TrackingSectionWidget extends StatelessWidget {
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () async =>
-              await trackingCubit.addTrackingRecordAndUpdateSummary(
-                  section: data.section, index: index),
+          onDoubleTap: () async => onDoubleTapWrapper(),
           color: color,
         );
       case "fixed_week":
@@ -45,26 +53,32 @@ class TrackingSectionWidget extends StatelessWidget {
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () => trackingCubit.addTrackingRecordAndUpdateSummary(
-              section: data.section, index: index),
+          onDoubleTap: () async => onDoubleTapWrapper(),
         );
       case "days_ago":
+        color = colorScheme.secondary;
+
+        return NthAgoTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingSummary: data,
+          onDoubleTap: () async => onDoubleTapWrapper(),
+        );
+      /*case "test":
         color = colorScheme.secondary;
         return NthAgoTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () => trackingCubit.addTrackingRecordAndUpdateSummary(
-              section: data.section, index: index),
-        );
+          onDoubleTap: () async => onDoubleTapWrapper(),
+        );*/
       case "time":
         color = colorScheme.secondary;
         return TimeTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () => trackingCubit.addTrackingRecordAndUpdateSummary(
-              section: data.section, index: index),
+          onDoubleTap: () async => onDoubleTapWrapper(),
           onFinished: () => trackingCubit.recordFinishTime(
               section: data.section, index: index),
         );
@@ -75,8 +89,7 @@ class TrackingSectionWidget extends StatelessWidget {
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () => trackingCubit.addTrackingRecordAndUpdateSummary(
-              section: data.section, index: index),
+          onDoubleTap: () async => onDoubleTapWrapper(),
           color: color,
         );
     }

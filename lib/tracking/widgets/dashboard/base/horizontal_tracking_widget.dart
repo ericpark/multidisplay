@@ -96,7 +96,6 @@ class HorizontalTrackingWidget extends StatelessWidget {
           shadowColor: widgetColor,
           clipBehavior: clipBehavior,
           child: SizedBox(
-            //TODO: Make this dynamic
             height: 200,
             width: 400,
             child: Container(

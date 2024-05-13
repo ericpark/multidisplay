@@ -3,15 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:multidisplay/auth/auth.dart';
 import 'package:multidisplay/tracking/tracking.dart';
+import 'package:multidisplay/tracking/widgets/fade_in_out.dart';
 
+// ignore: must_be_immutable
 class TrackingLayoutTablet extends StatelessWidget {
-  const TrackingLayoutTablet({super.key});
+  TrackingLayoutTablet({super.key});
+  late void Function(String?) fadeInOut;
+
+  void fadeInOutCallback(String? message) {
+    fadeInOut.call(message);
+  }
 
   List<Widget> getSections(List<String> sectionOrder) {
     List<Widget> sections = [];
     for (int section = 0; section < sectionOrder.length; section++) {
       sections.add(TrackingSectionWidget(
         sectionName: sectionOrder[section],
+        fadeInCallback: (message) {
+          fadeInOutCallback(message);
+        },
       ));
     }
     return sections;
@@ -60,20 +70,31 @@ class TrackingLayoutTablet extends StatelessWidget {
                 ),
               ),
           ]);
-          return RefreshIndicator(
-            onRefresh: () async => await context
-                .read<TrackingCubit>()
-                .refreshTrackingGroups(
-                    userId: context.read<AuthCubit>().state.user?.id),
-            child: ReorderableListView(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              onReorder: (int oldIndex, int newIndex) async {
-                await trackingCubit.reorderSections(
-                    oldIndex: oldIndex, newIndex: newIndex);
-              },
-              buildDefaultDragHandles: state.reorderable,
-              children: sectionWidgets,
-            ),
+          return Stack(
+            children: [
+              RefreshIndicator(
+                onRefresh: () async => await context
+                    .read<TrackingCubit>()
+                    .refreshTrackingGroups(
+                        userId: context.read<AuthCubit>().state.user?.id),
+                child: ReorderableListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  onReorder: (int oldIndex, int newIndex) async {
+                    await trackingCubit.reorderSections(
+                        oldIndex: oldIndex, newIndex: newIndex);
+                  },
+                  buildDefaultDragHandles: state.reorderable,
+                  children: sectionWidgets,
+                ),
+              ),
+              FadeInOutMessage(
+                show: true,
+                builder: (BuildContext context,
+                    void Function(String?) runAnimation) {
+                  fadeInOut = runAnimation;
+                },
+              ),
+            ],
           );
         },
       ),

@@ -7,21 +7,22 @@ class CalendarNewEventView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarCubit calendarCubit =
-        BlocProvider.of<CalendarCubit>(context, listen: true);
+    CalendarCubit calendarCubit = BlocProvider.of<CalendarCubit>(context);
 
     return BlocProvider(
       create: (formContext) =>
           CalendarFormBloc(calendarList: calendarCubit.state.calendars),
       child: Builder(
         builder: (context) {
-          CalendarFormBloc formBloc = context.read<CalendarFormBloc>();
+          //CalendarFormBloc formBloc = context.read<CalendarFormBloc>();
+          final formBloc = BlocProvider.of<CalendarFormBloc>(context);
 
           bool isKeyboardShowing =
               MediaQuery.of(context).viewInsets.vertical > 0;
 
           return Scaffold(
             resizeToAvoidBottomInset: true,
+            primary: true,
             appBar: AppBar(
               leading: IconButton(
                   key: const Key('newEvent_close_iconButton'),

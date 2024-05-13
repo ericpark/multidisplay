@@ -60,55 +60,65 @@ class OutlinedTrackingWithButtonWidget extends StatelessWidget
     final String rightMetricName = rightMetric["display_name"] ?? "";
     final String rightValue = rightMetric["value"] ?? "-";
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        color: Colors.white,
-        elevation: 5,
-        shadowColor: widgetColor,
-        child: SizedBox(
-          //TODO: Make this dynamic
-          height: 200,
-          width: 200,
-          child: Container(
-            color: Colors.white,
-            child: Column(
+    return Card(
+      color: Colors.white,
+      elevation: 5,
+      shadowColor: widgetColor,
+      child: SizedBox.expand(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Text(
-                    trackingName,
-                    style: primaryTextStyle,
-                    textAlign: TextAlign.left,
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Text(
+                          trackingName,
+                          style: primaryTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                      child: Text(mainValue, style: centerStyle),
+                Expanded(
+                  flex: 6,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(mainValue, style: centerStyle),
+                        Text(mainMetricName, style: tertiaryStyle),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
-                      child: Text(mainMetricName, style: tertiaryStyle),
-                    ),
-                  ],
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
-                  child: Row(
-                    mainAxisAlignment: isActive
-                        ? MainAxisAlignment.center
-                        : MainAxisAlignment.spaceBetween,
-                    children: isActive
-                        ? [
-                            SizedBox(
-                              height: 20,
-                              width: 180,
-                              child: Center(
+                Flexible(
+                  fit: FlexFit.loose,
+                  flex: 2,
+                  child: isActive
+                      ? Row(
+                          crossAxisAlignment: isActive
+                              ? CrossAxisAlignment.stretch
+                              : CrossAxisAlignment.center,
+                          mainAxisAlignment: isActive
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.spaceBetween,
+                          children: [
+                              FittedBox(
+                                fit: BoxFit.fitHeight,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       side: BorderSide(color: widgetColor)),
@@ -123,35 +133,100 @@ class OutlinedTrackingWithButtonWidget extends StatelessWidget
                                       await onPress!();
                                     }
                                   },
-                                  child: Text(
-                                    'Finish',
-                                    style: secondaryTextStyle.copyWith(
-                                      fontSize: 10,
+                                  child: Text('Finish',
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                              color: widgetColor,
+                                              fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                            ])
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flex(
+                              direction: Axis.horizontal,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Left Metric
+                                Expanded(
+                                  flex: 1,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(leftValue,
+                                            style: secondaryTextStyle),
+                                        //const SizedBox(height: 5),
+                                        //Text(leftMetricName, style: tertiaryStyle),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ]
-                        : [
-                            // Left Metric
-                            Column(
-                              children: [
-                                Text(leftValue, style: secondaryTextStyle),
-                                const SizedBox(height: 5),
-                                Text(leftMetricName, style: tertiaryStyle),
+                                const Spacer(
+                                  flex: 1,
+                                ),
+                                // Right Metric
+                                Expanded(
+                                  flex: 1,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(rightValue,
+                                            style: secondaryTextStyle),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                            // Right Metric
-                            Column(
+                            Flex(
+                              direction: Axis.horizontal,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(rightValue, style: secondaryTextStyle),
-                                const SizedBox(height: 5),
-                                Text(rightMetricName, style: tertiaryStyle),
+                                // Left Metric
+                                Expanded(
+                                  flex: 1,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(leftMetricName,
+                                            style: tertiaryStyle),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(
+                                  flex: 1,
+                                ),
+                                // Right Metric
+                                Expanded(
+                                  flex: 1,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(rightMetricName,
+                                            style: tertiaryStyle),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ],
-                  ),
+                        ),
                 ),
               ],
             ),

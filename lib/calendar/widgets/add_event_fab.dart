@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Packages
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -47,12 +49,14 @@ class _AddEventFABState extends State<AddEventFAB> {
       },
       afterOpen: () {
         debugPrint('afterOpen');
+        context.read<CalendarCubit>().startLoading();
       },
       onClose: () {
         debugPrint('onClose');
       },
       afterClose: () {
         debugPrint('afterClose');
+        context.read<CalendarCubit>().refreshCalendarUI();
       },
       children: [
         FloatingActionButton.extended(
@@ -62,13 +66,14 @@ class _AddEventFABState extends State<AddEventFAB> {
           label: const Text('Add Group'),
           foregroundColor: Theme.of(context).primaryColor,
           backgroundColor: Colors.white,
-          onPressed: () {
-            /* Navigator.of(context).push(
-                MaterialPageRoute(builder: ((context) => const NextPage())));*/
+          onPressed: () async {
             final state = _key.currentState;
+
             if (state != null) {
               debugPrint('isOpen:${state.isOpen}');
               state.toggle();
+              // Issue with two scaffolds on the same page.
+              // await showDismissableModal(context, const CalendarNewEventView());
             }
           },
         ),
@@ -80,7 +85,9 @@ class _AddEventFABState extends State<AddEventFAB> {
           foregroundColor: Theme.of(context).primaryColor,
           backgroundColor: Colors.white,
           onPressed: () async {
-            await showDismissableModal(context, const CalendarNewEventView());
+            await Navigator.of(context).push(CupertinoModalPopupRoute(
+                barrierDismissible: true,
+                builder: ((context) => const CalendarNewEventView())));
             final state = _key.currentState;
             if (state != null) {
               debugPrint('isOpen:${state.isOpen}');

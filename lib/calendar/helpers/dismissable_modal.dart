@@ -5,8 +5,10 @@ import 'package:multidisplay/calendar/calendar.dart';
 Future<dynamic> showDismissableModal(
     BuildContext buildContext, Widget widget) async {
   CalendarCubit cubit = buildContext.read<CalendarCubit>();
+
   cubit.startLoading();
   await showCupertinoModalPopup(
+    useRootNavigator: true,
     barrierDismissible: true,
     context: buildContext,
     builder: (BuildContext context) {

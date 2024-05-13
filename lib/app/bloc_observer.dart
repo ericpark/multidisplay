@@ -13,7 +13,7 @@ class AppBlocObserver extends BlocObserver {
       return;
     }
     if (kDebugMode) {
-      //print('EVENT: $event');
+      print('EVENT: $event');
     }
   }
 

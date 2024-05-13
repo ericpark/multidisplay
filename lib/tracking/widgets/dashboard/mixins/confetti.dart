@@ -93,6 +93,11 @@ mixin Confetti {
     double randomMultiplier = 1, // Allows for random probability to be adjusted
     bool debug = false,
   }) {
+    // TODO: Remove
+    if (DateTime.now().midnight == DateTime(2024, 5, 10).midnight) {
+      return true;
+    }
+
     // randomMultiplier subtracts a percentage of the random number from itself.
     // randomMultiplier of 1 will not affect the random number
     // randomMultiplier of 0 will always return 0

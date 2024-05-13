@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart' hide CalendarView;
@@ -8,11 +9,9 @@ class CalendarSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CalendarCubit, CalendarState>(
-      listener: (context, state) {},
+    return BlocBuilder<CalendarCubit, CalendarState>(
       builder: (context, state) {
         CalendarCubit calendarCubit = context.read<CalendarCubit>();
-
         switch (state.status) {
           case CalendarStatus.initial:
             return const CalendarEmpty();
@@ -34,7 +33,14 @@ class CalendarSchedule extends StatelessWidget {
               onTap: (calendarTapDetails) async {
                 CalendarEvent event = calendarTapDetails.appointments?.first;
                 Widget container = CalendarEditEventView(event: event);
-                await showDismissableModal(context, container);
+                calendarCubit.startLoading();
+
+                // Changed to navigator for now because two scaffolds cause an issue
+                await Navigator.of(context).push(CupertinoModalPopupRoute(
+                    barrierDismissible: true,
+                    builder: ((context) => container)));
+                //await showDismissableModal(context, container);
+                calendarCubit.refreshCalendarUI();
               },
             );
           case CalendarStatus.failure:

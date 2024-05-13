@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:custom_components/custom_components.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 // Project
 import 'package:multidisplay/calendar/calendar.dart';
@@ -49,6 +50,7 @@ class CalendarLayoutTablet extends StatelessWidget {
             ),
           ],
         ),
+        floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: const AddEventFAB(),
         body: const CalendarLayoutTabletView());
   }

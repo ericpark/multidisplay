@@ -73,23 +73,34 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
 
     Color? color = widget.color;
 
-    return GestureDetector(
-      onDoubleTap: () async => onDoubleTap(),
-      onLongPress: () async => displayDetailsPage(),
-      onTap: () async => displayDetailsPage(),
-      child: Stack(
-        children: [
-          OutlinedTrackingWidget(
-            id: widget.id,
-            section: widget.section,
-            trackingName: trackingName,
-            mainMetric: mainMetric,
-            leftMetric: leftMetric,
-            rightMetric: rightMetric,
-            color: color,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return GestureDetector(
+          onDoubleTap: () async => onDoubleTap(),
+          onLongPress: () async => displayDetailsPage(),
+          onTap: () async => displayDetailsPage(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: constraints.maxHeight,
+              height: constraints.maxHeight,
+              child: Stack(
+                children: [
+                  OutlinedTrackingWidget(
+                    id: widget.id,
+                    section: widget.section,
+                    trackingName: trackingName,
+                    mainMetric: mainMetric,
+                    leftMetric: leftMetric,
+                    rightMetric: rightMetric,
+                    color: color,
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

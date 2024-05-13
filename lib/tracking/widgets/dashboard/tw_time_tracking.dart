@@ -168,48 +168,52 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     } catch (err) {
       debugPrint("ERROR: TIME TRACKING WIDGET - $err");
     }
-    return GestureDetector(
-      onDoubleTap: () async => isActive ? null : onDoubleTap(),
-      onLongPress: () async => displayDetailsPage(),
-      onTap: () async => isActive ? null : displayDetailsPage(),
-      child: Stack(
-        children: [
-          OutlinedTrackingWithButtonWidget(
-            id: widget.id,
-            section: widget.section,
-            trackingName: trackingName,
-            mainMetric: mainMetric,
-            leftMetric: leftMetric,
-            rightMetric: rightMetric,
-            color: widget.color ?? color,
-            isActive: isActive,
-            onPress: () async => onFinish(
-              compareMetric: compareMetric,
-              compareThreshold: compareThreshold,
-            ),
-          ),
-          Padding(
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return GestureDetector(
+          onDoubleTap: () async => isActive ? null : onDoubleTap(),
+          onLongPress: () async => displayDetailsPage(),
+          onTap: () async => isActive ? null : displayDetailsPage(),
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
-              child: Center(
-                child: ConfettiWidget(
-                  confettiController: controllerCenter,
-                  blastDirectionality: BlastDirectionality.explosive,
-                  shouldLoop: false,
-                  minBlastForce: 20,
-                  maxBlastForce: 50,
-                  gravity: 0.01,
-                  particleDrag: 0.15,
-                  colors: widget.heartColors,
-                  createParticlePath: widget.drawHeart,
-                ),
+              width: constraints.maxHeight,
+              height: constraints.maxHeight,
+              child: Stack(
+                children: [
+                  OutlinedTrackingWithButtonWidget(
+                    id: widget.id,
+                    section: widget.section,
+                    trackingName: trackingName,
+                    mainMetric: mainMetric,
+                    leftMetric: leftMetric,
+                    rightMetric: rightMetric,
+                    color: widget.color ?? color,
+                    isActive: isActive,
+                    onPress: () async => onFinish(
+                      compareMetric: compareMetric,
+                      compareThreshold: compareThreshold,
+                    ),
+                  ),
+                  Center(
+                    child: ConfettiWidget(
+                      confettiController: controllerCenter,
+                      blastDirectionality: BlastDirectionality.explosive,
+                      shouldLoop: false,
+                      minBlastForce: 20,
+                      maxBlastForce: 50,
+                      gravity: 0.01,
+                      particleDrag: 0.15,
+                      colors: widget.heartColors,
+                      createParticlePath: widget.drawHeart,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

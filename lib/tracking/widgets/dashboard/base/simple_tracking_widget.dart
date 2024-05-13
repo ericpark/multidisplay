@@ -89,7 +89,6 @@ class SimpleTrackingWidget extends StatelessWidget {
           shadowColor: Colors.black,
           borderRadius: BorderRadius.circular(10),
           child: SizedBox(
-            //TODO: Make this dynamic
             height: 200,
             width: 200,
             child: Container(

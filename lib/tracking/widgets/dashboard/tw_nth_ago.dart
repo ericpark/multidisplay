@@ -119,45 +119,51 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
         thresholds: thresholds,
       );
     }
-    return GestureDetector(
-      onDoubleTap: () => onDoubleTap(
-          compareMetric: compareMetric, compareThreshold: compareThreshold),
-      onLongPress: () async => displayDetailsPage(),
-      onTap: () async => displayDetailsPage(),
-      child: Stack(
-        children: [
-          OutlinedTrackingWidget(
-            id: widget.id,
-            section: widget.section,
-            trackingName: trackingName,
-            mainMetric: mainMetric,
-            leftMetric: leftMetric,
-            rightMetric: rightMetric,
-            color: color,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return GestureDetector(
+          onDoubleTap: () => onDoubleTap(
+            compareMetric: compareMetric,
+            compareThreshold: compareThreshold,
           ),
-          // CONFETTI
-          Padding(
+          onLongPress: () async => displayDetailsPage(),
+          onTap: () async => displayDetailsPage(),
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
-              child: Center(
-                child: ConfettiWidget(
-                  confettiController: controllerCenter,
-                  blastDirectionality: BlastDirectionality.explosive,
-                  shouldLoop: false,
-                  minBlastForce: 20,
-                  maxBlastForce: 50,
-                  gravity: 0.01,
-                  particleDrag: 0.15,
-                  colors: widget.confettiColors,
-                  createParticlePath: widget.drawStar,
-                ),
+              width: constraints.maxHeight,
+              height: constraints.maxHeight,
+              child: Stack(
+                children: [
+                  OutlinedTrackingWidgetAuto(
+                    id: widget.id,
+                    section: widget.section,
+                    trackingName: trackingName,
+                    mainMetric: mainMetric,
+                    leftMetric: leftMetric,
+                    rightMetric: rightMetric,
+                    color: color,
+                  ),
+                  // CONFETTI
+                  Center(
+                    child: ConfettiWidget(
+                      confettiController: controllerCenter,
+                      blastDirectionality: BlastDirectionality.explosive,
+                      shouldLoop: false,
+                      minBlastForce: 20,
+                      maxBlastForce: 50,
+                      gravity: 0.01,
+                      particleDrag: 0.15,
+                      colors: widget.confettiColors,
+                      createParticlePath: widget.drawStar,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

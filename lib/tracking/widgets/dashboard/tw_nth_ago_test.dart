@@ -7,9 +7,9 @@ import 'package:multidisplay/calendar/helpers/dismissable_modal.dart';
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
 
-class FixedNthTrackingWidget extends StatefulWidget
+class NthAgoTrackingWidgetTest extends StatefulWidget
     with TrackingWidget, TrackingDialog, Confetti, ThresholdColor {
-  FixedNthTrackingWidget({
+  NthAgoTrackingWidgetTest({
     super.key,
     id,
     section,
@@ -27,10 +27,11 @@ class FixedNthTrackingWidget extends StatefulWidget
   final Color? color;
 
   @override
-  State<FixedNthTrackingWidget> createState() => _FixedNthTrackingWidgetState();
+  State<NthAgoTrackingWidgetTest> createState() =>
+      _NthAgoTrackingWidgetTestState();
 }
 
-class _FixedNthTrackingWidgetState extends State<FixedNthTrackingWidget> {
+class _NthAgoTrackingWidgetTestState extends State<NthAgoTrackingWidgetTest> {
   late ConfettiController controllerCenter;
 
   @override
@@ -57,7 +58,7 @@ class _FixedNthTrackingWidgetState extends State<FixedNthTrackingWidget> {
     if (confirmTracking != true) return;
 
     // Do not use compareMetric
-    const useCelebration = false;
+    const useCelebration = true;
     final celebrationMetric = compareMetric ?? 0;
     final celebrationThreshold = compareThreshold ?? 0;
 
@@ -66,9 +67,9 @@ class _FixedNthTrackingWidgetState extends State<FixedNthTrackingWidget> {
       useCelebrationThreshold: useCelebration,
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
-      useMultipleToday: true,
+      useMultipleToday: false,
       records: widget.trackingSummary.records,
-      useRandom: false,
+      useRandom: true,
     );
 
     if (confirmTracking == true && showConfetti) {
@@ -93,7 +94,7 @@ class _FixedNthTrackingWidgetState extends State<FixedNthTrackingWidget> {
     final rightMetric =
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
-    const thresholdMetric = "remaining_week";
+    final thresholdMetric = widget.trackingSummary.mainMetric;
 
     Color? color = widget.color;
 
@@ -123,7 +124,9 @@ class _FixedNthTrackingWidgetState extends State<FixedNthTrackingWidget> {
       builder: (BuildContext context, BoxConstraints constraints) {
         return GestureDetector(
           onDoubleTap: () => onDoubleTap(
-              compareMetric: compareMetric, compareThreshold: compareThreshold),
+            compareMetric: compareMetric,
+            compareThreshold: compareThreshold,
+          ),
           onLongPress: () async => displayDetailsPage(),
           onTap: () async => displayDetailsPage(),
           child: Padding(

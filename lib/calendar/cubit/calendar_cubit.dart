@@ -58,7 +58,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     //emit(state.copyWith(status: CalendarStatus.loading));
     // Temporary fix to refresh after popover is gone rather than rewriting
     // the builder functions for both scheduler and month views.
-    //await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     emit(state.copyWith(status: CalendarStatus.success));
   }
 

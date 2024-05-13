@@ -38,7 +38,7 @@ class TrackingPage extends StatelessWidget {
                 if (constraints.maxWidth < 400) {
                   return const TrackingLayoutMobile();
                 }
-                return const TrackingLayoutTablet();
+                return TrackingLayoutTablet();
               },
             );
           },

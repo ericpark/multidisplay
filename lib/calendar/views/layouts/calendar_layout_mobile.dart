@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 
 // Project
 import 'package:multidisplay/calendar/calendar.dart';

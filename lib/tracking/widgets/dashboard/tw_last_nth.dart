@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 // Packages
-import 'package:multidisplay/calendar/helpers/dismissable_modal.dart';
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 
 // Project
 import 'package:multidisplay/tracking/tracking.dart';

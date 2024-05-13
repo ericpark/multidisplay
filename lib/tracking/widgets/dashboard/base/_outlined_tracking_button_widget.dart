@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/calendar/helpers/dismissable_modal.dart';
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 
 class OutlinedTrackingButtonWidget extends StatefulWidget {
   const OutlinedTrackingButtonWidget({

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Packages
-import 'package:multidisplay/calendar/helpers/dismissable_modal.dart';
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 import 'package:multidisplay/constants.dart';
 
 // Project

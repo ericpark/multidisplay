@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:custom_components/custom_components.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 
 // Project
 import 'package:multidisplay/calendar/calendar.dart';

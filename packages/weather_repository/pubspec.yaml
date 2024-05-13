@@ -2,7 +2,7 @@ name: weather_repository
 description: A new Flutter package project.
 version: 0.0.1
 publish_to: none
-homepage:
+homepage: ericspark.com
 
 environment:
   sdk: '>=3.1.5 <4.0.0'

@@ -26,8 +26,8 @@ DailyWeather _$DailyWeatherFromJson(Map<String, dynamic> json) =>
           sunrise:
               $checkedConvert('sunrise', (v) => DateTime.parse(v as String)),
           sunset: $checkedConvert('sunset', (v) => DateTime.parse(v as String)),
-          precipitation_probability_max:
-              $checkedConvert('precipitation_probability_max', (v) => v as int),
+          precipitation_probability_max: $checkedConvert(
+              'precipitation_probability_max', (v) => (v as num).toInt()),
         );
         return val;
       },

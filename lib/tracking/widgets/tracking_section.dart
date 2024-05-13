@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 class TrackingSectionWidget extends StatelessWidget {
@@ -24,9 +23,8 @@ class TrackingSectionWidget extends StatelessWidget {
     void onDoubleTapWrapper() async {
       await trackingCubit.addTrackingRecordAndUpdateSummary(
           section: data.section, index: index);
-      if (DateTime.now().midnight == DateTime(2024, 5, 10).midnight) {
-        if (fadeInCallback != null) fadeInCallback!("Happy Birthday Soojee!");
-      }
+
+      //if (fadeInCallback != null) fadeInCallback!("");
     }
 
     switch (data.trackingType) {

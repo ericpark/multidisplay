@@ -43,8 +43,8 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
               'sunrise', (v) => v == null ? null : DateTime.parse(v as String)),
           sunset: $checkedConvert(
               'sunset', (v) => v == null ? null : DateTime.parse(v as String)),
-          precipitationProbability:
-              $checkedConvert('precipitation_probability', (v) => v as int?),
+          precipitationProbability: $checkedConvert(
+              'precipitation_probability', (v) => (v as num?)?.toInt()),
         );
         return val;
       },
@@ -70,7 +70,7 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'sunrise': instance.sunrise.toIso8601String(),
       'sunset': instance.sunset.toIso8601String(),
       'precipitation_probability': instance.precipitationProbability,
-      'position': {
+      'position': <String, dynamic>{
         r'$1': instance.position.$1,
         r'$2': instance.position.$2,
       },

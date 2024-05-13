@@ -45,7 +45,7 @@ class SettingsLayoutTablet extends StatelessWidget {
                     case AuthStatus.initial:
                       String? userId =
                           await Navigator.of(context).push(LoginPage.route());
-                      if (userId == null || userId == "") {
+                      if (userId == "") {
                         userId = null;
                       }
                       if (context.mounted) {
@@ -59,7 +59,7 @@ class SettingsLayoutTablet extends StatelessWidget {
                     case AuthStatus.unauthenticated:
                       String? userId =
                           await Navigator.of(context).push(LoginPage.route());
-                      if (userId == null || userId == "") {
+                      if (userId == "") {
                         userId = null;
                       }
                       if (context.mounted) {

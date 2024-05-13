@@ -8,7 +8,7 @@ targets:
       - multidisplay:tracking_repo
       - multidisplay:calendar_repo
       - multidisplay:weather_repo
-      - multidisplay:open_meteo
+      - multidisplay:open_meteo_api
     builders:
       source_gen:combining_builder:
         options:
@@ -28,7 +28,7 @@ targets:
           copy_with: true
           build_extensions:
             'lib/{{path}}/{{file}}.dart': 'lib/{{path}}/generated/{{file}}.freezed.dart'
-  open_meteo:
+  open_meteo_api:
     sources:
       - packages/open_meteo_api/lib/src/models/**
     builders:
@@ -45,7 +45,7 @@ targets:
     sources:
       - packages/weather_repository/lib/src/models/**
     dependencies:
-      - open_meteo
+      - open_meteo_api
     builders:
       source_gen:combining_builder:
         options:

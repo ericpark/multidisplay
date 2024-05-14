@@ -14,15 +14,20 @@ class DeviceType {
 
   DeviceType.fromBuildContext(BuildContext context)
       : this._(
-            deviceType: getDeviceType(context),
-            screenHeight: MediaQuery.of(context).size.height,
-            screenWidth: MediaQuery.of(context).size.width,
-            formFactor: getDeviceFormFactor(context),);
+          deviceType: getDeviceType(context),
+          screenHeight: MediaQuery.of(context).size.height,
+          screenWidth: MediaQuery.of(context).size.width,
+          formFactor: getDeviceFormFactor(context),
+        );
 
   final String deviceType;
   final double screenWidth;
   final double screenHeight;
   final FormFactor formFactor;
+
+  static const thresholdPhone = 700.0;
+  static const thresholdPhablet = 1100.0;
+  static const thresholdTablet = 1500.0;
 
   static String getDeviceType(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -31,10 +36,6 @@ class DeviceType {
     final diagonalSize = sqrt(
       (screenWidth * screenWidth) + (screenHeight * screenHeight),
     );
-
-    const thresholdPhone = 700.0;
-    const thresholdPhablet = 1100.0;
-    const thresholdTablet = 1500.0;
 
     if (diagonalSize < thresholdPhone) {
       return 'Phone';
@@ -54,10 +55,6 @@ class DeviceType {
     final diagonalSize = sqrt(
       (screenWidth * screenWidth) + (screenHeight * screenHeight),
     );
-
-    const thresholdPhone = 700.0;
-    const thresholdPhablet = 1100.0;
-    const thresholdTablet = 1500.0;
 
     if (diagonalSize < thresholdPhone) {
       return FormFactor.mobile;

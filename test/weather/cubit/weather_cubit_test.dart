@@ -11,6 +11,8 @@ import '../../helpers/hydrated_bloc.dart';
 const weatherLocation = 'London';
 const weatherCondition = weather_repository.WeatherCondition.rainySlight;
 const weatherTemperature = 9.8;
+final sunrise = DateTime.now();
+final sunset = DateTime.now();
 
 class MockWeatherRepository extends Mock
     implements weather_repository.WeatherRepository {}
@@ -34,6 +36,13 @@ void main() {
       when(() => weather.date).thenReturn(DateTime(2024));
       when(() => weather.temperatureHigh).thenReturn(weatherTemperature);
       when(() => weather.temperatureLow).thenReturn(weatherTemperature);
+      when(() => weather.precipitation).thenReturn(0);
+      when(() => weather.soilMoisture).thenReturn(0);
+      when(() => weather.soilCondition)
+          .thenReturn(weather_repository.SoilCondition.unknown);
+      when(() => weather.sunrise).thenReturn(sunrise);
+      when(() => weather.sunset).thenReturn(sunset);
+      when(() => weather.precipitationProbability).thenReturn(0);
       when(
         () => weatherRepository.getWeather(any()),
       ).thenAnswer((_) async => weather);
@@ -138,6 +147,7 @@ void main() {
                 isA<Weather>()
                     .having((w) => w.lastUpdated, 'lastUpdated', isNotNull)
                     .having((w) => w.condition, 'condition', weatherCondition)
+                    .having((w) => w.soilMoisture, 'soilMoisture', isNotEmpty)
                     .having(
                       (w) => w.temperature,
                       'temperature',
@@ -184,6 +194,11 @@ void main() {
             temperatureLow: Temperature(value: weatherTemperature),
             lastUpdated: DateTime(2020),
             condition: weatherCondition,
+            soilMoisture: 0,
+            soilCondition: weather_repository.SoilCondition.unknown,
+            sunrise: sunrise,
+            sunset: sunset,
+            precipitationProbability: 0,
           ),
         ),
         act: (cubit) => cubit.refreshWeather(),

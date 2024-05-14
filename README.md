@@ -12,7 +12,8 @@ flutter packages pub run build_runner build  --delete-conflicting-outputs
 `
 
 `
-flutter test --coverage                    
-genhtml coverage/lcov.info -o coverage 
+flutter test --coverage
+lcov --remove coverage/lcov.info "lib/**/generated/*" -o coverage/new_lcov.info
+genhtml coverage/new_lcov.info -o coverage 
 open coverage/index.html
 `

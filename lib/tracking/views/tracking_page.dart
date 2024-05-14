@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/tracking/tracking.dart';
 import 'package:multidisplay/auth/auth.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
 class TrackingPage extends StatelessWidget {
   const TrackingPage({super.key});

@@ -33,7 +33,7 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: OutlinedButton(
               onPressed: position == null
                   ? () async {
@@ -60,14 +60,18 @@ class _SearchPageState extends State<SearchPage> {
                           // returned true. According to Android guidelines
                           // your App should show an explanatory UI now.
                           return Future.error(
-                              'Location permissions are denied');
+                            'Location permissions are denied',
+                          );
                         }
                       }
 
                       if (permission == LocationPermission.deniedForever) {
                         // Permissions are denied forever, handle appropriately.
                         return Future.error(
-                            'Location permissions are permanently denied, we cannot request permissions.');
+                          '''
+                          Location permissions are permanently denied, 
+                          we cannot request permissions.''',
+                        );
                       }
 
                       // When we reach here, permissions are granted and we can
@@ -84,13 +88,13 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   Icon(Icons.location_on, semanticLabel: 'Location'),
                   SizedBox(width: 5),
-                  Text("Current Location"),
+                  Text('Current Location'),
                 ],
               ),
             ),
           ),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Divider(),
           ),
           Row(
@@ -110,11 +114,13 @@ class _SearchPageState extends State<SearchPage> {
               IconButton(
                 key: const Key('searchPage_search_iconButton'),
                 icon: const Icon(Icons.search, semanticLabel: 'Submit'),
-                onPressed: () => Navigator.of(context).pop(jsonEncode({
-                  "city": _text,
-                  "latitude": position?.latitude,
-                  "longitude": position?.longitude
-                })),
+                onPressed: () => Navigator.of(context).pop(
+                  jsonEncode({
+                    'city': _text,
+                    'latitude': position?.latitude,
+                    'longitude': position?.longitude,
+                  }),
+                ),
               ),
             ],
           ),

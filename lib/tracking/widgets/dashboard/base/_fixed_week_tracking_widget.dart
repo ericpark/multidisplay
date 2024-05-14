@@ -1,21 +1,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// DEPRECATED: DO NOT USE
 ///////////////////////////////////////////////////////////////////////////////
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 // ignore_for_file: dangling_library_doc_comments
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class FixedWeekTrackingWidget extends StatelessWidget {
   const FixedWeekTrackingWidget({
-    super.key,
     required this.id,
     required this.section,
     required this.trackingSummary,
     required this.onDoubleTap,
     required this.remaining,
+    super.key,
     this.dialogChoices,
   });
 
@@ -26,14 +26,13 @@ class FixedWeekTrackingWidget extends StatelessWidget {
 
   final List<String>? dialogChoices;
   final void Function()? onDoubleTap;
-  void _showDefaultDialog(BuildContext context) async {
+  Future<void> _showDefaultDialog(BuildContext context) async {
     final result = await showOkCancelAlertDialog(
       context: context,
       title: 'Track Event',
       message: 'Do you want to add this event?',
       okLabel: 'Yes',
       cancelLabel: 'No',
-      isDestructiveAction: false,
       builder: (context, child) => Theme(
         data: ThemeData(
           textButtonTheme: TextButtonThemeData(
@@ -59,11 +58,11 @@ class FixedWeekTrackingWidget extends StatelessWidget {
 
     final trackingName = trackingSummary.name;
     final mainMetric = trackingSummary.metrics[trackingSummary.mainMetric] ??
-        {"display_name": "", "value": ""};
+        {'display_name': '', 'value': ''};
     final leftMetric = trackingSummary.metrics[trackingSummary.leftMetric] ??
-        const {"display_name": "", "value": ""};
+        const {'display_name': '', 'value': ''};
     final rightMetric = trackingSummary.metrics[trackingSummary.rightMetric] ??
-        const {"display_name": "", "value": ""};
+        const {'display_name': '', 'value': ''};
     final threshold = [1, 0];
     if (remaining >= threshold[0]) {
       color = Colors.green[700];

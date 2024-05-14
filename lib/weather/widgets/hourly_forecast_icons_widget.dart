@@ -6,18 +6,21 @@ import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/weather/widgets/hourly_forecast_widget.dart';
 
 class HourlyForecastIconsWidget extends StatelessWidget {
-  const HourlyForecastIconsWidget(
-      {required this.filterHours, required this.units, super.key});
+  const HourlyForecastIconsWidget({
+    required this.filterHours,
+    required this.units,
+    super.key,
+  });
 
   final List<Weather> filterHours;
   final TemperatureUnits units;
 
   List<Widget> _getForecastWidgetsRow({required double width}) {
-    List<Widget> forecastWidgets = [];
+    final forecastWidgets = <Widget>[];
 
-    int hourInterval = 3;
-    int maxWidgets = (filterHours.length / hourInterval).floor() + 1;
-    double widgetSize = width / maxWidgets;
+    var hourInterval = 3;
+    final maxWidgets = (filterHours.length / hourInterval).floor() + 1;
+    var widgetSize = width / maxWidgets;
 
     if (width < 400) {
       hourInterval = 1;
@@ -25,13 +28,14 @@ class HourlyForecastIconsWidget extends StatelessWidget {
     }
 
     for (var i = 0; i < filterHours.length; i++) {
-      /// Show an icon for every three hours and the last one for a 24 hour period
+      /// Show an icon for every three hours and the last one for a 24-hr period
       /// Or show all 24 hours in a scrollable row with 5 showing at once.
       if ((i % hourInterval == 0) || (i == filterHours.length - 1)) {
         forecastWidgets.add(
           SizedBox(
-              width: widgetSize, // Evenly Distribute in size
-              child: HourlyForecastCell(weather: filterHours[i], units: units)),
+            width: widgetSize, // Evenly Distribute in size
+            child: HourlyForecastCell(weather: filterHours[i], units: units),
+          ),
         );
       }
     }
@@ -41,24 +45,26 @@ class HourlyForecastIconsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final width = constraints.maxWidth;
-      ScrollPhysics scrollable = width > 400
-          ? const NeverScrollableScrollPhysics()
-          : const AlwaysScrollableScrollPhysics();
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final width = constraints.maxWidth;
+        final scrollable = width > 400
+            ? const NeverScrollableScrollPhysics()
+            : const AlwaysScrollableScrollPhysics();
 
-      final forecastWidgets = _getForecastWidgetsRow(width: width);
+        final forecastWidgets = _getForecastWidgetsRow(width: width);
 
-      return Padding(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-        child: SingleChildScrollView(
+        return Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: scrollable,
             child: Row(
               children: forecastWidgets,
-            )),
-      );
-    });
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -76,7 +82,7 @@ class HourlyForecastCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Stack(
         children: [
           //_WeatherBackground(),
@@ -85,7 +91,7 @@ class HourlyForecastCell extends StatelessWidget {
               children: [
                 // HOUR
                 Text(
-                  DateFormat('jm').format(weather.date).replaceAll(":00", ""),
+                  DateFormat('jm').format(weather.date).replaceAll(':00', ''),
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
@@ -102,16 +108,16 @@ class HourlyForecastCell extends StatelessWidget {
                 Text(
                   weather.soilCondition.name,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: weather.soilCondition.name == "muddy"
+                    fontWeight: weather.soilCondition.name == 'muddy'
                         ? FontWeight.bold
                         : FontWeight.w300,
-                    color: weather.soilCondition.name == "muddy"
+                    color: weather.soilCondition.name == 'muddy'
                         ? const Color.fromARGB(255, 193, 110, 2)
                         : theme.textTheme.bodyMedium!.color!.withOpacity(0.5),
                   ),
                 ),
                 Text(
-                  "${(weather.precipitationProbability).toInt()}%",
+                  '${weather.precipitationProbability}%',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
@@ -135,9 +141,8 @@ class _WeatherIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
         child: SizedBox(
           width: _iconSize,
           height: _iconSize,

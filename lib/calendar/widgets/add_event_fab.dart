@@ -21,21 +21,19 @@ class _AddEventFABState extends State<AddEventFAB> {
     return ExpandableFab(
       key: _key,
       // duration: const Duration(milliseconds: 500),
-      distance: 70.0,
+      distance: 70,
       type: ExpandableFabType.up,
       // pos: ExpandableFabPos.left,
       // childrenOffset: const Offset(0, 20),
       // fanAngle: 40,
       openButtonBuilder: RotateFloatingActionButtonBuilder(
         child: const Icon(Icons.add),
-        fabSize: ExpandableFabSize.regular,
         foregroundColor: Theme.of(context).primaryColor,
         backgroundColor: Colors.white,
         shape: const CircleBorder(),
       ),
       closeButtonBuilder: DefaultFloatingActionButtonBuilder(
         child: const Icon(Icons.close),
-        fabSize: ExpandableFabSize.regular,
         foregroundColor: Colors.red[300],
         backgroundColor: Colors.white,
         shape: const CircleBorder(),
@@ -73,7 +71,8 @@ class _AddEventFABState extends State<AddEventFAB> {
               debugPrint('isOpen:${state.isOpen}');
               state.toggle();
               // Issue with two scaffolds on the same page.
-              // await showDismissableModal(context, const CalendarNewEventView());
+              // await showDismissableModal(context,
+              //const CalendarNewEventView());
             }
           },
         ),
@@ -85,9 +84,11 @@ class _AddEventFABState extends State<AddEventFAB> {
           foregroundColor: Theme.of(context).primaryColor,
           backgroundColor: Colors.white,
           onPressed: () async {
-            await Navigator.of(context).push(CupertinoModalPopupRoute(
-                barrierDismissible: true,
-                builder: ((context) => const CalendarNewEventView())));
+            await Navigator.of(context).push(
+              CupertinoModalPopupRoute<dynamic>(
+                builder: (context) => const CalendarNewEventView(),
+              ),
+            );
             final state = _key.currentState;
             if (state != null) {
               debugPrint('isOpen:${state.isOpen}');

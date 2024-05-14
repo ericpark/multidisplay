@@ -1,11 +1,9 @@
+import 'package:custom_components/custom_components.dart';
 import 'package:flutter/material.dart';
-
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:custom_components/custom_components.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:multidisplay/app/widgets/dismissable_modal.dart';
-
 // Project
 import 'package:multidisplay/calendar/calendar.dart';
 
@@ -14,7 +12,7 @@ class CalendarLayoutTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    final calendarCubit = context.read<CalendarCubit>();
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -53,7 +51,7 @@ class CalendarLayoutTablet extends StatelessWidget {
         ),
         floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: const AddEventFAB(),
-        body: const CalendarLayoutTabletView());
+        body: const CalendarLayoutTabletView(),);
   }
 }
 
@@ -62,12 +60,12 @@ class CalendarLayoutTabletView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const cardPadding = EdgeInsets.all(8.0);
+    const cardPadding = EdgeInsets.all(8);
 
     const calendarMonthWidget = SimpleCard(
-        gradientPreset: GradientPreset.lighten, child: CalendarMonthWidget());
+        gradientPreset: GradientPreset.lighten, child: CalendarMonthWidget(),);
     const calendarScheduleWidget = SimpleCard(
-        gradientPreset: GradientPreset.lighten, child: CalendarSchedule());
+        gradientPreset: GradientPreset.lighten, child: CalendarSchedule(),);
 
     /// Layout :
     /// |---------------------|
@@ -85,11 +83,11 @@ class CalendarLayoutTabletView extends StatelessWidget {
             Expanded(
                 flex: 60,
                 child:
-                    Padding(padding: cardPadding, child: calendarMonthWidget)),
+                    Padding(padding: cardPadding, child: calendarMonthWidget),),
             Expanded(
                 flex: 40,
                 child: Padding(
-                    padding: cardPadding, child: calendarScheduleWidget)),
+                    padding: cardPadding, child: calendarScheduleWidget,),),
           ],
         ),
       ),

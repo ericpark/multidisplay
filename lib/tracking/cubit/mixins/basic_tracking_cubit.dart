@@ -3,8 +3,8 @@ import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 /// BasicTrackingCubit.dart contains the [BasicTrackingCubit] class. This class
-/// contains methods that are used by multiple tracking cubits to calculate basic
-/// tracking metrics.
+/// contains methods that are used by multiple tracking cubits to calculate
+/// basic tracking metrics.
 ///
 class BasicTrackingCubit<TrackingState> {
   String getLastThirtyDayCount({required List<TrackingRecord> records}) {
@@ -20,7 +20,7 @@ class BasicTrackingCubit<TrackingState> {
   String getRemainingWeek({required List<TrackingRecord> records}) {
     final now = DateTime.now();
     // Subtract the number of days since Sunday (including today)
-    int daysSinceSunday = now.weekday;
+    final daysSinceSunday = now.weekday;
     // Calculate the date for the last Sunday
     final compareDate = DateTime(now.year, now.month, now.day)
         .midnight
@@ -44,13 +44,14 @@ class BasicTrackingCubit<TrackingState> {
   }
 
   String getDaysSinceLast({required List<TrackingRecord> records}) =>
-      "${(DateTime.now().difference(records.last.date.midnight).inHours / 24).floor()}";
+      '''${(DateTime.now().difference(records.last.date.midnight).inHours / 24).floor()}''';
 
   String getLastSevenDayAverage({required int total}) =>
       (total / 7).toStringAsFixed(2);
 
+  /// Returns the last date in the records list formatted as MM/dd/yyyy
   String getLastDate({required List<TrackingRecord> records}) =>
       records.isNotEmpty
-          ? DateFormat("MM/dd/yyyy").format(records.last.date)
-          : "-";
+          ? DateFormat('MM/dd/yyyy').format(records.last.date)
+          : '-';
 }

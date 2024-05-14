@@ -10,11 +10,10 @@ class ExpensesOverviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SpendingSection(
-            sectionName: "Overview",
-          )
+            sectionName: 'Overview',
+          ),
         ],
       ),
     );

@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:multidisplay/weather/weather.dart';
 import 'package:weather_icons/weather_icons.dart';
-import 'package:flutter/material.dart';
 
 extension WeatherConditionExtensions on WeatherCondition {
   IconData get toWeatherIcon {
@@ -69,8 +69,8 @@ extension WeatherConditionExtensions on WeatherCondition {
   }
 
   String get toWeatherDescription {
-    var result = name.replaceAll(RegExp(r'(?<!^)(?=[A-Z])'), r" ");
-    var finalResult = result[0].toUpperCase() + result.substring(1);
+    final result = name.replaceAll(RegExp('(?<!^)(?=[A-Z])'), ' ');
+    final finalResult = result[0].toUpperCase() + result.substring(1);
 
     return finalResult;
   }

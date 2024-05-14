@@ -17,7 +17,7 @@ class DateTimeConverter implements JsonConverter<DateTime, dynamic> {
   }
 
   @override
-  String toJson(DateTime object) => DateFormat("yyyy-MM-dd").format(object);
+  String toJson(DateTime object) => DateFormat('yyyy-MM-dd').format(object);
 }
 
 class DateTimeNullableConverter implements JsonConverter<DateTime?, dynamic> {
@@ -36,7 +36,7 @@ class DateTimeNullableConverter implements JsonConverter<DateTime?, dynamic> {
 
   @override
   String toJson(DateTime? object) =>
-      DateFormat("yyyy-MM-dd").format(object ?? DateTime.now());
+      DateFormat('yyyy-MM-dd').format(object ?? DateTime.now());
 }
 
 class TimestampNullableConverter implements JsonConverter<DateTime?, dynamic> {

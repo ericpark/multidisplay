@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 // Packages
 import 'package:intl/intl.dart';
-
 //Project
-import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/app/helpers/helpers.dart';
+import 'package:multidisplay/weather/weather.dart';
 
 class DailyForecastPopulated extends StatelessWidget {
   const DailyForecastPopulated({
@@ -21,37 +19,39 @@ class DailyForecastPopulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> forecastWidgets = [];
+    final forecastWidgets = <Widget>[];
 
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final width = constraints.maxWidth;
-      ScrollPhysics scrollable = width > 400
-          ? const NeverScrollableScrollPhysics()
-          : const AlwaysScrollableScrollPhysics();
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final width = constraints.maxWidth;
+        final scrollable = width > 400
+            ? const NeverScrollableScrollPhysics()
+            : const AlwaysScrollableScrollPhysics();
 
-      double widgetSize = width / 7;
+        var widgetSize = width / 7;
 
-      if (width < 400) {
-        widgetSize = width / 3;
-      }
-      for (var i = 0; i < forecast.length; i++) {
-        forecastWidgets.add(
-          SizedBox(
+        if (width < 400) {
+          widgetSize = width / 3;
+        }
+        for (var i = 0; i < forecast.length; i++) {
+          forecastWidgets.add(
+            SizedBox(
               width: widgetSize, // Evenly Distribute in size
-              child: DailyForecastCell(weather: forecast[i], units: units)),
-        );
-      }
-      return Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: scrollable,
-          child: Row(
-            children: forecastWidgets,
+              child: DailyForecastCell(weather: forecast[i], units: units),
+            ),
+          );
+        }
+        return Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: scrollable,
+            child: Row(
+              children: forecastWidgets,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -70,10 +70,10 @@ class DailyForecastCell extends StatelessWidget {
     final theme = Theme.of(context);
 
     final dayString = weather.date.isToday
-        ? "Today"
+        ? 'Today'
         : DateFormat('EEEE').format(weather.date);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Stack(
         children: [
           //_WeatherBackground(),
@@ -109,68 +109,80 @@ class DailyForecastCell extends StatelessWidget {
                 // HIGH TEXT SPAN
                 RichText(
                   text: TextSpan(
-                      text: "high:  ",
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    text: 'high:  ',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: weather.formattedTemperature(
+                          units,
+                          temperatureType: 'high',
+                        ),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                            text: weather.formattedTemperature(units,
-                                temperatureType: "high"),
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ]),
+                    ],
+                  ),
                 ),
                 // LOW TEXT SPAN
                 RichText(
                   text: TextSpan(
-                      text: "low:   ",
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    text: 'low:   ',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: weather.formattedTemperature(
+                          units,
+                          temperatureType: 'low',
+                        ),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                            text: weather.formattedTemperature(units,
-                                temperatureType: "low"),
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ]),
+                    ],
+                  ),
                 ),
                 // PRECIPITATION PERCENTAGE TEXT SPAN
                 RichText(
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   text: TextSpan(
-                      text: "precip: ",
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    text: 'precip: ',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: '${weather.precipitationProbability}%',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                            text: "${weather.precipitationProbability}%",
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ]),
+                    ],
+                  ),
                 ),
                 RichText(
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   text: TextSpan(
-                      text: "",
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    text: '',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(
+                        text:
+                            '(${weather.precipitation.toStringAsFixed(2)} in)',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                            text:
-                                "(${weather.precipitation.toStringAsFixed(2)} in)",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            )),
-                      ]),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -191,7 +203,6 @@ class _WeatherIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
       child: Padding(
         padding: const EdgeInsets.only(top: 5, bottom: 5),
         child: SizedBox(

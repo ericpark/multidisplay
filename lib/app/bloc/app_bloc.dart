@@ -13,11 +13,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppPageChanged>(onAppPageChanged);
   }
 
-  void onAppStarted(AppStarted event, Emitter<AppState> emit) async {
+  Future<void> onAppStarted(AppStarted event, Emitter<AppState> emit) async {
     emit(AppState.started(deviceType: state.deviceType));
   }
 
-  void onAppLoaded(AppLoaded event, Emitter<AppState> emit) async {
+  Future<void> onAppLoaded(AppLoaded event, Emitter<AppState> emit) async {
     emit(state);
   }
 

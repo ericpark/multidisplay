@@ -8,7 +8,6 @@ part 'generated/tracking_record.freezed.dart';
 
 @freezed
 class TrackingRecord with _$TrackingRecord {
-  const TrackingRecord._();
 
   factory TrackingRecord({
     @DateTimeConverter() required DateTime date,
@@ -16,12 +15,13 @@ class TrackingRecord with _$TrackingRecord {
     @TimestampNullableConverter() DateTime? createdAt,
     String? description,
   }) = _TrackingRecord;
+  const TrackingRecord._();
 
   factory TrackingRecord.fromJson(Map<String, dynamic> json) =>
       _$TrackingRecordFromJson(json);
 
   tracking_repository.TrackingRecord toRepository() {
-    var json = toJson();
+    final json = toJson();
     return tracking_repository.TrackingRecord.fromJson(json);
   }
 }

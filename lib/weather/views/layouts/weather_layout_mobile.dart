@@ -12,7 +12,7 @@ class WeatherLayoutMobile extends StatelessWidget {
 
     // The state is reevaluated every minute. This is to allow refresh rate
     // to be calculated based on timer constants.
-    const ticksPerMinute = (60 / TimerBloc.defaultDuration);
+    const ticksPerMinute = 60 / TimerBloc.defaultDuration;
 
     return SafeArea(
       child: BlocConsumer<TimerBloc, TimerState>(
@@ -20,23 +20,23 @@ class WeatherLayoutMobile extends StatelessWidget {
               (previous.duration % ticksPerMinute == 0) ||
               (previous is TimerRunPause && current is TimerRunInProgress),
           listener: (timerContext, timerState) {
-            TimerBloc timerBloc = timerContext.read<TimerBloc>();
-            WeatherCubit weatherCubit = timerContext.read<WeatherCubit>();
+            final timerBloc = timerContext.read<TimerBloc>();
+            final weatherCubit = timerContext.read<WeatherCubit>();
             switch (timerState) {
               case TimerInitial _:
                 weatherCubit.refreshWeather(current: true);
                 timerBloc.add(
-                    const TimerStarted(duration: TimerBloc.defaultDuration));
+                    const TimerStarted(duration: TimerBloc.defaultDuration),);
 
               case TimerRunComplete _:
                 if (!weatherCubit.state.autoRefresh) {
                   break; // Break if autoRefresh is disabled.
                 }
                 timerBloc.add(
-                    const TimerStarted(duration: TimerBloc.defaultDuration));
+                    const TimerStarted(duration: TimerBloc.defaultDuration),);
               case TimerRunInProgress _:
                 // Each tick is 30 seconds so 2 * 30 = every minute.
-                if (timerState.duration % (ticksPerMinute) != 0) {
+                if (timerState.duration % ticksPerMinute != 0) {
                   break; // To increase efficiency, check only every new minute
                 }
                 weatherCubit.handlePeriodicRefresh();
@@ -45,8 +45,8 @@ class WeatherLayoutMobile extends StatelessWidget {
             }
           },
           builder: (timerContext, timerState) {
-            TimerBloc timerBloc = timerContext.read<TimerBloc>();
-            WeatherCubit weatherCubit = timerContext.read<WeatherCubit>();
+            final timerBloc = timerContext.read<TimerBloc>();
+            final weatherCubit = timerContext.read<WeatherCubit>();
 
             final currentWeatherWidget = PullToRefreshCard(
               gradientPreset: GradientPreset.lighten,
@@ -73,8 +73,8 @@ class WeatherLayoutMobile extends StatelessWidget {
             return _WeatherLayoutMobileView(
                 currentWeatherWidget: currentWeatherWidget,
                 hourlyWeatherWidget: hourlyWeatherWidget,
-                dailyWeatherWidget: dailyWeatherWidget);
-          }),
+                dailyWeatherWidget: dailyWeatherWidget,);
+          },),
     );
   }
 }
@@ -92,7 +92,7 @@ class _WeatherLayoutMobileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const cardPadding = EdgeInsets.all(4.0);
+    const cardPadding = EdgeInsets.all(4);
 
     /// Layout :
     /// |---------------------|

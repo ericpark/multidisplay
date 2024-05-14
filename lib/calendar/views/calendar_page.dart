@@ -7,7 +7,7 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarCubit calCubit = context.read<CalendarCubit>();
+    final calCubit = context.read<CalendarCubit>();
     // Do stuff here that will run when tab changes
     if (calCubit.state.status.isInitial) {}
     if (calCubit.state.status.isLoading) {}
@@ -24,7 +24,7 @@ class CalendarPage extends StatelessWidget {
               }
               return const CalendarLayoutTablet();
             },
-          ));
-    });
+          ),);
+    },);
   }
 }

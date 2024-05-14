@@ -11,9 +11,9 @@ part 'generated/calendar_details.freezed.dart';
 //@JsonSerializable(explicitToJson: true)
 class CalendarDetails with _$CalendarDetails {
   factory CalendarDetails({
-    String? id,
     required String ownerId,
     required String name,
+    String? id,
     @Default('') String description,
     @Default([]) List<String>? users,
     @ColorConverter() @Default(Colors.transparent) Color color,
@@ -30,7 +30,8 @@ class DateTimeNullableConverter implements JsonConverter<DateTime?, dynamic> {
   const DateTimeNullableConverter();
 
   @override
-  DateTime fromJson(dynamic timestamp) => timestamp?.toDate() ?? DateTime.now();
+  DateTime fromJson(dynamic timestamp) =>
+      (timestamp as Timestamp?)?.toDate() ?? DateTime.now();
 
   @override
   Timestamp toJson(DateTime? timestamp) =>

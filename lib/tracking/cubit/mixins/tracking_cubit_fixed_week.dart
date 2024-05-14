@@ -1,29 +1,30 @@
 import 'package:multidisplay/tracking/tracking.dart';
 
 mixin FixedWeekTrackingCubit<TrackingState> {
-  TrackingSummary decrementFixedWeekTracker(
-      {required TrackingSummary trackingSummary}) {
-    Map<String, Map<String, String>> updatedMetrics = {};
-    final List<TrackingRecord> records = trackingSummary.records;
+  TrackingSummary decrementFixedWeekTracker({
+    required TrackingSummary trackingSummary,
+  }) {
+    final updatedMetrics = <String, Map<String, String>>{};
+    final records = trackingSummary.records;
 
-    for (var key in trackingSummary.metrics.keys) {
+    for (final key in trackingSummary.metrics.keys) {
       final currentMetric =
-          trackingSummary.metrics[key] ?? {"display_name": "", "value": ""};
-      Map<String, String> updatedMetric = {
-        "display_name": currentMetric["display_name"] ?? "",
+          trackingSummary.metrics[key] ?? {'display_name': '', 'value': ''};
+      final updatedMetric = <String, String>{
+        'display_name': currentMetric['display_name'] ?? '',
       };
       switch (key) {
-        case "remaining_week":
-          updatedMetric["value"] =
-              BasicTrackingCubit().getRemainingWeek(records: records);
-        case "days_since_last":
-          updatedMetric["value"] =
-              BasicTrackingCubit().getDaysSinceLast(records: records);
-        case "last_thirty_days":
-          updatedMetric["value"] =
-              BasicTrackingCubit().getLastThirtyDayCount(records: records);
+        case 'remaining_week':
+          updatedMetric['value'] =
+              BasicTrackingCubit<dynamic>().getRemainingWeek(records: records);
+        case 'days_since_last':
+          updatedMetric['value'] =
+              BasicTrackingCubit<dynamic>().getDaysSinceLast(records: records);
+        case 'last_thirty_days':
+          updatedMetric['value'] = BasicTrackingCubit<dynamic>()
+              .getLastThirtyDayCount(records: records);
         default:
-          updatedMetric["value"] = currentMetric["value"] ?? "-";
+          updatedMetric['value'] = currentMetric['value'] ?? '-';
       }
       updatedMetrics[key] = updatedMetric;
     }
@@ -31,7 +32,7 @@ mixin FixedWeekTrackingCubit<TrackingState> {
          trackingSummary.metrics[trackingSummary.mainMetric]?["value"] ??
               "") ??
       0;*/
-    TrackingSummary updatedTrackingSummary =
+    final updatedTrackingSummary =
         trackingSummary.copyWith(metrics: updatedMetrics);
 
     return updatedTrackingSummary;

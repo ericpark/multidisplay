@@ -41,10 +41,10 @@ final class AppState extends Equatable {
 
   @override
   String toString({bool? detailed = false}) {
-    if (detailed == true) {
+    if (detailed ?? false) {
       return super.toString();
     } else {
-      return "AppState($page)";
+      return 'AppState($page)';
     }
   }
 }

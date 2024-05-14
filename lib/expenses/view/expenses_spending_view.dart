@@ -10,19 +10,19 @@ class ExpensesSpendingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exampleWidget = Padding(
-      padding: const EdgeInsets.all(8.0),
+    const exampleWidget = Padding(
+      padding: EdgeInsets.all(8),
       child: SizedBox(
         height: 200,
         width: 350,
-        child: Container(
-            color: Colors.white,
-            child:
-                const ContentPlaceholder(lineType: ContentLineType.threeLines)),
+        child: ColoredBox(
+          color: Colors.white,
+          child: ContentPlaceholder(lineType: ContentLineType.threeLines),
+        ),
       ),
     );
 
-    final summaryHeader = Row(
+    const summaryHeader = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         exampleWidget,
@@ -36,7 +36,7 @@ class ExpensesSpendingView extends StatelessWidget {
     final sectionHeader = SizedBox(
       width: double.infinity,
       child: Text(
-        "APRIL 2024",
+        'APRIL 2024',
         style: theme.textTheme.headlineLarge!
             .copyWith(fontWeight: FontWeight.bold),
         textAlign: TextAlign.left,
@@ -44,7 +44,7 @@ class ExpensesSpendingView extends StatelessWidget {
     );
 
     const karmaChip = Padding(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(4),
       child: SizedBox(
         child: Chip(
           avatar: Icon(Icons.auto_awesome_rounded),
@@ -53,7 +53,7 @@ class ExpensesSpendingView extends StatelessWidget {
       ),
     );
     const reoccurringChip = Padding(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(4),
       child: SizedBox(
         child: Chip(
           avatar: Icon(Icons.event_repeat_outlined),
@@ -62,7 +62,7 @@ class ExpensesSpendingView extends StatelessWidget {
       ),
     );
     const unnecessaryChip = Padding(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(4),
       child: SizedBox(
         child: Chip(
           avatar: Icon(Icons.sentiment_very_dissatisfied_outlined),
@@ -71,7 +71,7 @@ class ExpensesSpendingView extends StatelessWidget {
       ),
     );
     const foodChip = Padding(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(4),
       child: SizedBox(
         child: Chip(
           avatar: Icon(Icons.fastfood_outlined),
@@ -80,70 +80,77 @@ class ExpensesSpendingView extends StatelessWidget {
       ),
     );
     final transactionRow = Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: SizedBox(
         height: 150,
         width: double.infinity,
-        child: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Expanded(
-                    child: ContentPlaceholder(
-                        lineType: ContentLineType.threeLines)),
-                SizedBox(
-                  height: 50,
-                  width: 1150,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: const [
-                      karmaChip,
-                      reoccurringChip,
-                      unnecessaryChip,
-                      foodChip,
-                    ],
-                  ),
-                )
-              ],
-            )),
+        child: ColoredBox(
+          color: Colors.white,
+          child: Column(
+            children: [
+              const Expanded(
+                child: ContentPlaceholder(
+                  lineType: ContentLineType.threeLines,
+                ),
+              ),
+              SizedBox(
+                height: 50,
+                width: 1150,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: const [
+                    karmaChip,
+                    reoccurringChip,
+                    unnecessaryChip,
+                    foodChip,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
     return Scaffold(
-        appBar: AppBar(primary: false, actions: [
+      appBar: AppBar(
+        primary: false,
+        actions: [
           IconButton(
-            icon: const Icon(Icons.filter_alt_sharp,
-                semanticLabel: 'Filter Expenses'),
+            icon: const Icon(
+              Icons.filter_alt_sharp,
+              semanticLabel: 'Filter Expenses',
+            ),
             onPressed: () async {},
           ),
-        ]),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                summaryHeader,
-                spacing,
-                sectionHeader,
-                spacing,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-                sectionHeader,
-                spacing,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-                transactionRow,
-              ],
-            ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: <Widget>[
+              summaryHeader,
+              spacing,
+              sectionHeader,
+              spacing,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+              sectionHeader,
+              spacing,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+              transactionRow,
+            ],
           ),
         ),
-        floatingActionButton: const AddExpenseFAB());
+      ),
+      floatingActionButton: const AddExpenseFAB(),
+    );
   }
 }

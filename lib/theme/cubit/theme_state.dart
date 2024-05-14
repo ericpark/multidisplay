@@ -45,7 +45,7 @@ class ThemeState extends Equatable {
           .bottomNavigationBarTheme
           .copyWith(
               selectedItemColor: deepPrimaryColor,
-              unselectedItemColor: Colors.grey));
+              unselectedItemColor: Colors.grey,),);
 
   static ThemeData darkTheme = ThemeData.dark(useMaterial3: true);
 

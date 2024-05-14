@@ -9,11 +9,11 @@ import 'package:multidisplay/tracking/tracking.dart';
 class DefaultTrackingWidget extends StatefulWidget
     with TrackingWidget, TrackingDialog {
   DefaultTrackingWidget({
-    super.key,
-    id,
-    section,
-    trackingSummary,
     required this.onDoubleTap,
+    required int id,
+    required String section,
+    required TrackingSummary trackingSummary,
+    super.key,
     this.color,
   }) {
     // Confetti Mixin
@@ -41,21 +41,23 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
     super.dispose();
   }
 
-  void onDoubleTap() async {
+  Future<void> onDoubleTap() async {
     // Do nothing if no double tap function is provided
     if (widget.onDoubleTap == null) return;
 
     // Check confirmation and stop if not confirmed
-    bool? confirmTracking = await widget.showDefaultDialog(
+    final confirmTracking = await widget.showDefaultDialog(
       context,
       onDoubleTap: widget.onDoubleTap,
     );
     if (confirmTracking != true) return;
   }
 
-  void displayDetailsPage() async {
+  Future<void> displayDetailsPage() async {
     await showDismissableModal(
-        context, TrackingDetailsView(id: widget.id, section: widget.section));
+      context,
+      TrackingDetailsView(id: widget.id, section: widget.section),
+    );
   }
 
   @override
@@ -71,7 +73,7 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
 
-    Color? color = widget.color;
+    final color = widget.color;
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -80,7 +82,7 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
           onLongPress: () async => displayDetailsPage(),
           onTap: () async => displayDetailsPage(),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
               width: constraints.maxHeight,
               height: constraints.maxHeight,

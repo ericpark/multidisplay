@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
@@ -19,7 +20,7 @@ mixin Confetti {
     Colors.green,
     Colors.red,
     Colors.yellow,
-    Colors.purple
+    Colors.purple,
   ];
 
   final heartColors = [
@@ -44,11 +45,16 @@ mixin Confetti {
     final fullAngle = degToRad(360);
     path.moveTo(size.width, halfWidth);
 
-    for (double step = 0; step < fullAngle; step += degreesPerStep) {
-      path.lineTo(halfWidth + externalRadius * cos(step),
-          halfWidth + externalRadius * sin(step));
-      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
-          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    for (var step = 0.0; step < fullAngle; step += degreesPerStep) {
+      path
+        ..lineTo(
+          halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step),
+        )
+        ..lineTo(
+          halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep),
+        );
     }
     path.close();
     return path;
@@ -58,16 +64,29 @@ mixin Confetti {
   Path drawHeart(Size size) {
     final path = Path();
 
-    double width = size.width;
-    double height = size.height;
+    final width = size.width;
+    final height = size.height;
 
     // Modify the path to draw a heart shape
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.2 * width, height * 0.1, -0.05 * width, height * 0.6,
-        0.5 * width, height);
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.8 * width, height * 0.1, 1.05 * width, height * 0.6,
-        0.5 * width, height);
+    path
+      ..moveTo(0.5 * width, height * 0.35)
+      ..cubicTo(
+        0.2 * width,
+        height * 0.1,
+        -0.05 * width,
+        height * 0.6,
+        0.5 * width,
+        height,
+      )
+      ..moveTo(0.5 * width, height * 0.35)
+      ..cubicTo(
+        0.8 * width,
+        height * 0.1,
+        1.05 * width,
+        height * 0.6,
+        0.5 * width,
+        height,
+      );
 
     return path;
   }
@@ -89,7 +108,7 @@ mixin Confetti {
     List<TrackingRecord> records = const [],
     // Random Number
     bool useRandom = true,
-    double randomThreshold = 0.50,
+    double randomThreshold = 0.80,
     double randomMultiplier = 1, // Allows for random probability to be adjusted
     bool debug = false,
   }) {
@@ -97,39 +116,58 @@ mixin Confetti {
     // randomMultiplier of 1 will not affect the random number
     // randomMultiplier of 0 will always return 0
     // Recommended range is 0.05 to 2.0 (~9% success to ~75% success)
-    double randomNumber = Random().nextDouble() * randomMultiplier;
+    final randomNumber = Random().nextDouble() * randomMultiplier;
 
     if (debug) {
-      debugPrint("Mode: $mode");
-      debugPrint("useCelebrationThreshold: $useCelebrationThreshold");
-      debugPrint("celebrationThreshold: $celebrationThreshold");
-      debugPrint("celebrationMetric: $celebrationMetric");
-      debugPrint("useMultipleToday: $useMultipleToday");
-      debugPrint("records: $records");
-      debugPrint("useRandom: $useRandom");
-      debugPrint("randomOriginal: ${randomNumber / randomMultiplier}");
-      debugPrint("randomMultiplier: $randomMultiplier");
-      debugPrint("randomNumber: $randomNumber");
-      debugPrint("randomThreshold: $randomThreshold");
+      debugPrint('Mode: $mode');
+      debugPrint('useCelebrationThreshold: $useCelebrationThreshold');
+      debugPrint('celebrationThreshold: $celebrationThreshold');
+      debugPrint('celebrationMetric: $celebrationMetric');
+      debugPrint('useMultipleToday: $useMultipleToday');
+      debugPrint('records: $records');
+      debugPrint('useRandom: $useRandom');
+      debugPrint('randomOriginal: ${randomNumber / randomMultiplier}');
+      debugPrint('randomMultiplier: $randomMultiplier');
+      debugPrint('randomNumber: $randomNumber');
+      debugPrint('randomThreshold: $randomThreshold');
     }
 
     if (mode == ConfettiMode.always) return true;
     if (mode == ConfettiMode.never) return false;
 
-    // If useMetricThreshold is false, it will not affect the confetti result
-    bool celebration = useCelebrationThreshold
+    // If everything is false, do not show confetti
+    if (useCelebrationThreshold == false &&
+        useRandom == false &&
+        useMultipleToday == false) return false;
+
+    /* Original implementation that was simplified below.
+    final celebration = useCelebrationThreshold
         ? (thresholdHigherIsBetter
             ? ((celebrationMetric ?? 0) > celebrationThreshold)
             : ((celebrationMetric ?? 0) < celebrationThreshold))
         : true;
-    // If useRandom is false, it will not affect the confetti result
-    final random = useRandom ? randomNumber >= randomThreshold : true;
+    */
+    // If the following is true, it will not affect the confetti result.
+    // If the following is false, it will rely on multipleInOneDay
+    // !useCelebrationThreshold is used so if useCelebrationThreshold is false,
+    // it will not affect the confetti result and purely depend on the random.
+    final celebration = !useCelebrationThreshold ||
+        (thresholdHigherIsBetter
+            ? ((celebrationMetric ?? 0) > celebrationThreshold)
+            : ((celebrationMetric ?? 0) < celebrationThreshold));
 
-    // If multipleToday is false or unset, it will not affect the confetti result
+    /* Original implementation that was simplified below.
+    final random = useRandom ? randomNumber >= randomThreshold : true;
+    */
+    // If useRandom is false, it will not affect the confetti result
+    final random = !useRandom || (randomNumber >= randomThreshold);
+
+    // If multipleToday is false/unset, it will not affect the confetti result
     // If multipleToday is true, it will rely on the records.
-    bool multipleInOneDay = useMultipleToday &&
+    final multipleInOneDay = useMultipleToday &&
         (records.where((record) => record.date.isToday).isNotEmpty);
 
+    //
     return (random && celebration) || multipleInOneDay;
   }
 
@@ -137,9 +175,9 @@ mixin Confetti {
     if (thresholds == null) return false;
     if (thresholds.isEmpty) return false;
     if (thresholds.isEmpty) return false;
-    if (thresholds["good"] == null) return false;
-    if (thresholds["warn"] == null) return false;
-    if (thresholds["poor"] == null) return false;
+    if (thresholds['good'] == null) return false;
+    if (thresholds['warn'] == null) return false;
+    if (thresholds['poor'] == null) return false;
 
     return true;
   }

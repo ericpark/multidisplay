@@ -26,7 +26,7 @@ final class TimerRunInProgress extends TimerState {
   const TimerRunInProgress(super.duration);
 
   String timerStateName() {
-    return "TimerRunInProgress";
+    return 'TimerRunInProgress';
   }
 
   @override

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multidisplay/tracking/tracking.dart';
 import 'package:multidisplay/app/widgets/dismissable_modal.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
 class HorizontalTrackingWidget extends StatelessWidget {
   const HorizontalTrackingWidget({
-    super.key,
     required this.id,
     required this.section,
     required this.trackingName,
     required this.mainMetric,
     required this.onDoubleTap,
+    super.key,
     this.clipBehavior,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     this.color,
-  })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
-        rightMetric = rightMetric ?? const {"display_name": "", "value": ""};
+  })  : leftMetric = leftMetric ?? const {'display_name': '', 'value': ''},
+        rightMetric = rightMetric ?? const {'display_name': '', 'value': ''};
 
   final int id;
   final String section;
@@ -31,48 +31,50 @@ class HorizontalTrackingWidget extends StatelessWidget {
 
   void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
     trackingCubit.addTrackingRecordAndUpdateSummary(
-        section: section, index: id);
+      section: section,
+      index: id,
+    );
   }
 
   /*void _handleLongPress(buildContext, widget) async {
     await showDismissableModal(buildContext, widget);
   }*/
 
-  void _handleOnTap(buildContext, widget) async {
+  Future<void> _handleOnTap(BuildContext buildContext, Widget widget) async {
     await showDismissableModal(buildContext, widget);
   }
 
   @override
   Widget build(BuildContext context) {
-    TrackingCubit trackingCubit = context.read<TrackingCubit>();
+    final trackingCubit = context.read<TrackingCubit>();
     final widgetColor = color ?? Theme.of(context).colorScheme.primary;
 
-    final TextStyle centerStyle = Theme.of(context)
+    final centerStyle = Theme.of(context)
         .primaryTextTheme
         .displayLarge!
         .copyWith(color: widgetColor);
-    final TextStyle primaryTextStyle = Theme.of(context)
+    final primaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .headlineSmall!
         .copyWith(color: widgetColor);
-    final TextStyle secondaryTextStyle = Theme.of(context)
+    final secondaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
         .copyWith(fontWeight: FontWeight.bold, color: widgetColor);
-    final TextStyle tertiaryStyle = Theme.of(context)
+    final tertiaryStyle = Theme.of(context)
         .primaryTextTheme
         .labelSmall!
         .copyWith(color: widgetColor);
 
     // Set Metrics
-    final String mainMetricName = mainMetric["display_name"] ?? "Not Found";
-    final String mainValue = mainMetric["value"] ?? "-";
+    final mainMetricName = mainMetric['display_name'] ?? 'Not Found';
+    final mainValue = mainMetric['value'] ?? '-';
 
-    final String leftMetricName = leftMetric["display_name"] ?? "";
-    final String leftValue = leftMetric["value"] ?? "-";
+    final leftMetricName = leftMetric['display_name'] ?? '';
+    final leftValue = leftMetric['value'] ?? '-';
 
-    final String rightMetricName = rightMetric["display_name"] ?? "";
-    final String rightValue = rightMetric["value"] ?? "-";
+    final rightMetricName = rightMetric['display_name'] ?? '';
+    final rightValue = rightMetric['value'] ?? '-';
 
     return GestureDetector(
       onDoubleTap: () {
@@ -89,7 +91,7 @@ class HorizontalTrackingWidget extends StatelessWidget {
       onTap: () =>
           _handleOnTap(context, TrackingDetailsView(id: id, section: section)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Card(
           color: Colors.white,
           elevation: 5,
@@ -98,13 +100,12 @@ class HorizontalTrackingWidget extends StatelessWidget {
           child: SizedBox(
             height: 200,
             width: 400,
-            child: Container(
+            child: ColoredBox(
               color: Colors.white,
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
+                    padding: const EdgeInsets.only(top: 15),
                     child: Text(
                       trackingName,
                       style: primaryTextStyle,
@@ -117,20 +118,22 @@ class HorizontalTrackingWidget extends StatelessWidget {
                       Column(
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(top: 10),
                             child: Text(mainValue, style: centerStyle),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 0.0, bottom: 5.0),
+                            padding: const EdgeInsets.only(bottom: 5),
                             child: Text(mainMetricName, style: tertiaryStyle),
                           ),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
+                          top: 15,
+                          bottom: 5,
+                          left: 5,
+                          right: 5,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

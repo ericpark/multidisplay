@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 enum FormFactor { mobile, tablet, desktop }
 
@@ -16,7 +17,7 @@ class DeviceType {
             deviceType: getDeviceType(context),
             screenHeight: MediaQuery.of(context).size.height,
             screenWidth: MediaQuery.of(context).size.width,
-            formFactor: getDeviceFormFactor(context));
+            formFactor: getDeviceFormFactor(context),);
 
   final String deviceType;
   final double screenWidth;

@@ -15,7 +15,7 @@ class TrackingForm extends StatelessWidget {
     final formBloc = BlocProvider.of<TrackerFormBloc>(context, listen: true);
 
     if (trackingSummary != null) {
-      TrackingSummary eventData = trackingSummary!;
+      final eventData = trackingSummary!;
 
       formBloc.name.updateInitialValue(eventData.name);
       formBloc.description.updateInitialValue(eventData.description);
@@ -59,21 +59,24 @@ class TrackingForm extends StatelessWidget {
                 ),
               ),
               itemBuilder: (context, value) => FieldItem(
-                child: Flex(direction: Axis.horizontal, children: [
-                  Expanded(
-                    flex: 9,
-                    child: Text(value),
-                  ),
-                  Expanded(flex: 5, child: Container()),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
-                    child: SizedBox(
-                      width: 10,
-                      height: 10,
-                      child: Container(color: Colors.transparent),
+                child: Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                      flex: 9,
+                      child: Text(value),
                     ),
-                  ),
-                ]),
+                    Expanded(flex: 5, child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
+                      child: SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             DropdownFieldBlocBuilder<String>(
@@ -90,76 +93,92 @@ class TrackingForm extends StatelessWidget {
                 ),
               ),
               itemBuilder: (context, value) => FieldItem(
-                child: Flex(direction: Axis.horizontal, children: [
-                  Expanded(
-                    flex: 9,
-                    child: Text(value),
-                  ),
-                  Expanded(flex: 5, child: Container()),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
-                    child: SizedBox(
-                      width: 10,
-                      height: 10,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                ]),
-              ),
-            ),
-            Flex(direction: Axis.horizontal, children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Flex(
+                  direction: Axis.horizontal,
                   children: [
+                    Expanded(
+                      flex: 9,
+                      child: Text(value),
+                    ),
+                    Expanded(flex: 5, child: Container()),
                     Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MetricTypeSection(
-                            metricFieldBloc: formBloc.mainMetric,
-                            name: "Main Metric")),
+                      padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
+                      child: SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Expanded(
+            ),
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                Expanded(
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                    SwitchFieldBlocBuilder(
-                      booleanFieldBloc: formBloc.setThresholds,
-                      body: Container(
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Set Thresholds?'),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: MetricTypeSection(
+                          metricFieldBloc: formBloc.mainMetric,
+                          name: 'Main Metric',
+                        ),
                       ),
-                    ),
-                    formBloc.setThresholds.value
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ThresholdSection(
-                                metricFieldBloc: formBloc.mainMetric, name: ""),
-                          )
-                        : Container(),
-                  ])),
-            ]),
-            const Text("Optional"),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      SwitchFieldBlocBuilder(
+                        booleanFieldBloc: formBloc.setThresholds,
+                        body: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Set Thresholds?'),
+                        ),
+                      ),
+                      if (formBloc.setThresholds.value)
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ThresholdSection(
+                            metricFieldBloc: formBloc.mainMetric,
+                            name: '',
+                          ),
+                        )
+                      else
+                        Container(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Text('Optional'),
             const Divider(),
-            Flex(direction: Axis.horizontal, children: [
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
                     child: MetricTypeSection(
                       metricFieldBloc: formBloc.leftMetric,
-                      name: "Left Metric",
-                    )),
-              ),
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                      name: 'Left Metric',
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
                     child: MetricTypeSection(
                       metricFieldBloc: formBloc.rightMetric,
-                      name: "Right Metric",
-                    )),
-              ),
-            ]),
+                      name: 'Right Metric',
+                    ),
+                  ),
+                ),
+              ],
+            ),
             TextFieldBlocBuilder(
               textFieldBloc: formBloc.description,
               keyboardType: TextInputType.text,
@@ -178,8 +197,9 @@ class TrackingForm extends StatelessWidget {
 }
 
 class MetricTypeSection extends StatelessWidget {
-  const MetricTypeSection(
-      {super.key, required this.metricFieldBloc, required this.name});
+  const MetricTypeSection({
+    required this.metricFieldBloc, required this.name, super.key,
+  });
 
   final MetricsFieldBloc metricFieldBloc;
   final String name;
@@ -215,21 +235,24 @@ class MetricTypeSection extends StatelessWidget {
             ),
           ),
           itemBuilder: (context, value) => FieldItem(
-            child: Flex(direction: Axis.horizontal, children: [
-              Expanded(
-                flex: 9,
-                child: Text(value),
-              ),
-              Expanded(flex: 5, child: Container()),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
-                child: SizedBox(
-                  width: 10,
-                  height: 10,
-                  child: Container(color: Colors.transparent),
+            child: Flex(
+              direction: Axis.horizontal,
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: Text(value),
                 ),
-              ),
-            ]),
+                Expanded(flex: 5, child: Container()),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
+                  child: SizedBox(
+                    width: 10,
+                    height: 10,
+                    child: Container(color: Colors.transparent),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -238,8 +261,9 @@ class MetricTypeSection extends StatelessWidget {
 }
 
 class ThresholdSection extends StatelessWidget {
-  const ThresholdSection(
-      {super.key, required this.metricFieldBloc, required this.name});
+  const ThresholdSection({
+    required this.metricFieldBloc, required this.name, super.key,
+  });
 
   final MetricsFieldBloc metricFieldBloc;
   final String name;
@@ -248,99 +272,108 @@ class ThresholdSection extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Flex(direction: Axis.horizontal, children: [
-          const Text("Good"),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.goodThresholdStart!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'start',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+        Flex(
+          direction: Axis.horizontal,
+          children: [
+            const Text('Good'),
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.goodThresholdStart!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'start',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.goodThresholdEnd!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'end',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.goodThresholdEnd!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'end',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
-        Flex(direction: Axis.horizontal, children: [
-          const Text("Warn"),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.warnThresholdStart!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'start',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+          ],
+        ),
+        Flex(
+          direction: Axis.horizontal,
+          children: [
+            const Text('Warn'),
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.warnThresholdStart!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'start',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.warnThresholdEnd!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'end',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.warnThresholdEnd!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'end',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
-        Flex(direction: Axis.horizontal, children: [
-          const Text("Poor"),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.poorThresholdStart!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'start',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+          ],
+        ),
+        Flex(
+          direction: Axis.horizontal,
+          children: [
+            const Text('Poor'),
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.poorThresholdStart!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'start',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: TextFieldBlocBuilder(
-              textFieldBloc: metricFieldBloc.poorThresholdEnd!,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'end',
-                prefixIcon: Icon(Icons.tag),
-                suffixIcon: Icon(
-                  Icons.emergency,
-                  size: 10,
+            Expanded(
+              child: TextFieldBlocBuilder(
+                textFieldBloc: metricFieldBloc.poorThresholdEnd!,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'end',
+                  prefixIcon: Icon(Icons.tag),
+                  suffixIcon: Icon(
+                    Icons.emergency,
+                    size: 10,
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ],
     );
   }

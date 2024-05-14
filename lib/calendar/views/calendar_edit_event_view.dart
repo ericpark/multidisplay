@@ -3,33 +3,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/calendar/calendar.dart';
 
 class CalendarEditEventView extends StatelessWidget {
-  const CalendarEditEventView({super.key, required this.event});
+  const CalendarEditEventView({required this.event, super.key});
 
   final CalendarEvent event;
 
-  Widget deleteButton(context) {
+  Widget deleteButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(5),
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.red),
-            borderRadius: BorderRadius.circular(45)),
+          border: Border.all(color: Colors.red),
+          borderRadius: BorderRadius.circular(45),
+        ),
         child: MaterialButton(
           onPressed: () async {
             final confirmation = await _showWarningDialog(context);
-            if (confirmation == true) {
+            if ((confirmation ?? false) == true) {
               if (!context.mounted) return;
               Navigator.of(context).pop();
             }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Text("Delete"),
+                padding: EdgeInsets.only(left: 15),
+                child: Text('Delete'),
               ),
               IconButton(
                 key: const Key('editWidget_delete_iconButton'),
@@ -43,7 +43,7 @@ class CalendarEditEventView extends StatelessWidget {
     );
   }
 
-  Future<bool?> _showWarningDialog(context) async {
+  Future<bool?> _showWarningDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -76,31 +76,32 @@ class CalendarEditEventView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarCubit calendarCubit =
-        BlocProvider.of<CalendarCubit>(context, listen: true);
+    final calendarCubit = BlocProvider.of<CalendarCubit>(context, listen: true);
 
     return BlocProvider(
       create: (formContext) =>
           CalendarFormBloc(calendarList: calendarCubit.state.calendars),
       child: Builder(
         builder: (context) {
-          CalendarFormBloc formBloc = context.read<CalendarFormBloc>();
+          final formBloc = context.read<CalendarFormBloc>();
 
-          bool isKeyboardShowing =
+          final isKeyboardShowing =
               MediaQuery.of(context).viewInsets.vertical > 0;
 
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
               leading: IconButton(
-                  key: const Key('editWidget_close_iconButton'),
-                  icon:
-                      const Icon(Icons.close_outlined, semanticLabel: 'Close'),
-                  onPressed: () async {
-                    Navigator.pop(
-                        context, "keyboard_showing_$isKeyboardShowing");
-                  }),
-              title: const Text("Edit Event"),
+                key: const Key('editWidget_close_iconButton'),
+                icon: const Icon(Icons.close_outlined, semanticLabel: 'Close'),
+                onPressed: () async {
+                  Navigator.pop(
+                    context,
+                    'keyboard_showing_$isKeyboardShowing',
+                  );
+                },
+              ),
+              title: const Text('Edit Event'),
               actions: [
                 IconButton(
                   key: const Key('editWidget_save_iconButton'),
@@ -113,14 +114,18 @@ class CalendarEditEventView extends StatelessWidget {
                     }
 
                     // If successful, add event
-                    CalendarEvent updatedEvent = formBloc.toCalendarEvent();
+                    final updatedEvent = formBloc.toCalendarEvent();
                     await calendarCubit.updateCalendarEvent(
-                        eventId: event.id, event: updatedEvent);
+                      eventId: event.id,
+                      event: updatedEvent,
+                    );
                     //await calendarCubit.refreshCalendarUI();
                     // Dismiss popover
                     if (!context.mounted) return;
                     Navigator.pop(
-                        context, "keyboard_showing_$isKeyboardShowing");
+                      context,
+                      'keyboard_showing_$isKeyboardShowing',
+                    );
                   },
                 ),
               ],
@@ -128,7 +133,6 @@ class CalendarEditEventView extends StatelessWidget {
             body: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   CalendarEventForm(event: event),
                   deleteButton(context),

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
 // Packages
 import 'package:custom_components/custom_components.dart';
+import 'package:flutter/material.dart';
 
 class WeatherCurrentLoading extends StatelessWidget {
   const WeatherCurrentLoading({super.key});
@@ -13,7 +12,7 @@ class WeatherCurrentLoading extends StatelessWidget {
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      Widget placeholder = constraints.maxHeight > 200
+      final Widget placeholder = constraints.maxHeight > 200
           ? CenterCardPlaceholder(
               contentColor: loadingColor,
             )
@@ -32,7 +31,7 @@ class WeatherCurrentLoading extends StatelessWidget {
           ],
         ),
       );
-    });
+    },);
   }
 }
 
@@ -46,11 +45,10 @@ class WeatherHourlyLoading extends StatelessWidget {
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      Widget topPlaceholder = constraints.maxHeight > 200
+      final topPlaceholder = constraints.maxHeight > 200
           ? SizedBox(
               height: constraints.maxHeight * 0.3,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -87,7 +85,7 @@ class WeatherHourlyLoading extends StatelessWidget {
           : VerticalCardPlaceholder(
               contentColor: loadingColor,
             );
-      Widget bodyPlaceholder = constraints.maxHeight > 200
+      final Widget bodyPlaceholder = constraints.maxHeight > 200
           ? ContentPlaceholder(
               lineType: ContentLineType.none,
               height: constraints.maxHeight * 0.6,
@@ -109,6 +107,6 @@ class WeatherHourlyLoading extends StatelessWidget {
           ],
         ),
       );
-    });
+    },);
   }
 }

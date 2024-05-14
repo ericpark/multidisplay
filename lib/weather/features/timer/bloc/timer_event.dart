@@ -32,6 +32,6 @@ class _TimerTicked extends TimerEvent {
 
   @override
   String toString() {
-    return "TimerTicked { duration: $duration } ";
+    return 'TimerTicked { duration: $duration } ';
   }
 }

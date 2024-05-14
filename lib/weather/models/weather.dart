@@ -134,7 +134,7 @@ class Weather extends Equatable {
       SoilCondition? soilCondition,
       DateTime? sunrise,
       DateTime? sunset,
-      int? precipitationProbability}) {
+      int? precipitationProbability,}) {
     return Weather(
       condition: condition ?? this.condition,
       lastUpdated: lastUpdated ?? this.lastUpdated,

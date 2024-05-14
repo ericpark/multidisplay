@@ -8,8 +8,8 @@ import 'package:multidisplay/settings/settings.dart';
 import 'package:multidisplay/weather/weather.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage._();
   const SettingsPage({super.key});
+  const SettingsPage._();
 
   static Route<void> route(WeatherCubit weatherCubit) {
     return MaterialPageRoute<void>(

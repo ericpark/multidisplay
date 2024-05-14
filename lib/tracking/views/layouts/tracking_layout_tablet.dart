@@ -15,14 +15,14 @@ class TrackingLayoutTablet extends StatelessWidget {
   }
 
   List<Widget> getSections(List<String> sectionOrder) {
-    List<Widget> sections = [];
-    for (int section = 0; section < sectionOrder.length; section++) {
-      sections.add(TrackingSectionWidget(
-        sectionName: sectionOrder[section],
-        fadeInCallback: (message) {
-          fadeInOutCallback(message);
-        },
-      ));
+    final sections = <Widget>[];
+    for (var section = 0; section < sectionOrder.length; section++) {
+      sections.add(
+        TrackingSectionWidget(
+          sectionName: sectionOrder[section],
+          fadeInCallback: fadeInOutCallback,
+        ),
+      );
     }
     return sections;
   }
@@ -33,7 +33,7 @@ class TrackingLayoutTablet extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 1,
-        scrolledUnderElevation: 5.0,
+        scrolledUnderElevation: 5,
         shadowColor: Colors.black,
         backgroundColor: Theme.of(context).secondaryHeaderColor,
         clipBehavior: Clip.antiAlias,
@@ -46,24 +46,25 @@ class TrackingLayoutTablet extends StatelessWidget {
             icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
             onPressed: () async {
               await context.read<TrackingCubit>().refreshTrackingGroups(
-                  userId: context.read<AuthCubit>().state.user?.id);
+                    userId: context.read<AuthCubit>().state.user?.id,
+                  );
             },
           ),
         ],
       ),
       body: BlocBuilder<TrackingCubit, TrackingState>(
         builder: (context, state) {
-          TrackingCubit trackingCubit = context.read<TrackingCubit>();
+          final trackingCubit = context.read<TrackingCubit>();
 
-          List<Widget> sections = getSections(state.trackingSections);
+          final sections = getSections(state.trackingSections);
 
-          List<Widget> sectionWidgets = [];
+          final sectionWidgets = <Widget>[];
 
           sectionWidgets.addAll([
             for (int index = 0; index < sections.length; index += 1)
               Padding(
                 key: Key('$index'),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: ListTile(
                   title: sections[index],
                   contentPadding: EdgeInsets.zero,
@@ -73,15 +74,17 @@ class TrackingLayoutTablet extends StatelessWidget {
           return Stack(
             children: [
               RefreshIndicator(
-                onRefresh: () async => await context
-                    .read<TrackingCubit>()
-                    .refreshTrackingGroups(
-                        userId: context.read<AuthCubit>().state.user?.id),
+                onRefresh: () async =>
+                    context.read<TrackingCubit>().refreshTrackingGroups(
+                          userId: context.read<AuthCubit>().state.user?.id,
+                        ),
                 child: ReorderableListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  padding: EdgeInsets.zero,
                   onReorder: (int oldIndex, int newIndex) async {
                     await trackingCubit.reorderSections(
-                        oldIndex: oldIndex, newIndex: newIndex);
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                    );
                   },
                   buildDefaultDragHandles: state.reorderable,
                   children: sectionWidgets,
@@ -89,8 +92,10 @@ class TrackingLayoutTablet extends StatelessWidget {
               ),
               FadeInOutMessage(
                 show: true,
-                builder: (BuildContext context,
-                    void Function(String?) runAnimation) {
+                builder: (
+                  BuildContext context,
+                  void Function(String?) runAnimation,
+                ) {
                   fadeInOut = runAnimation;
                 },
               ),

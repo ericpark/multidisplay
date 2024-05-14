@@ -7,24 +7,24 @@ class NewTrackerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TrackingCubit trackingCubit =
+    final trackingCubit =
         BlocProvider.of<TrackingCubit>(context, listen: true);
-    List<String> sections = trackingCubit.state.trackingSections;
-    List<String> trackingTypes = ["days_ago", "last_seven"];
-    Map<String, List<String>> metricsMap = {
-      "days_ago": ["days_since_last", "last_date"],
-      "last_seven": ["last_seven_days", "days_since_last"]
+    final sections = trackingCubit.state.trackingSections;
+    final trackingTypes = <String>['days_ago', 'last_seven'];
+    final metricsMap = <String, List<String>>{
+      'days_ago': ['days_since_last', 'last_date'],
+      'last_seven': ['last_seven_days', 'days_since_last'],
     };
 
     return BlocProvider(
       create: (formContext) => TrackerFormBloc(
           sectionList: sections,
           trackingTypeList: trackingTypes,
-          metricsMap: metricsMap),
+          metricsMap: metricsMap,),
       child: Builder(
         builder: (context) {
           final formBloc = BlocProvider.of<TrackerFormBloc>(context);
-          bool isKeyboardShowing =
+          final isKeyboardShowing =
               MediaQuery.of(context).viewInsets.vertical > 0;
 
           return Scaffold(
@@ -37,9 +37,9 @@ class NewTrackerPage extends StatelessWidget {
                   onPressed: () async {
                     if (!context.mounted) return;
                     Navigator.pop(
-                        context, "keyboard_showing_$isKeyboardShowing");
-                  }),
-              title: const Text("Create New Tracker"),
+                        context, 'keyboard_showing_$isKeyboardShowing',);
+                  },),
+              title: const Text('Create New Tracker'),
               actions: [
                 IconButton(
                   key: const Key('newTracker_save_iconButton'),
@@ -51,16 +51,16 @@ class NewTrackerPage extends StatelessWidget {
                       return;
                     }
                     // If successful, add event
-                    TrackingSummary newTrackingSummary =
+                    final newTrackingSummary =
                         formBloc.toTrackingSummary();
 
                     await trackingCubit.addNewTrackingSummary(
-                        trackingSummaryData: newTrackingSummary);
+                        trackingSummaryData: newTrackingSummary,);
 
                     // Dismiss popover
                     if (!context.mounted) return;
                     Navigator.pop(
-                        context, "keyboard_showing_$isKeyboardShowing");
+                        context, 'keyboard_showing_$isKeyboardShowing',);
                   },
                 ),
               ],
@@ -68,7 +68,6 @@ class NewTrackerPage extends StatelessWidget {
             body: const SingleChildScrollView(
               physics: ClampingScrollPhysics(),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [TrackingForm()],
               ),

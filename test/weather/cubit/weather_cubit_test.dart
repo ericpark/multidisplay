@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multidisplay/weather/weather.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:multidisplay/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart'
     as weather_repository;
 
@@ -124,12 +124,11 @@ void main() {
       blocTest<WeatherCubit, WeatherState>(
         'emits [loading, success] when getWeather returns (fahrenheit)',
         build: () => weatherCubit,
-        seed: () => WeatherState(temperatureUnits: TemperatureUnits.fahrenheit),
+        seed: WeatherState.new,
         act: (cubit) => cubit.fetchWeatherWithCity(weatherLocation),
         expect: () => <dynamic>[
           WeatherState(
             status: WeatherStatus.loading,
-            temperatureUnits: TemperatureUnits.fahrenheit,
           ),
           isA<WeatherState>()
               .having((w) => w.status, 'status', WeatherStatus.success)
@@ -256,7 +255,6 @@ void main() {
         'emits updated weather (fahrenheit)',
         build: () => weatherCubit,
         seed: () => WeatherState(
-          temperatureUnits: TemperatureUnits.fahrenheit,
           status: WeatherStatus.success,
           weather: Weather(
             date: DateTime(2024),
@@ -295,7 +293,7 @@ void main() {
         build: () => weatherCubit,
         act: (cubit) => cubit.toggleUnits(),
         expect: () => <WeatherState>[
-          WeatherState(temperatureUnits: TemperatureUnits.fahrenheit),
+          WeatherState(),
         ],
       );
 
@@ -305,7 +303,6 @@ void main() {
         build: () => weatherCubit,
         seed: () => WeatherState(
           status: WeatherStatus.success,
-          temperatureUnits: TemperatureUnits.fahrenheit,
           weather: Weather(
             date: DateTime(2024),
             location: weatherLocation,
@@ -353,7 +350,6 @@ void main() {
         expect: () => <WeatherState>[
           WeatherState(
             status: WeatherStatus.success,
-            temperatureUnits: TemperatureUnits.fahrenheit,
             weather: Weather(
               location: weatherLocation,
               temperature: Temperature(

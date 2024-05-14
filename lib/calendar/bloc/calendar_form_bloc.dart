@@ -12,7 +12,7 @@ class CalendarFormBloc extends FormBloc<String, String> {
         endDate,
         description,
         isAllDay,
-        tags
+        tags,
       ],
     );
     endDate.addValidators([_endDateMustBeAfterStartDate(startDate)]);
@@ -20,7 +20,7 @@ class CalendarFormBloc extends FormBloc<String, String> {
 
   final List<String> calendarList;
 
-  final eventName = TextFieldBloc(
+  final eventName = TextFieldBloc<dynamic>(
     name: 'event_name',
     validators: [
       FieldBlocValidators.required,
@@ -42,46 +42,47 @@ class CalendarFormBloc extends FormBloc<String, String> {
     toJson: (value) => (value ?? DateTime.now()).toUtc().toIso8601String(),
   );
 
-  late final calendar = SelectFieldBloc(
-      name: 'calendar_id',
-      items: calendarList,
-      initialValue: calendarList.isNotEmpty ? calendarList[0] : null);
+  late final calendar = SelectFieldBloc<String, dynamic>(
+    name: 'calendar_id',
+    items: calendarList,
+    initialValue: calendarList.isNotEmpty ? calendarList[0] : null,
+  );
 
-  final description = TextFieldBloc(
+  final description = TextFieldBloc<dynamic>(
     name: 'description',
   );
 
-  final background = TextFieldBloc(
+  final background = TextFieldBloc<dynamic>(
     name: 'background',
   );
 
-  final isAllDay = BooleanFieldBloc(
+  final isAllDay = BooleanFieldBloc<dynamic>(
     name: 'is_all_day',
     initialValue: true,
   );
 
-  final tags = MultiSelectFieldBloc(
+  final tags = MultiSelectFieldBloc<String, dynamic>(
     name: 'tags',
     items: ['tag 1', 'tag 2', 'tag 3'],
   );
 
   CalendarEvent toCalendarEvent() {
-    Map<String, dynamic> json = state.toJson();
-    if (json["end"] == null) {
-      json["end"] = json["start"];
+    final json = state.toJson();
+    if (json['end'] == null) {
+      json['end'] = json['start'];
     }
-    json["background"] = "000000";
+    json['background'] = '000000';
     return CalendarEvent.fromJson(json);
   }
 
   @override
   Future<void> onSubmitting() async {
     if (!await eventName.validate()) {
-      emitFailure(failureResponse: "Invalid Event Name");
+      emitFailure(failureResponse: 'Invalid Event Name');
       return;
     }
     if (!await startDate.validate()) {
-      emitFailure(failureResponse: "Invalid Start Date");
+      emitFailure(failureResponse: 'Invalid Start Date');
       return;
     }
 
@@ -94,13 +95,15 @@ class CalendarFormBloc extends FormBloc<String, String> {
   }
 
   Validator<DateTime?> _endDateMustBeAfterStartDate(
-      InputFieldBloc startDateFieldBloc) {
+    InputFieldBloc<DateTime?, Object> startDateFieldBloc,
+  ) {
     return (DateTime? endDate) {
+      if (startDateFieldBloc.value == null) return 'Invalid Start Date';
       if (endDate == null) {
         // End Date can be empty
         return null;
       }
-      if (!endDate.isBefore(startDateFieldBloc.value)) {
+      if (!endDate.isBefore(startDateFieldBloc.value!)) {
         return null;
       }
       return 'End Date must be after Start Date';

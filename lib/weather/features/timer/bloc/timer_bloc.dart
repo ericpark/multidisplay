@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:multidisplay/constants.dart';
 import 'package:multidisplay/weather/features/timer/timer.dart';
-import 'package:equatable/equatable.dart';
 
 part 'timer_event.dart';
 part 'timer_state.dart';

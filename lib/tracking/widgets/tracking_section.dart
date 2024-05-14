@@ -4,13 +4,13 @@ import 'package:multidisplay/tracking/tracking.dart';
 
 class TrackingSectionWidget extends StatelessWidget {
   const TrackingSectionWidget({
-    super.key,
     required this.sectionName,
+    super.key,
     this.fadeInCallback,
   });
 
   final String sectionName;
-  final Function(String)? fadeInCallback;
+  final void Function(String)? fadeInCallback;
 
   Widget getTrackingWidget({
     required int index,
@@ -20,22 +20,24 @@ class TrackingSectionWidget extends StatelessWidget {
   }) {
     Color? color;
 
-    void onDoubleTapWrapper() async {
+    Future<void> onDoubleTapWrapper() async {
       await trackingCubit.addTrackingRecordAndUpdateSummary(
-          section: data.section, index: index);
+        section: data.section,
+        index: index,
+      );
 
       //if (fadeInCallback != null) fadeInCallback!("");
     }
 
     switch (data.trackingType) {
-      case "consecutive":
+      case 'consecutive':
         return ConsecutiveTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
         );
-      case "last_seven":
+      case 'last_seven':
         color = colorScheme.primary;
 
         return LastNthTrackingWidget(
@@ -45,7 +47,7 @@ class TrackingSectionWidget extends StatelessWidget {
           onDoubleTap: () async => onDoubleTapWrapper(),
           color: color,
         );
-      case "fixed_week":
+      case 'fixed_week':
         color = colorScheme.secondary;
         return FixedNthTrackingWidget(
           id: index,
@@ -53,7 +55,7 @@ class TrackingSectionWidget extends StatelessWidget {
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
         );
-      case "days_ago":
+      case 'days_ago':
         color = colorScheme.secondary;
 
         return NthAgoTrackingWidget(
@@ -70,7 +72,7 @@ class TrackingSectionWidget extends StatelessWidget {
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
         );*/
-      case "time":
+      case 'time':
         color = colorScheme.secondary;
         return TimeTrackingWidget(
           id: index,
@@ -78,7 +80,9 @@ class TrackingSectionWidget extends StatelessWidget {
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
           onFinished: () => trackingCubit.recordFinishTime(
-              section: data.section, index: index),
+            section: data.section,
+            index: index,
+          ),
         );
 
       default:
@@ -99,12 +103,12 @@ class TrackingSectionWidget extends StatelessWidget {
     required bool reorderable,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(sectionHeader, style: textStyle),
-          reorderable ? const Icon(Icons.menu) : Container(),
+          if (reorderable) const Icon(Icons.menu) else Container(),
         ],
       ),
     );
@@ -115,13 +119,16 @@ class TrackingSectionWidget extends StatelessWidget {
     required ColorScheme colorScheme,
     required TrackingCubit trackingCubit,
   }) {
-    List<Widget> trackingWidgets = [];
-    for (int i = 0; i < data.length; i++) {
-      trackingWidgets.add(getTrackingWidget(
+    final trackingWidgets = <Widget>[];
+    for (var i = 0; i < data.length; i++) {
+      trackingWidgets.add(
+        getTrackingWidget(
           index: i,
           data: data[i],
           colorScheme: colorScheme,
-          trackingCubit: trackingCubit));
+          trackingCubit: trackingCubit,
+        ),
+      );
     }
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -134,11 +141,11 @@ class TrackingSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String sectionHeaderString = sectionName;
+    final sectionHeaderString = sectionName;
     final sectionHeaderStyle = Theme.of(context).textTheme.titleLarge;
     return BlocBuilder<TrackingCubit, TrackingState>(
       builder: (context, state) {
-        TrackingCubit trackingCubit = context.read<TrackingCubit>();
+        final trackingCubit = context.read<TrackingCubit>();
         switch (state.status) {
           case TrackingStatus.initial:
             return const TrackingEmpty();
@@ -151,7 +158,7 @@ class TrackingSectionWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: sectionHeader(
                     sectionHeader: sectionHeaderString,
                     textStyle: sectionHeaderStyle,
@@ -159,7 +166,7 @@ class TrackingSectionWidget extends StatelessWidget {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Divider(),
                 ),
                 SizedBox(
@@ -169,7 +176,7 @@ class TrackingSectionWidget extends StatelessWidget {
                     colorScheme: Theme.of(context).colorScheme,
                     trackingCubit: trackingCubit,
                   ),
-                )
+                ),
               ],
             );
           case TrackingStatus.failure:

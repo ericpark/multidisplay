@@ -21,12 +21,14 @@ class HourlyForecastWidget extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        switch (state.forecastStatus["hourly"]!) {
+        switch (state.forecastStatus['hourly']!) {
           case WeatherStatus.initial:
             return const WeatherEmpty();
           case WeatherStatus.loading:
             return const SizedBox(
-                width: double.infinity, child: WeatherHourlyLoading());
+              width: double.infinity,
+              child: WeatherHourlyLoading(),
+            );
           case WeatherStatus.success:
             final sunriseAndSunset =
                 context.read<WeatherCubit>().getNextSunriseAndSunset();
@@ -34,8 +36,8 @@ class HourlyForecastWidget extends StatelessWidget {
             return HourlyForecastPopulated(
               forecast: state.hourlyForecast,
               units: state.temperatureUnits,
-              sunrise: sunriseAndSunset["sunrise"],
-              sunset: sunriseAndSunset["sunset"],
+              sunrise: sunriseAndSunset['sunrise'],
+              sunset: sunriseAndSunset['sunset'],
             );
           case WeatherStatus.failure:
             return const WeatherError();
@@ -59,49 +61,59 @@ class HourlyForecastPopulated extends StatelessWidget {
   final DateTime? sunrise;
   final DateTime? sunset;
 
-  LinearGradient? _getHourlyGradientTransition(
-      {required List<Weather> filterHours}) {
+  LinearGradient? _getHourlyGradientTransition({
+    required List<Weather> filterHours,
+  }) {
     if (sunrise == null || sunset == null) {
       return null;
     }
-    final List<double> stops = <double>[];
-    final List<Color> color = <Color>[];
+    final stops = <double>[];
+    final color = <Color>[];
     final totalMinutes = filterHours.length * 60;
 
     Color firstColor;
     Color secondColor;
 
     for (var h = 0; h < filterHours.length - 1; h++) {
-      var hour = filterHours[h];
-      var nextHour = filterHours[h + 1];
+      final hour = filterHours[h];
+      final nextHour = filterHours[h + 1];
 
       firstColor = hour.temperature.color;
       secondColor = nextHour.temperature.color;
 
-      color.add(firstColor);
-      color.add(firstColor);
-      color.add(secondColor);
-      color.add(secondColor);
+      color
+        ..add(firstColor)
+        ..add(firstColor)
+        ..add(secondColor)
+        ..add(secondColor);
 
-      stops.add((h * 60) / totalMinutes);
-      stops.add(((h * 60) + 15) / totalMinutes);
-      stops.add(((h * 60) + 45) / totalMinutes);
-      stops.add(((h * 60) + 60) / totalMinutes);
+      stops
+        ..add((h * 60) / totalMinutes)
+        ..add(((h * 60) + 15) / totalMinutes)
+        ..add(((h * 60) + 45) / totalMinutes)
+        ..add(((h * 60) + 60) / totalMinutes);
     }
     return LinearGradient(colors: color, stops: stops);
   }
 
-  dynamic _getTemperatureSeries({required List<Weather> filterHours}) {
-    final List<ChartData> temperatureData = filterHours
-        .map((hourly) => ChartData(
-            hourly.date, hourly.temperature.value, Colors.transparent))
+  CartesianSeries<ChartData, DateTime> _getTemperatureSeries({
+    required List<Weather> filterHours,
+  }) {
+    final temperatureData = filterHours
+        .map(
+          (hourly) => ChartData(
+            hourly.date,
+            hourly.temperature.value,
+            Colors.transparent,
+          ),
+        )
         .toList();
     final tempGradientColors =
         _getHourlyGradientTransition(filterHours: filterHours);
 
     return AreaSeries<ChartData, DateTime>(
       dataSource: temperatureData,
-      yAxisName: "Temperature",
+      yAxisName: 'Temperature',
       xValueMapper: (ChartData temperatureData, _) => temperatureData.x,
       yValueMapper: (ChartData temperatureData, _) => temperatureData.y,
       gradient: tempGradientColors,
@@ -118,15 +130,19 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
   }
 
-  dynamic _getPrecipitationSeries({required List<Weather> filterHours}) {
-    List<ChartData> precipitationData = filterHours
-        .map((hourly) =>
-            ChartData(hourly.date, hourly.precipitation, Colors.blue[200]!))
+  CartesianSeries<ChartData, DateTime> _getPrecipitationSeries({
+    required List<Weather> filterHours,
+  }) {
+    final precipitationData = filterHours
+        .map(
+          (hourly) =>
+              ChartData(hourly.date, hourly.precipitation, Colors.blue[200]),
+        )
         .toList();
 
     return SplineSeries<ChartData, DateTime>(
       dataSource: precipitationData,
-      yAxisName: "Precipitation",
+      yAxisName: 'Precipitation',
       xValueMapper: (ChartData precipitationData, _) => precipitationData.x,
       yValueMapper: (ChartData precipitationData, _) => precipitationData.y,
       name: 'Precipitation',
@@ -154,10 +170,9 @@ class HourlyForecastPopulated extends StatelessWidget {
         firstTransition.difference(DateTime.now()).inMinutes > 30;
 
     final nowMarker = PlotBand(
-      isVisible: true,
       start: DateTime.now(),
       end: DateTime.now(),
-      text: "Now",
+      text: 'Now',
       verticalTextPadding: '5%',
       associatedAxisStart: 0,
       associatedAxisEnd: height - 15,
@@ -171,9 +186,8 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
 
     final sunsetMarker = PlotBand(
-      isVisible: true,
-      start: sunset!,
-      end: sunset!,
+      start: sunset,
+      end: sunset,
       text: "    ${DateFormat("h:mm a").format(sunset!)}",
       verticalTextPadding: '5%',
       associatedAxisStart: 0,
@@ -188,9 +202,8 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
 
     final sunriseMarker = PlotBand(
-      isVisible: true,
-      start: sunrise!,
-      end: sunrise!,
+      start: sunrise,
+      end: sunrise,
       text: "    ${DateFormat("h:mm a").format(sunrise!)}",
       verticalTextPadding: '5%',
       associatedAxisStart: 0,
@@ -204,14 +217,13 @@ class HourlyForecastPopulated extends StatelessWidget {
       dashArray: const <double>[10, 10],
     );
     final firstSection = PlotBand(
-      isVisible: true,
       start: filterHours[0].date,
       end: firstTransition,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
       text: (showDayNight && labelsNotOverlapping)
-          ? (sunset!.isBefore(sunrise!) ? "day" : "night")
-          : "",
+          ? (sunset!.isBefore(sunrise!) ? 'day' : 'night')
+          : '',
       color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -219,12 +231,11 @@ class HourlyForecastPopulated extends StatelessWidget {
       borderWidth: 1,
     );
     final firstTransitionSection = PlotBand(
-      isVisible: true,
       start: firstTransition,
       end: firstTransition.add(transitionMinutes),
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: sunset!.isBefore(sunrise!) ? "sunset" : "sunrise",
+      text: sunset!.isBefore(sunrise!) ? 'sunset' : 'sunrise',
       gradient: sunset!.isBefore(sunrise!) ? sunsetGradient : sunriseGradient,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -234,12 +245,11 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
 
     final middleSection = PlotBand(
-      isVisible: true,
       start: firstTransition.add(transitionMinutes),
       end: secondTransition,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "night" : "day") : "",
+      text: showDayNight ? (sunset!.isBefore(sunrise!) ? 'night' : 'day') : '',
       color: sunset!.isBefore(sunrise!) ? nightColor : dayColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -248,12 +258,11 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
 
     final secondTransitionSection = PlotBand(
-      isVisible: true,
       start: secondTransition,
       end: secondTransition.add(transitionMinutes),
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: sunset!.isBefore(sunrise!) ? "sunrise" : "sunset",
+      text: sunset!.isBefore(sunrise!) ? 'sunrise' : 'sunset',
       gradient: sunset!.isBefore(sunrise!) ? sunriseGradient : sunsetGradient,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -263,12 +272,11 @@ class HourlyForecastPopulated extends StatelessWidget {
     );
 
     final lastSection = PlotBand(
-      isVisible: true,
       start: secondTransition.add(transitionMinutes),
       end: filterHours.last.date,
       associatedAxisStart: height - 10,
       associatedAxisEnd: height,
-      text: showDayNight ? (sunset!.isBefore(sunrise!) ? "day" : "night") : "",
+      text: showDayNight ? (sunset!.isBefore(sunrise!) ? 'day' : 'night') : '',
       color: sunset!.isBefore(sunrise!) ? dayColor : nightColor,
       //verticalTextPadding: '1%',
       textAngle: 0,
@@ -290,22 +298,26 @@ class HourlyForecastPopulated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final previousHour = now.subtract(Duration(
-      hours: 1,
-      minutes: now.minute,
-      seconds: now.second,
-      milliseconds: now.millisecond,
-      microseconds: now.microsecond,
-    ));
+    final previousHour = now.subtract(
+      Duration(
+        hours: 1,
+        minutes: now.minute,
+        seconds: now.second,
+        milliseconds: now.millisecond,
+        microseconds: now.microsecond,
+      ),
+    );
 
-    final List<Weather> filterHours = forecast
+    final filterHours = forecast
         .where((hourly) => hourly.date.isAfter(previousHour))
         .take(25)
         .toList();
 
     final maxTemp = filterHours
-        .reduce((curr, next) =>
-            curr.temperature.value > next.temperature.value ? curr : next)
+        .reduce(
+          (curr, next) =>
+              curr.temperature.value > next.temperature.value ? curr : next,
+        )
         .temperature
         .value;
     final maximumXValue = (maxTemp < 70) ? 90.0 : maxTemp + 20;
@@ -313,31 +325,34 @@ class HourlyForecastPopulated extends StatelessWidget {
     // TEMPERATURE GRAPH
     final temperatureSeries = _getTemperatureSeries(filterHours: filterHours);
     final temperatureAxis = NumericAxis(
-        name: "Temperature",
-        title: AxisTitle(
-          text: "Temperature (°${units.isCelsius ? 'C' : 'F'})",
-        ),
-        maximum: maximumXValue);
+      name: 'Temperature',
+      title: AxisTitle(
+        text: "Temperature (°${units.isCelsius ? 'C' : 'F'})",
+      ),
+      maximum: maximumXValue,
+    );
 
     // PRECIPITATION GRAPH
     final precipitationSeries =
         _getPrecipitationSeries(filterHours: filterHours);
     const precipitationAxis = NumericAxis(
-        name: "Precipitation",
-        opposedPosition: true,
-        title: AxisTitle(text: "precipitation (in)"),
-        minimum: 0,
-        maximum: 1,
-        majorGridLines: MajorGridLines(width: 0));
+      name: 'Precipitation',
+      opposedPosition: true,
+      title: AxisTitle(text: 'precipitation (in)'),
+      minimum: 0,
+      maximum: 1,
+      majorGridLines: MajorGridLines(width: 0),
+    );
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        bool isMobile = constraints.maxWidth < 400;
+        final isMobile = constraints.maxWidth < 400;
 
         final plotBands = _getPlotBands(
-            filterHours: filterHours,
-            height: maximumXValue,
-            showDayNight: !isMobile);
+          filterHours: filterHours,
+          height: maximumXValue,
+          showDayNight: !isMobile,
+        );
         return Center(
           child: Column(
             children: [
@@ -356,7 +371,7 @@ class HourlyForecastPopulated extends StatelessWidget {
                   primaryYAxis: temperatureAxis,
                   series: <CartesianSeries<ChartData, DateTime>>[
                     temperatureSeries,
-                    precipitationSeries
+                    precipitationSeries,
                   ],
                 ),
               ),

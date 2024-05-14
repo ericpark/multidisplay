@@ -7,16 +7,22 @@ class HomeLayoutTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const cardPadding = EdgeInsets.all(8.0);
+    const cardPadding = EdgeInsets.all(8);
 
     const clockWidget = SimpleCard(
-        gradientPreset: GradientPreset.lighten, child: ClockWidget());
+      gradientPreset: GradientPreset.lighten,
+      child: ClockWidget(),
+    );
 
     const weatherWidget = SimpleCard(
-        gradientPreset: GradientPreset.lighten, child: WeatherWidget());
+      gradientPreset: GradientPreset.lighten,
+      child: WeatherWidget(),
+    );
 
     const calendarWidget = SimpleCard(
-        gradientPreset: GradientPreset.lighten, child: CalendarWidget());
+      gradientPreset: GradientPreset.lighten,
+      child: CalendarWidget(),
+    );
 
     /// Layout :
     /// |---------------------|
@@ -32,22 +38,25 @@ class HomeLayoutTablet extends StatelessWidget {
         direction: Axis.horizontal,
         children: [
           Expanded(
-              flex: 50,
-              child: Flex(
-                direction: Axis.vertical,
-                children: [
-                  Expanded(
-                      flex: 50,
-                      child: Padding(padding: cardPadding, child: clockWidget)),
-                  Expanded(
-                      flex: 50,
-                      child:
-                          Padding(padding: cardPadding, child: weatherWidget))
-                ],
-              )),
+            flex: 50,
+            child: Flex(
+              direction: Axis.vertical,
+              children: [
+                Expanded(
+                  flex: 50,
+                  child: Padding(padding: cardPadding, child: clockWidget),
+                ),
+                Expanded(
+                  flex: 50,
+                  child: Padding(padding: cardPadding, child: weatherWidget),
+                ),
+              ],
+            ),
+          ),
           Expanded(
-              flex: 50,
-              child: Padding(padding: cardPadding, child: calendarWidget)),
+            flex: 50,
+            child: Padding(padding: cardPadding, child: calendarWidget),
+          ),
         ],
       ),
     );

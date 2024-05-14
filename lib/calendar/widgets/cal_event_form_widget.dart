@@ -16,7 +16,7 @@ class CalendarEventForm extends StatelessWidget {
     final calendarState = context.read<CalendarCubit>().state;
 
     if (event != null) {
-      CalendarEvent eventData = event!;
+      final eventData = event!;
 
       formBloc.eventName.updateInitialValue(eventData.eventName);
       formBloc.description.updateInitialValue(eventData.description);
@@ -77,10 +77,10 @@ class CalendarEventForm extends StatelessWidget {
                       width: 10,
                       height: 10,
                       child: Container(
-                          color: calendarState.calendarDetails[value]?.color),
+                          color: calendarState.calendarDetails[value]?.color,),
                     ),
                   ),
-                ]),
+                ],),
               ),
             ),
             DateTimeFieldBlocBuilder(
@@ -127,7 +127,7 @@ class CalendarEventForm extends StatelessWidget {
               ),
               itemBuilder: (context, value) =>
                   ChipFieldItem(label: Text(value)),
-            )
+            ),
           ],
         ),
       ),

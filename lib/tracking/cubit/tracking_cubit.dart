@@ -16,11 +16,13 @@ part 'tracking_cubit_create.dart';
 part 'tracking_cubit_details.dart';
 part 'tracking_cubit_widgets.dart';
 
-/// TrackingCubit handles the business logic needed by the Tracking Page and widgets.
+/// TrackingCubit handles the business logic needed by the Tracking Page and
+/// widgets.
 ///
-/// This class should be as clean as possible and only contain high level business logic.
-/// Some methods are included here to help with the UI and transitions. All methods here
-/// should emit a new state at the end of the function (except those that need the mixins).
+/// This class should be as clean as possible and only contain high level
+/// business logic. Some methods are included here to help with the UI and
+/// transitions. All methods here should emit a new state at the end of the
+/// function (except those that need the mixins).
 class TrackingCubit extends HydratedCubit<TrackingState>
     with
         TimeTrackingCubit<TrackingState>,
@@ -29,8 +31,9 @@ class TrackingCubit extends HydratedCubit<TrackingState>
         DaysSinceTrackingCubit<TrackingState>,
         FixedWeekTrackingCubit<TrackingState> {
   TrackingCubit(this._trackingRepository)
-      : super(const TrackingState(
-            status: TrackingStatus.initial, trackingGroups: {}));
+      : super(
+          const TrackingState(),
+        );
 
   final TrackingRepository _trackingRepository;
 
@@ -41,23 +44,25 @@ class TrackingCubit extends HydratedCubit<TrackingState>
     emit(state.copyWith(status: TrackingStatus.loading));
 
     // Get Tracking Groups and Data
-    Map<String, TrackingGroup> groups = await getTrackingGroups(
+    final groups = await getTrackingGroups(
       userId: userId,
       showOnlyPublic: state.showOnlyPublic,
     );
 
-    // Update Tracking Groups and Data
-    Map<String, TrackingGroup> updatedTrackingGroups =
-        await _getUpdatedTrackingGroups(
+    // Get Tracking Groups for each section.
+    // [forceUpdate] = true will update all metrics.
+    final updatedTrackingGroups = await _getUpdatedTrackingGroups(
       trackingGroups: groups,
       forceUpdate: true,
     );
 
-    emit(state.copyWith(
-      status: TrackingStatus.success,
-      trackingSections: groups.keys.toList(),
-      trackingGroups: updatedTrackingGroups,
-    ));
+    emit(
+      state.copyWith(
+        status: TrackingStatus.success,
+        trackingSections: groups.keys.toList(),
+        trackingGroups: updatedTrackingGroups,
+      ),
+    );
   }
 
   /// UPDATING METRICS  --------------------------------------------------------
@@ -67,18 +72,20 @@ class TrackingCubit extends HydratedCubit<TrackingState>
     bool checkDayUpdate = false,
     bool forceUpdate = false,
   }) async {
-    Map<String, TrackingGroup> groups = {};
+    final groups = <String, TrackingGroup>{};
     // Get sections from repository
-    List<String> sections = trackingGroups.keys.toList();
+    final sections = trackingGroups.keys.toList();
 
-    for (var sectionName in sections) {
-      TrackingGroup trackingGroup = trackingGroups[sectionName]!;
+    for (final sectionName in sections) {
+      final trackingGroup = trackingGroups[sectionName]!;
       if (trackingGroup.data.isNotEmpty) {
-        TrackingGroup updatedTrackingGroup = trackingGroup.copyWith(
-            data: await _getUpdatedTrackingSummaries(
-                trackingSummaries: trackingGroup.data,
-                checkDayUpdate: checkDayUpdate,
-                forceUpdate: forceUpdate));
+        final updatedTrackingGroup = trackingGroup.copyWith(
+          data: await _getUpdatedTrackingSummaries(
+            trackingSummaries: trackingGroup.data,
+            checkDayUpdate: checkDayUpdate,
+            forceUpdate: forceUpdate,
+          ),
+        );
         groups[sectionName] = updatedTrackingGroup;
       }
     }
@@ -86,8 +93,8 @@ class TrackingCubit extends HydratedCubit<TrackingState>
     return groups;
   }
 
-  /// Update Tracking Summary Metrics based on conditions and return updated List
-  /// Checks [autoUpdate] to see if the metric should be updated
+  /// Update Tracking Summary Metrics based on conditions to return updated List
+  /// Checks [TrackingSummary.autoUpdate] to see if the metric should be updated
   /// [checkDayUpdate] set to true will consider fetchedAt date
   /// [forceUpdate] set to true will ensure all metrics are updated
   /// This will update any changes in the repository
@@ -98,9 +105,9 @@ class TrackingCubit extends HydratedCubit<TrackingState>
   }) async {
     if (trackingSummaries.isEmpty) return [];
 
-    List<TrackingSummary> updatedTrackingSummaries = [];
+    final updatedTrackingSummaries = <TrackingSummary>[];
 
-    for (TrackingSummary trackingSummary in trackingSummaries) {
+    for (final trackingSummary in trackingSummaries) {
       // trackingSummary is added here because it may or may not be updated.
       updatedTrackingSummaries.add(trackingSummary);
 
@@ -111,18 +118,19 @@ class TrackingCubit extends HydratedCubit<TrackingState>
       if (!trackingSummary.autoUpdate && !forceUpdate) continue;
 
       // if fetchedAt is missing or it's not today, return false
-      bool fetchedToday = trackingSummary.fetchedAt != null
+      /*final fetchedToday = trackingSummary.fetchedAt != null
           ? trackingSummary.fetchedAt!.isToday
-          : false;
+          : false;*/
+      final fetchedToday = trackingSummary.fetchedAt?.isToday ?? false;
 
       /// Skip if not checking new day or already fetched today
-      /// if [forceUpdate] is true or [checkDayUpdate] is false, this will not continue
+      /// if [forceUpdate] is true or [checkDayUpdate] is false, this will stop
       /// Skips the updating TrackingSummary if checkDayUpdate is true,
       /// and fetchedToday is true and forceUpdate is false
       if (checkDayUpdate && fetchedToday && !forceUpdate) continue;
 
       // There was no reason to skip so the tracking summary is updated
-      TrackingSummary updatedTrackingSummary =
+      final updatedTrackingSummary =
           await _updateTrackingSummaryMetrics(trackingSummary: trackingSummary);
 
       /// The updatedTrackingSummary should always be the most up to date.
@@ -133,12 +141,12 @@ class TrackingCubit extends HydratedCubit<TrackingState>
           updatedTrackingSummary;
 
       // If the metrics were updated, update it in repository
-      bool metricsUpdated = !(const DeepCollectionEquality()
+      final metricsUpdated = !(const DeepCollectionEquality()
           .equals(updatedTrackingSummary.metrics, trackingSummary.metrics));
 
       if (metricsUpdated) {
         // Does not need to wait for saves to the repository
-        _trackingRepository.updateTrackingSummary(
+        await _trackingRepository.updateTrackingSummary(
           trackingSummaryId: updatedTrackingSummary.id,
           data: updatedTrackingSummary.toRepository().toJson(),
         );
@@ -148,17 +156,19 @@ class TrackingCubit extends HydratedCubit<TrackingState>
     return updatedTrackingSummaries;
   }
 
-  /// Calculates and updates the tracking summary metrics based on the tracking type
-  ///
-  /// This is included here because it needs to be able to see the mixin functions
-  Future<TrackingSummary> _updateTrackingSummaryMetrics(
-      {required TrackingSummary trackingSummary}) async {
+  /// Calculates and updates the tracking summary metrics based on the
+  /// tracking type
+  Future<TrackingSummary> _updateTrackingSummaryMetrics({
+    required TrackingSummary trackingSummary,
+  }) async {
     TrackingSummary updatedTrackingSummary;
 
     // Get all records for the tracking summary and convert to app model
-    List<TrackingRecord> records =
+    // TODO(ericpark): This should be more efficient based on the tracking type.
+    final records =
         (await _trackingRepository.getTrackingRecordsForTrackingSummary(
-                trackingSummaryId: trackingSummary.id))
+      trackingSummaryId: trackingSummary.id,
+    ))
             .map((rec) => TrackingRecord.fromJson(rec.toJson()))
             .toList();
 
@@ -166,21 +176,26 @@ class TrackingCubit extends HydratedCubit<TrackingState>
     if (records.isEmpty) return trackingSummary;
 
     switch (trackingSummary.trackingType) {
-      case "consecutive":
+      case 'consecutive':
         updatedTrackingSummary = incrementConsecutiveTracker(
-            trackingSummary: trackingSummary.copyWith(records: records));
-      case "last_seven":
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'last_seven':
         updatedTrackingSummary = incrementLastSevenTracker(
-            trackingSummary: trackingSummary.copyWith(records: records));
-      case "days_ago":
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'days_ago':
         updatedTrackingSummary = incrementDaysSince(
-            trackingSummary: trackingSummary.copyWith(records: records));
-      case "fixed_week":
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'fixed_week':
         updatedTrackingSummary = decrementFixedWeekTracker(
-            trackingSummary: trackingSummary.copyWith(records: records));
-      case "time":
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'time':
         updatedTrackingSummary = calculateTimeBasedTracker(
-            trackingSummary: trackingSummary.copyWith(records: records));
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
       default:
         updatedTrackingSummary = trackingSummary.copyWith(records: records);
     }

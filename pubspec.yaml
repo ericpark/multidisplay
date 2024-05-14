@@ -28,77 +28,68 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  flutter_bloc: ^8.1.3
-  rounded_tabbar_widget: ^0.0.2
-  flow_builder: ^0.1.0
-  equatable: ^2.0.5
-  intl: ^0.18.0
-  syncfusion_flutter_calendar: ^25.2.3
-  weather_icons: ^3.0.0
-  open_meteo_api:
-    path: packages/open_meteo_api
-  weather_repository:
-    path: packages/weather_repository
-  calendar_repository:
-    path: packages/calendar_repository
-  tracking_repository:
-    path: packages/tracking_repository
+  adaptive_dialog: ^2.1.0
+  adaptive_theme: ^3.6.0
   auth_repository:
     path: packages/auth_repository
+  bloc: ^8.1.3
+  calendar_repository:
+    path: packages/calendar_repository
+  cloud_firestore: ^4.17.0
+  confetti: ^0.7.0
   custom_components:
     path: packages/custom_components
-  hydrated_bloc: ^9.0.0
-  json_annotation: ^4.8.1
-  path_provider: ^2.0.8
-  bloc: ^8.1.3
-  syncfusion_flutter_charts: ^25.2.3+1
-  form_bloc: ^0.31.0
-  flutter_form_bloc: ^0.31.0
-  adaptive_theme: ^3.6.0
-  freezed_annotation: ^2.4.1
+  equatable: ^2.0.5
+  expandable_widgets: ^1.0.3+1
+  firebase_auth: ^4.19.2
+  firebase_core: ^2.30.0
+  flow_builder: ^0.1.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.3
   flutter_calendar_heatmap:
     git:
       url: https://github.com/ericpark/flutter_calendar_heatmap
       ref: main # branch name
-  adaptive_dialog: ^2.1.0
-  shimmer: ^3.0.0
-  expandable_widgets: ^1.0.3+1
-  google_fonts: ^6.2.1
-  geolocator: ^11.0.0
   flutter_expandable_fab: ^2.0.0
-  confetti: ^0.7.0
+  flutter_form_bloc: ^0.31.0
   flutter_login: ^5.0.0
-  firebase_core: ^2.30.0
-  cloud_firestore: ^4.17.0
   font_awesome_flutter: ^10.7.0
-  firebase_auth: ^4.19.2
+  form_bloc: ^0.31.0
+  freezed_annotation: ^2.4.1
+  geolocator: ^11.0.0
+  google_fonts: ^6.2.1
+  hydrated_bloc: ^9.0.0
+  intl: ^0.18.0
+  json_annotation: ^4.8.1
+  open_meteo_api:
+    path: packages/open_meteo_api
+  path_provider: ^2.0.8
+  rounded_tabbar_widget: ^0.0.2
+  shimmer: ^3.0.0
+  syncfusion_flutter_calendar: ^25.2.3
+  syncfusion_flutter_charts: ^25.2.3+1
+  tracking_repository:
+    path: packages/tracking_repository
+  weather_icons: ^3.0.0
+  weather_repository:
+    path: packages/weather_repository
+ 
 
 
   
 dev_dependencies:
+  bloc_test: ^9.1.0
+  build_runner: ^2.4.8
+  firestore_converter_generator: ^1.0.11
+  flutter_launcher_icons: "^0.13.1"
+  flutter_native_splash: ^2.3.10
   flutter_test:
     sdk: flutter
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^4.0.0
-  build_runner: ^2.4.8
+  freezed: ^2.4.7
   json_serializable: ^6.3.1
   mocktail: ^1.0.0
-  bloc_test: ^9.1.0
-  flutter_native_splash: ^2.3.10
-  flutter_launcher_icons: "^0.13.1"
-  freezed: ^2.4.7
-  firestore_converter_generator: ^1.0.11
+  very_good_analysis: ^5.1.0
 
 
 # For information on the generic Dart part of this file, see the

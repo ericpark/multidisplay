@@ -1,18 +1,16 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 // Packages
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:multidisplay/auth/auth.dart';
 // Project
 import 'package:multidisplay/experimental/experimental.dart';
 import 'package:multidisplay/home/home.dart';
-import 'package:multidisplay/weather/weather.dart';
 import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/auth/auth.dart';
+import 'package:multidisplay/weather/weather.dart';
 
 class SettingsLayoutTablet extends StatelessWidget {
   const SettingsLayoutTablet({super.key});
@@ -30,7 +28,7 @@ class SettingsLayoutTablet extends StatelessWidget {
                   ? const Icon(Icons.logout, semanticLabel: 'logout_profile')
                   : const Icon(Icons.person, semanticLabel: 'login_profile');
               final buttonText = Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.all(4),
                 child: state.status == AuthStatus.authenticated
                     ? const Text('Logout')
                     : const Text('Login'),
@@ -43,27 +41,31 @@ class SettingsLayoutTablet extends StatelessWidget {
                 onTap: () async {
                   switch (state.status) {
                     case AuthStatus.initial:
-                      String? userId =
+                      var userId =
                           await Navigator.of(context).push(LoginPage.route());
-                      if (userId == "") {
+                      if (userId == '') {
                         userId = null;
                       }
                       if (context.mounted) {
-                        context.read<TrackingCubit>().init(userId: userId);
+                        await context
+                            .read<TrackingCubit>()
+                            .init(userId: userId);
                       }
                     case AuthStatus.authenticated:
                       await context.read<AuthCubit>().logout();
                       if (context.mounted) {
-                        context.read<TrackingCubit>().init();
+                        await context.read<TrackingCubit>().init();
                       }
                     case AuthStatus.unauthenticated:
-                      String? userId =
+                      var userId =
                           await Navigator.of(context).push(LoginPage.route());
-                      if (userId == "") {
+                      if (userId == '') {
                         userId = null;
                       }
                       if (context.mounted) {
-                        context.read<TrackingCubit>().init(userId: userId);
+                        await context
+                            .read<TrackingCubit>()
+                            .init(userId: userId);
                       }
                     case AuthStatus.loading:
                     //context.read<AuthCubit>().init();
@@ -74,7 +76,8 @@ class SettingsLayoutTablet extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
                           child:
-                              Icon(Icons.login_outlined, semanticLabel: 'login_button'),
+                              Icon(Icons.login_outlined,
+                              semanticLabel: 'login_button'),
                         ),
                       ),*/
               );
@@ -83,7 +86,7 @@ class SettingsLayoutTablet extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(
-              "Home",
+              'Home',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -105,11 +108,11 @@ class SettingsLayoutTablet extends StatelessWidget {
                       // Switch to system settings
                       AdaptiveTheme.of(context).setSystem();
                       // Align cubit with the new theme.
-                      ThemeData theme = AdaptiveTheme.of(context).theme;
+                      final theme = AdaptiveTheme.of(context).theme;
                       context.read<ThemeCubit>().toggleToTheme(theme);
                     } else {
                       // Align cubit with the current theme.
-                      ThemeData theme = AdaptiveTheme.of(context).theme;
+                      final theme = AdaptiveTheme.of(context).theme;
                       context.read<ThemeCubit>().toggleToTheme(theme);
                       if (state.selectedTheme.isDark) {
                         AdaptiveTheme.of(context).setLight();
@@ -146,12 +149,13 @@ class SettingsLayoutTablet extends StatelessWidget {
                           /// If theme is light, themeSwitchToDark is true
                           /// If theme is dark, themeSwitchToDark is false
                           /// state doesn't change between these
-                          //final themeSwitchToDark = state.selectedTheme.isLight;
+                          //final themeSwitchToDark=state.selectedTheme.isLight
 
                           /// This value is AFTER the switch has been pressed.
                           /// If isDark was true and then the switch was tapped,
-                          /// the user wants to switch to a Light Theme. switchToDark
-                          /// will return false (the new value), NOT the value of context.read<ThemeCubit>().isDark;
+                          /// the user wants to switch to a Light Theme.
+                          /// switchToDark will return false (the new value),
+                          /// NOT the value of context.read<ThemeCubit>().isDark
                           if (switchToDark) {
                             AdaptiveTheme.of(context).setDark();
                           } else {
@@ -169,21 +173,22 @@ class SettingsLayoutTablet extends StatelessWidget {
                 previous.clockType != current.clockType,
             builder: (context, state) {
               return ListTile(
-                  title: const Text('Use Military Time'),
-                  isThreeLine: true,
-                  subtitle: const Text(
-                    'AM/PM vs Military',
-                  ),
-                  trailing: Switch(
-                      value: state.clockType.isMilitary,
-                      onChanged: (_) =>
-                          context.read<HomeCubit>().toggleClockType()));
+                title: const Text('Use Military Time'),
+                isThreeLine: true,
+                subtitle: const Text(
+                  'AM/PM vs Military',
+                ),
+                trailing: Switch(
+                  value: state.clockType.isMilitary,
+                  onChanged: (_) => context.read<HomeCubit>().toggleClockType(),
+                ),
+              );
             },
           ),
           const Divider(),
           ListTile(
             title: Text(
-              "Weather",
+              'Weather',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -203,14 +208,15 @@ class SettingsLayoutTablet extends StatelessWidget {
 
               if (!context.mounted) return;
               await context.read<WeatherCubit>().fetchWeatherWithCity(
-                  location["city"] as String,
-                  latitude: location["latitude"] as double?,
-                  longitude: location["longitude"] as double?);
+                    location['city'] as String,
+                    latitude: location['latitude'] as double?,
+                    longitude: location['longitude'] as double?,
+                  );
             },
             trailing: const SizedBox(
               height: double.infinity,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Icon(Icons.search, semanticLabel: 'Search'),
               ),
             ),
@@ -253,7 +259,7 @@ class SettingsLayoutTablet extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(
-              "Tracking",
+              'Tracking',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -306,7 +312,7 @@ class SettingsLayoutTablet extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(
-              "Experimental",
+              'Experimental',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -319,12 +325,12 @@ class SettingsLayoutTablet extends StatelessWidget {
               'Widget Library',
             ),
             onTap: () async {
-              Navigator.of(context).push(ExperimentalPage.route());
+              await Navigator.of(context).push(ExperimentalPage.route());
             },
             trailing: const SizedBox(
               height: double.infinity,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Icon(Icons.widgets, semanticLabel: 'Experimental'),
               ),
             ),

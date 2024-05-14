@@ -7,23 +7,26 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TimerBloc timerBloc = context.read<TimerBloc>();
-    final WeatherCubit weatherCubit = context.read<WeatherCubit>();
+    context
+        .read<WeatherCubit>()
+        .refreshWeather(current: true, hourly: true, daily: true);
 
-    weatherCubit.refreshWeather(current: true, hourly: true, daily: true);
-    timerBloc.add(const TimerStarted(duration: TimerBloc.defaultDuration));
+    context
+        .read<TimerBloc>()
+        .add(const TimerStarted(duration: TimerBloc.defaultDuration));
 
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
       ),
       body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth < 400) {
-          return const WeatherLayoutMobile();
-        }
-        return const WeatherLayoutTablet();
-      }),
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 400) {
+            return const WeatherLayoutMobile();
+          }
+          return const WeatherLayoutTablet();
+        },
+      ),
     );
   }
 }

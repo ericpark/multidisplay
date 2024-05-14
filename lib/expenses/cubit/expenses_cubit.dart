@@ -7,5 +7,4 @@ part 'generated/expenses_cubit.g.dart';
 
 class ExpensesCubit extends Cubit<ExpensesState> {
   ExpensesCubit() : super(ExpensesState.initial());
-  //ExpensesCubit() : super(const ExpensesState(status: ExpensesStatus.initial));
 }

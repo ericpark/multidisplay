@@ -5,5 +5,5 @@ mixin TrackingWidget {
   late final String section;
   late final TrackingSummary trackingSummary;
 
-  final emptyMetric = const {"display_name": "", "value": ""};
+  final emptyMetric = const {'display_name': '', 'value': ''};
 }

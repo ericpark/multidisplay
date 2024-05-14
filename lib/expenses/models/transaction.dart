@@ -9,7 +9,6 @@ part 'generated/transaction.freezed.dart';
 
 @freezed
 class Transaction with _$Transaction {
-  const Transaction._();
 
   factory Transaction({
     //@DateTimeConverter() required DateTime date,
@@ -17,6 +16,7 @@ class Transaction with _$Transaction {
     //@DateTimeNullableConverter() DateTime? createdAt,
     String? description,
   }) = _Transaction;
+  const Transaction._();
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>
       _$TransactionFromJson(json);

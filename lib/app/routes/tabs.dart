@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:multidisplay/calendar/calendar.dart';
+import 'package:multidisplay/expenses/expenses.dart';
 // Project
 import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/settings/settings.dart';
-import 'package:multidisplay/weather/weather.dart';
-import 'package:multidisplay/calendar/calendar.dart';
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/expenses/expenses.dart';
+import 'package:multidisplay/weather/weather.dart';
 
 const List<BottomNavigationBarItem> bottomTabs = <BottomNavigationBarItem>[
   BottomNavigationBarItem(
@@ -49,5 +47,5 @@ final List<Widget> pages = [
       value: context.read<WeatherCubit>(),
       child: const SettingsPage(),
     );
-  }),
+  },),
 ];

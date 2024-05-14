@@ -14,16 +14,16 @@ class WeatherState extends Equatable {
   WeatherState(
       {this.status = WeatherStatus.initial,
       this.forecastStatus = const {
-        "current": WeatherStatus.initial,
-        "hourly": WeatherStatus.initial,
-        "daily": WeatherStatus.initial,
+        'current': WeatherStatus.initial,
+        'hourly': WeatherStatus.initial,
+        'daily': WeatherStatus.initial,
       },
       this.temperatureUnits = TemperatureUnits.fahrenheit,
       this.autoRefresh = true,
       this.position,
       Weather? weather,
       List<Weather>? dailyForecast,
-      List<Weather>? hourlyForecast})
+      List<Weather>? hourlyForecast,})
       : weather = weather ?? Weather.empty,
         dailyForecast = dailyForecast ?? [Weather.empty],
         hourlyForecast = hourlyForecast ?? [Weather.empty];
@@ -76,7 +76,7 @@ class WeatherState extends Equatable {
         weather,
         dailyForecast,
         hourlyForecast,
-        position
+        position,
       ];
 }
 

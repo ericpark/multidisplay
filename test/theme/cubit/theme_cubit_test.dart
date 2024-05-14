@@ -1,9 +1,9 @@
 //import 'package:bloc_test/bloc_test.dart';
 //import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/weather/weather.dart';
-import 'package:mocktail/mocktail.dart';
 
 import '../../helpers/hydrated_bloc.dart';
 

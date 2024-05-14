@@ -16,8 +16,7 @@ abstract class ExpensesState with _$ExpensesState {
     @Default(ExpensesStatus.initial) ExpensesStatus status,
   }) = _ExpensesState;
 
-  factory ExpensesState.initial() =>
-      const ExpensesState(status: ExpensesStatus.initial);
+  factory ExpensesState.initial() => const ExpensesState();
 
   factory ExpensesState.fromJson(Map<String, dynamic> json) =>
       _$ExpensesStateFromJson(json);

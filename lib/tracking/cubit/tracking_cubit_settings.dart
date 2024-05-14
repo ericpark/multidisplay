@@ -1,4 +1,5 @@
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_protected_member,
+// ignore_for_file: invalid_use_of_visible_for_testing_member
 
 part of 'tracking_cubit.dart';
 
@@ -18,22 +19,24 @@ extension TrackingCubitSettings on TrackingCubit {
 
   /// Moves the selected item at [oldIndex] to [newIndex]
   ///
-  /// This should only happen when [reorderable] is enabled
+  /// This should only happen when [TrackingCubit.state.reorderable] is enabled
   Future<void> reorderSections({
     required int oldIndex,
     required int newIndex,
   }) async {
     if (oldIndex == newIndex) return;
 
-    List<String> newOrder = getNewSectionOrder(
+    final newOrder = getNewSectionOrder(
       previousOrder: state.trackingSections,
       newIndex: newIndex,
       oldIndex: oldIndex,
     );
 
-    emit(state.copyWith(
-      status: TrackingStatus.success,
-      trackingSections: newOrder,
-    ));
+    emit(
+      state.copyWith(
+        status: TrackingStatus.success,
+        trackingSections: newOrder,
+      ),
+    );
   }
 }

@@ -1,20 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// DEPRECATED: DO NOT USE
 ///////////////////////////////////////////////////////////////////////////////
-// ignore_for_file: dangling_library_doc_comments
-import 'package:flutter/material.dart';
 import 'dart:math';
 
+// ignore_for_file: dangling_library_doc_comments
+import 'package:flutter/material.dart';
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 
 class OutlinedTrackingButtonWidget extends StatefulWidget {
   const OutlinedTrackingButtonWidget({
-    super.key,
     required this.id,
     required this.section,
     required this.trackingName,
@@ -23,16 +21,17 @@ class OutlinedTrackingButtonWidget extends StatefulWidget {
     required this.onTrackingEnds,
     required this.onFinished,
     required this.isTracking,
+    super.key,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     bool? showConfetti,
     String? confettiType,
     this.clipBehavior,
     this.color,
-  })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
-        rightMetric = rightMetric ?? const {"display_name": "", "value": ""},
+  })  : leftMetric = leftMetric ?? const {'display_name': '', 'value': ''},
+        rightMetric = rightMetric ?? const {'display_name': '', 'value': ''},
         showConfetti = showConfetti ?? false,
-        confettiType = confettiType ?? "star";
+        confettiType = confettiType ?? 'star';
 
   final int id;
   final String section;
@@ -88,11 +87,16 @@ class _OutlinedTrackingButtonWidgetState
     final fullAngle = degToRad(360);
     path.moveTo(size.width, halfWidth);
 
-    for (double step = 0; step < fullAngle; step += degreesPerStep) {
-      path.lineTo(halfWidth + externalRadius * cos(step),
-          halfWidth + externalRadius * sin(step));
-      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
-          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    for (var step = 0.0; step < fullAngle; step += degreesPerStep) {
+      path
+        ..lineTo(
+          halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step),
+        )
+        ..lineTo(
+          halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep),
+        );
     }
     path.close();
     return path;
@@ -101,63 +105,77 @@ class _OutlinedTrackingButtonWidgetState
   Path drawHeart(Size size) {
     final path = Path();
 
-    double width = size.width;
-    double height = size.height;
+    final width = size.width;
+    final height = size.height;
 
     // Modify the path to draw a heart shape
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.2 * width, height * 0.1, -0.05 * width, height * 0.6,
-        0.5 * width, height);
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.8 * width, height * 0.1, 1.05 * width, height * 0.6,
-        0.5 * width, height);
+    path
+      ..moveTo(0.5 * width, height * 0.35)
+      ..cubicTo(
+        0.2 * width,
+        height * 0.1,
+        -0.05 * width,
+        height * 0.6,
+        0.5 * width,
+        height,
+      )
+      ..moveTo(0.5 * width, height * 0.35)
+      ..cubicTo(
+        0.8 * width,
+        height * 0.1,
+        1.05 * width,
+        height * 0.6,
+        0.5 * width,
+        height,
+      );
 
     return path;
   }
 
   void _handleDefaultDoubleTap({required TrackingCubit trackingCubit}) {
     trackingCubit.addTrackingRecordAndUpdateSummary(
-        section: widget.section, index: widget.id);
+      section: widget.section,
+      index: widget.id,
+    );
   }
 
-  void _handleOnTap(buildContext, widget) async {
+  Future<void> _handleOnTap(BuildContext buildContext, Widget widget) async {
     await showDismissableModal(buildContext, widget);
   }
 
   @override
   Widget build(BuildContext context) {
-    TrackingCubit trackingCubit = context.read<TrackingCubit>();
+    final trackingCubit = context.read<TrackingCubit>();
     final widgetColor = widget.color ?? Theme.of(context).colorScheme.primary;
 
-    final TextStyle centerStyle = Theme.of(context)
+    final centerStyle = Theme.of(context)
         .primaryTextTheme
         .displayLarge!
         .copyWith(color: widgetColor);
-    final TextStyle primaryTextStyle = Theme.of(context)
+    final primaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .headlineSmall!
         .copyWith(color: Colors.black);
-    final TextStyle secondaryTextStyle = Theme.of(context)
+    final secondaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
         .copyWith(fontWeight: FontWeight.bold, color: widgetColor);
-    final TextStyle tertiaryStyle = Theme.of(context)
+    final tertiaryStyle = Theme.of(context)
         .primaryTextTheme
         .labelSmall!
         .copyWith(color: Colors.black);
 
     // Set Metrics
-    final String mainMetricName =
-        widget.mainMetric["display_name"] ?? "Not Found";
-    final String mainValue = widget.mainMetric["value"] ?? "-";
+    final mainMetricName = widget.mainMetric['display_name'] ?? 'Not Found';
+    final mainValue = widget.mainMetric['value'] ?? '-';
 
-    final String leftMetricName = widget.leftMetric["display_name"] ?? "";
-    final String leftValue = widget.leftMetric["value"] ?? "-";
+    final leftMetricName = widget.leftMetric['display_name'] ?? '';
+    final leftValue = widget.leftMetric['value'] ?? '-';
 
-    final String rightMetricName = widget.rightMetric["display_name"] ?? "";
-    final String rightValue = widget.rightMetric["value"] ?? "-";
+    final rightMetricName = widget.rightMetric['display_name'] ?? '';
+    final rightValue = widget.rightMetric['value'] ?? '-';
 
-    final confettiColors = widget.confettiType == "star"
+    final confettiColors = widget.confettiType == 'star'
         ? [
             Colors.blue,
             Colors.green,
@@ -165,15 +183,15 @@ class _OutlinedTrackingButtonWidgetState
             Colors.yellow,
             Colors.purple,
           ]
-        : widget.confettiType == "heart"
+        : widget.confettiType == 'heart'
             ? const [
                 Colors.pink,
                 Colors.red,
               ]
             : null;
-    final confettiShape = widget.confettiType == "star"
+    final confettiShape = widget.confettiType == 'star'
         ? drawStar
-        : widget.confettiType == "heart"
+        : widget.confettiType == 'heart'
             ? drawHeart
             : null;
     return GestureDetector(
@@ -187,23 +205,27 @@ class _OutlinedTrackingButtonWidgetState
         } else {
           _handleDefaultDoubleTap(trackingCubit: trackingCubit);
         }
-        if (widget.showConfetti == true && confirmTracking == true) {
+        if (widget.showConfetti == true && (confirmTracking ?? false)) {
           _controllerCenter.play();
         }
       },
       onLongPress: () {
-        _handleOnTap(context,
-            TrackingDetailsView(id: widget.id, section: widget.section));
+        _handleOnTap(
+          context,
+          TrackingDetailsView(id: widget.id, section: widget.section),
+        );
         trackingCubit.transitionUI();
       },
-      onTap: () => (rightValue == "")
+      onTap: () => (rightValue == '')
           ? {}
-          : _handleOnTap(context,
-              TrackingDetailsView(id: widget.id, section: widget.section)),
+          : _handleOnTap(
+              context,
+              TrackingDetailsView(id: widget.id, section: widget.section),
+            ),
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Card(
               color: Colors.white,
               elevation: 5,
@@ -212,13 +234,12 @@ class _OutlinedTrackingButtonWidgetState
               child: SizedBox(
                 height: 200,
                 width: 200,
-                child: Container(
+                child: ColoredBox(
                   color: Colors.white,
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
+                        padding: const EdgeInsets.only(top: 15),
                         child: Text(
                           widget.trackingName,
                           style: primaryTextStyle,
@@ -226,21 +247,25 @@ class _OutlinedTrackingButtonWidgetState
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Text(mainValue, style: centerStyle),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
+                        padding: const EdgeInsets.only(bottom: 5),
                         child: Text(mainMetricName, style: tertiaryStyle),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 15.0, bottom: 5.0, left: 5.0, right: 5.0),
+                          top: 15,
+                          bottom: 5,
+                          left: 5,
+                          right: 5,
+                        ),
                         child: Row(
-                          mainAxisAlignment: (rightValue == "")
+                          mainAxisAlignment: (rightValue == '')
                               ? MainAxisAlignment.center
                               : MainAxisAlignment.spaceBetween,
-                          children: (rightValue == "")
+                          children: (rightValue == '')
                               ? [
                                   SizedBox(
                                     height: 20,
@@ -248,8 +273,8 @@ class _OutlinedTrackingButtonWidgetState
                                     child: Center(
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            side:
-                                                BorderSide(color: widgetColor)),
+                                          side: BorderSide(color: widgetColor),
+                                        ),
                                         onPressed: () async {
                                           bool? confirmTracking;
                                           if (widget.onTrackingEnds != null) {
@@ -257,9 +282,9 @@ class _OutlinedTrackingButtonWidgetState
                                                 await widget.onTrackingEnds!();
                                           }
                                           if (widget.showConfetti == true &&
-                                              confirmTracking == true) {
+                                              (confirmTracking ?? false)) {
                                             _controllerCenter.play();
-                                            widget.onFinished!();
+                                            await widget.onFinished!();
                                           }
                                         },
                                         child: Text(
@@ -270,25 +295,33 @@ class _OutlinedTrackingButtonWidgetState
                                         ),
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ]
                               : [
                                   Column(
                                     children: [
-                                      Text(leftValue,
-                                          style: secondaryTextStyle),
+                                      Text(
+                                        leftValue,
+                                        style: secondaryTextStyle,
+                                      ),
                                       const SizedBox(height: 5),
-                                      Text(leftMetricName,
-                                          style: tertiaryStyle),
+                                      Text(
+                                        leftMetricName,
+                                        style: tertiaryStyle,
+                                      ),
                                     ],
                                   ),
                                   Column(
                                     children: [
-                                      Text(rightValue,
-                                          style: secondaryTextStyle),
+                                      Text(
+                                        rightValue,
+                                        style: secondaryTextStyle,
+                                      ),
                                       const SizedBox(height: 5),
-                                      Text(rightMetricName,
-                                          style: tertiaryStyle),
+                                      Text(
+                                        rightMetricName,
+                                        style: tertiaryStyle,
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -301,7 +334,7 @@ class _OutlinedTrackingButtonWidgetState
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
               width: 200,
               height: 200,
@@ -310,7 +343,6 @@ class _OutlinedTrackingButtonWidgetState
                   confettiController: _controllerCenter,
                   blastDirectionality: BlastDirectionality
                       .explosive, // don't specify a direction, blast randomly
-                  shouldLoop: false,
                   minBlastForce: 20,
                   maxBlastForce: 50,
                   gravity: 0.01,

@@ -1,23 +1,21 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:auth_repository/auth_repository.dart';
+import 'package:calendar_repository/calendar_repository.dart';
 import 'package:flutter/material.dart';
 // Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:adaptive_theme/adaptive_theme.dart';
-
+// Project
+import 'package:multidisplay/app/app.dart';
+import 'package:multidisplay/auth/auth.dart';
+import 'package:multidisplay/calendar/calendar.dart';
+import 'package:multidisplay/expenses/expenses.dart';
+import 'package:multidisplay/home/home.dart';
+import 'package:multidisplay/theme/theme.dart';
+import 'package:multidisplay/tracking/tracking.dart';
+import 'package:multidisplay/weather/weather.dart';
 // Repositories
 import 'package:tracking_repository/tracking_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
-import 'package:calendar_repository/calendar_repository.dart';
-import 'package:auth_repository/auth_repository.dart';
-
-// Project
-import 'package:multidisplay/app/app.dart';
-import 'package:multidisplay/theme/theme.dart';
-import 'package:multidisplay/home/home.dart';
-import 'package:multidisplay/calendar/calendar.dart';
-import 'package:multidisplay/weather/weather.dart';
-import 'package:multidisplay/tracking/tracking.dart';
-import 'package:multidisplay/expenses/expenses.dart';
-import 'package:multidisplay/auth/auth.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -70,7 +68,7 @@ class App extends StatelessWidget {
                       ..toggleCalendarView(
                           view: deviceType == FormFactor.mobile
                               ? CalendarView.month
-                              : CalendarView.all)),
+                              : CalendarView.all,),),
             BlocProvider<TrackingCubit>(
               create: (BuildContext context) =>
                   TrackingCubit(context.read<TrackingRepository>()),
@@ -95,7 +93,7 @@ class App extends StatelessWidget {
             ),
           ],
           child: AppView(savedThemeMode: savedThemeMode),
-        ));
+        ),);
   }
 }
 
@@ -112,7 +110,7 @@ class AppView extends StatelessWidget {
       final themeState = context.watch<ThemeCubit>().state;
 
       // if AdaptiveThemeMode.System then ThemeState should match
-      AdaptiveThemeMode initial = savedThemeMode == AdaptiveThemeMode.system
+      final initial = savedThemeMode == AdaptiveThemeMode.system
           ? AdaptiveThemeMode.system
           // else, match AdaptiveTheme to ThemeState
           : themeState.selectedTheme == AppTheme.light
@@ -141,6 +139,6 @@ class AppView extends StatelessWidget {
           );
         },
       );
-    });
+    },);
   }
 }

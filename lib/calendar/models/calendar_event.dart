@@ -1,9 +1,9 @@
+import 'package:calendar_repository/calendar_repository.dart'
+    as calendar_repository;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:calendar_repository/calendar_repository.dart'
-    as calendar_repository;
 
 part 'generated/calendar_event.g.dart';
 
@@ -20,19 +20,38 @@ class CalendarEvent extends Equatable {
     bool? active,
     String? description,
     String? notes,
-  })  : id = id ?? "",
+  })  : id = id ?? '',
         end = end ?? start,
         isAllDay = isAllDay ?? true,
         active = active ?? true,
-        description = description ?? "",
-        notes = notes ?? "";
+        description = description ?? '',
+        notes = notes ?? '';
+
+  factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
+      _$CalendarEventFromJson(json);
+
+  factory CalendarEvent.fromRepository(
+    calendar_repository.CalendarEvent event,
+  ) {
+    return CalendarEvent(
+      eventName: event.eventName,
+      start: event.startDate,
+      end: event.endDate,
+      background: event.color,
+      isAllDay: event.allDay,
+      active: event.active,
+      description: event.description,
+      calendarId: event.calendarId,
+      id: event.id,
+    );
+  }
 
   CalendarEvent.empty()
       : this(
-          eventName: "",
+          eventName: '',
           start: DateTime(1970),
           background: Colors.transparent,
-          calendarId: "",
+          calendarId: '',
         );
 
   final String eventName;
@@ -47,24 +66,6 @@ class CalendarEvent extends Equatable {
   final String description;
   final String notes;
 
-  factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
-      _$CalendarEventFromJson(json);
-
-  factory CalendarEvent.fromRepository(
-      calendar_repository.CalendarEvent event) {
-    return CalendarEvent(
-      eventName: event.eventName,
-      start: event.startDate,
-      end: event.endDate,
-      background: event.color,
-      isAllDay: event.allDay,
-      active: event.active,
-      description: event.description,
-      calendarId: event.calendarId,
-      id: event.id,
-    );
-  }
-
   calendar_repository.CalendarEvent toRepository() {
     return calendar_repository.CalendarEvent(
       eventName: eventName,
@@ -73,7 +74,6 @@ class CalendarEvent extends Equatable {
       calendarId: calendarId,
       active: active,
       color: background,
-      recurring: false,
       description: description,
       id: id,
     );
@@ -122,11 +122,11 @@ class ColorConverter implements JsonConverter<Color, String> {
   const ColorConverter();
 
   static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF$hexColor";
+    var hexString = hexColor.toUpperCase().replaceAll('#', '');
+    if (hexString.length == 6) {
+      hexString = 'FF$hexString';
     }
-    return int.parse(hexColor, radix: 16);
+    return int.parse(hexString, radix: 16);
   }
 
   @override
@@ -134,7 +134,7 @@ class ColorConverter implements JsonConverter<Color, String> {
 
   @override
   String toJson(Color object) =>
-      object.toString().split("(")[1].substring(4, 10);
+      object.toString().split('(')[1].substring(4, 10);
 }
 
 class CalendarEventDataSource extends CalendarDataSource {
@@ -144,26 +144,26 @@ class CalendarEventDataSource extends CalendarDataSource {
 
   @override
   DateTime getStartTime(int index) {
-    return appointments![index].start;
+    return (appointments![index] as CalendarEvent).start;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return appointments![index].end;
+    return (appointments![index] as CalendarEvent).end;
   }
 
   @override
   String getSubject(int index) {
-    return appointments![index].eventName;
+    return (appointments![index] as CalendarEvent).eventName;
   }
 
   @override
   Color getColor(int index) {
-    return appointments![index].background;
+    return (appointments![index] as CalendarEvent).background;
   }
 
   @override
   bool isAllDay(int index) {
-    return appointments![index].isAllDay;
+    return (appointments![index] as CalendarEvent).isAllDay;
   }
 }

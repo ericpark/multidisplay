@@ -12,12 +12,12 @@ import 'package:multidisplay/tracking/tracking.dart';
 class TimeTrackingWidget extends StatefulWidget
     with TrackingWidget, TrackingDialog, Confetti, ThresholdColor {
   TimeTrackingWidget({
-    super.key,
-    id,
-    section,
-    trackingSummary,
     required this.onDoubleTap,
     required this.onFinished,
+    required int id,
+    required String section,
+    required TrackingSummary trackingSummary,
+    super.key,
     this.color,
   }) {
     // Confetti Mixin
@@ -54,7 +54,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     final timeMetric =
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
-    if (timeMetric["value"] == "") {
+    if (timeMetric['value'] == '') {
       timer = Timer.periodic(
           const Duration(seconds: LONG_TICKER_DURATION_IN_SECONDS), (timer) {
         if (mounted) {
@@ -74,7 +74,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     final timeMetric =
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
-    if (timeMetric["value"] == "") {
+    if (timeMetric['value'] == '') {
       timer?.cancel();
     }
     controllerCenter.dispose();
@@ -82,19 +82,21 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     super.dispose();
   }
 
-  void onFinish({double? compareMetric, double? compareThreshold}) async {
+  Future<void> onFinish({
+    double? compareMetric,
+    double? compareThreshold,
+  }) async {
     widget.onFinished!();
 
     // Check confirmation and stop if not confirmed
     final celebrationMetric = compareMetric ?? 0;
     final celebrationThreshold = compareThreshold ?? 0;
 
-    bool showConfetti = widget.showConfetti(
+    final showConfetti = widget.showConfetti(
       useCelebrationThreshold: true,
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
       thresholdHigherIsBetter: false,
-      useMultipleToday: false,
       records: widget.trackingSummary.records,
       useRandom: false,
     );
@@ -104,7 +106,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     }
   }
 
-  void onDoubleTap() async {
+  Future<void> onDoubleTap() async {
     // Do nothing if no double tap function is provided
     if (widget.onDoubleTap == null) return;
     await widget.showDefaultDialog(
@@ -113,9 +115,11 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     );
   }
 
-  void displayDetailsPage() async {
+  Future<void> displayDetailsPage() async {
     await showDismissableModal(
-        context, TrackingDetailsView(id: widget.id, section: widget.section));
+      context,
+      TrackingDetailsView(id: widget.id, section: widget.section),
+    );
   }
 
   @override
@@ -141,13 +145,13 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
     hours = now.difference(started).inHours;
     minutes = now.difference(started).inMinutes - (hours * 60);
 
-    bool isActive =
-        (rightMetric["display_name"] != "" && rightMetric["value"] == "");
+    final isActive =
+        rightMetric['display_name'] != '' && rightMetric['value'] == '';
     // If the right metric is empty, we are still tracking.
     if (isActive) {
       mainMetric = {
-        "display_name": "Hours (in progress)",
-        "value": "${(hours + ((minutes ~/ 15) * 0.25))}"
+        'display_name': 'Hours (in progress)',
+        'value': '${hours + ((minutes ~/ 15) * 0.25)}',
       };
       thresholdMetric = widget.trackingSummary.rightMetric;
     }
@@ -156,9 +160,9 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
       if (widget.trackingSummary.thresholds[thresholdMetric] != null) {
         final thresholds = widget.trackingSummary.thresholds[thresholdMetric]!;
         compareThreshold ??=
-            widget.trackingSummary.thresholds[thresholdMetric]?["good"]?["end"];
+            widget.trackingSummary.thresholds[thresholdMetric]?['good']?['end'];
 
-        compareMetric = double.parse(mainMetric["value"]!);
+        compareMetric = double.parse(mainMetric['value']!);
 
         color = widget.getThresholdColor(
           compareMetric: compareMetric,
@@ -166,7 +170,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
         );
       }
     } catch (err) {
-      debugPrint("ERROR: TIME TRACKING WIDGET - $err");
+      debugPrint('ERROR: TIME TRACKING WIDGET - $err');
     }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -175,7 +179,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
           onLongPress: () async => displayDetailsPage(),
           onTap: () async => isActive ? null : displayDetailsPage(),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
               width: constraints.maxHeight,
               height: constraints.maxHeight,
@@ -199,7 +203,6 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
                     child: ConfettiWidget(
                       confettiController: controllerCenter,
                       blastDirectionality: BlastDirectionality.explosive,
-                      shouldLoop: false,
                       minBlastForce: 20,
                       maxBlastForce: 50,
                       gravity: 0.01,

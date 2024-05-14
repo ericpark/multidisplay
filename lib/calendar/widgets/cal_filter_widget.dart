@@ -21,7 +21,7 @@ class _CalendarFilterListTileState extends State<CalendarFilterListTile> {
           onChanged: (value) => {
             setState(() {
               isChecked = !isChecked;
-            })
+            }),
           },
         ),
         trailing: IconButton(

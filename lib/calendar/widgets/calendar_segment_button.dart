@@ -3,9 +3,7 @@ import 'package:multidisplay/calendar/calendar.dart';
 
 class CalendarSegmentButton extends StatelessWidget {
   const CalendarSegmentButton({
-    super.key,
-    required this.selected,
-    required this.onChange,
+    required this.selected, required this.onChange, super.key,
   });
 
   final CalendarView selected;
@@ -18,16 +16,16 @@ class CalendarSegmentButton extends StatelessWidget {
           ButtonSegment<CalendarView>(
               value: CalendarView.month,
               label: Text('Month'),
-              icon: Icon(Icons.calendar_month)),
+              icon: Icon(Icons.calendar_month),),
           ButtonSegment<CalendarView>(
               value: CalendarView.schedule,
               label: Text('Schedule'),
-              icon: Icon(Icons.calendar_view_day)),
+              icon: Icon(Icons.calendar_view_day),),
         ],
         selected: <CalendarView>{
-          selected
+          selected,
         },
         onSelectionChanged: (Set<CalendarView> newSelection) =>
-            onChange(newSelection.first));
+            onChange(newSelection.first),);
   }
 }

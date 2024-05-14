@@ -8,11 +8,13 @@ class TrackingLayoutMobile extends StatelessWidget {
   const TrackingLayoutMobile({super.key});
 
   List<Widget> getSections(List<String> sectionOrder) {
-    List<Widget> sections = [];
-    for (int section = 0; section < sectionOrder.length; section++) {
-      sections.add(TrackingSectionWidget(
-        sectionName: sectionOrder[section],
-      ));
+    final sections = <Widget>[];
+    for (var section = 0; section < sectionOrder.length; section++) {
+      sections.add(
+        TrackingSectionWidget(
+          sectionName: sectionOrder[section],
+        ),
+      );
     }
     return sections;
   }
@@ -23,7 +25,7 @@ class TrackingLayoutMobile extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 1,
-        scrolledUnderElevation: 5.0,
+        scrolledUnderElevation: 5,
         shadowColor: Colors.black,
         backgroundColor: Theme.of(context).secondaryHeaderColor,
         clipBehavior: Clip.antiAlias,
@@ -36,38 +38,43 @@ class TrackingLayoutMobile extends StatelessWidget {
             icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
             onPressed: () async {
               await context.read<TrackingCubit>().refreshTrackingGroups(
-                  userId: context.read<AuthCubit>().state.user?.id);
+                    userId: context.read<AuthCubit>().state.user?.id,
+                  );
             },
           ),
         ],
       ),
       body: BlocBuilder<TrackingCubit, TrackingState>(
         builder: (context, state) {
-          TrackingCubit trackingCubit = context.read<TrackingCubit>();
+          final trackingCubit = context.read<TrackingCubit>();
 
-          List<Widget> sections = getSections(state.trackingSections);
+          final sections = getSections(state.trackingSections);
 
-          List<Widget> sectionWidgets = [];
+          final sectionWidgets = <Widget>[];
 
           sectionWidgets.addAll([
             for (int index = 0; index < sections.length; index += 1)
               Padding(
                 key: Key('$index'),
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(
-                    title: sections[index], contentPadding: EdgeInsets.zero),
+                  title: sections[index],
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
           ]);
           return RefreshIndicator(
-            onRefresh: () async => await context
-                .read<TrackingCubit>()
-                .refreshTrackingGroups(
-                    userId: context.read<AuthCubit>().state.user?.id),
+            onRefresh: () async =>
+                context.read<TrackingCubit>().refreshTrackingGroups(
+                      userId: context.read<AuthCubit>().state.user?.id,
+                    ),
             child: ReorderableListView(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
+              padding: EdgeInsets.zero,
               onReorder: (int oldIndex, int newIndex) async {
                 await trackingCubit.reorderSections(
-                    oldIndex: oldIndex, newIndex: newIndex);
+                  oldIndex: oldIndex,
+                  newIndex: newIndex,
+                );
               },
               buildDefaultDragHandles: state.reorderable,
               children: sectionWidgets,

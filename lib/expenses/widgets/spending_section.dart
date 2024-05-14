@@ -8,7 +8,7 @@ import 'package:multidisplay/expenses/expenses.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 class SpendingSection extends StatelessWidget {
-  const SpendingSection({super.key, required this.sectionName});
+  const SpendingSection({required this.sectionName, super.key});
 
   final String sectionName;
 
@@ -17,7 +17,7 @@ class SpendingSection extends StatelessWidget {
     required TextStyle? textStyle,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -49,9 +49,9 @@ class SpendingSection extends StatelessWidget {
         itemBuilder: (context, index) {
           return HorizontalTrackingWidget(
             id: 0,
-            section: "section",
-            trackingName: "trackingName",
-            mainMetric: const {"display_name": "Test", "value": "1"},
+            section: 'section',
+            trackingName: 'trackingName',
+            mainMetric: const {'display_name': 'Test', 'value': '1'},
             onDoubleTap: () {},
           );
         },
@@ -61,7 +61,7 @@ class SpendingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String sectionHeaderString = sectionName;
+    final sectionHeaderString = sectionName;
     final sectionHeaderStyle = Theme.of(context).textTheme.titleLarge;
     return BlocBuilder<ExpensesCubit, ExpensesState>(
       builder: (context, state) {
@@ -70,7 +70,7 @@ class SpendingSection extends StatelessWidget {
           //case ExpensesStatus.initial:
           //return const TrackingEmpty();
           case ExpensesStatus.loading:
-            return const Text("TODO");
+            return const Text('TODO');
           //return const TrackingLoading();
           case ExpensesStatus.initial ||
                 ExpensesStatus.success ||
@@ -91,10 +91,11 @@ class SpendingSection extends StatelessWidget {
               ],
             );
           case ExpensesStatus.failure:
-            return const Text("TODO");
+            return const Text('TODO');
           //return const TrackingError();
+          // ignore: no_default_cases
           default:
-            return const Text("Unhandled Exception");
+            return const Text('Unhandled Exception');
         }
       },
     );

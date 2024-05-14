@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 
 mixin TrackingDialog {
   Future<bool?> showDefaultDialog(BuildContext context,
-      {VoidCallback? onDoubleTap}) async {
+      {VoidCallback? onDoubleTap,}) async {
     final result = await showOkCancelAlertDialog(
       context: context,
       title: 'Track Event',
       message: 'Do you want to add this event?',
       okLabel: 'Yes',
       cancelLabel: 'No',
-
-      isDestructiveAction: false,
       //style: AdaptiveStyle.iOS,
       builder: (context, child) => Theme(
         data: ThemeData(
@@ -37,10 +35,10 @@ mixin TrackingDialog {
 }
 
 Future<bool?> showChoiceDialog(BuildContext context,
-    {VoidCallback? onDoubleTap, List<String>? dialogChoices}) async {
+    {VoidCallback? onDoubleTap, List<String>? dialogChoices,}) async {
   final actions = dialogChoices!
       .map((choice) => AlertDialogAction(
-          key: choice.toLowerCase().replaceAll(" ", "-"), label: choice))
+          key: choice.toLowerCase().replaceAll(' ', '-'), label: choice,),)
       .toList();
 
   final result = await showConfirmationDialog(
@@ -63,7 +61,6 @@ Future<bool?> showFinishTrackingDialog(BuildContext context) async {
     message: 'Do you want to mark this as finished?',
     okLabel: 'Yes',
     cancelLabel: 'No',
-    isDestructiveAction: false,
     builder: (context, child) => Theme(
       data: ThemeData(
         textButtonTheme: TextButtonThemeData(

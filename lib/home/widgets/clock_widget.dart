@@ -42,7 +42,7 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    String timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
+    final timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
 
     return Center(
       child: Column(
@@ -50,7 +50,7 @@ class _ClockWidgetState extends State<ClockWidget> {
         children: <Widget>[
           Column(
             children: [
-              const Text("Today is"),
+              const Text('Today is'),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
@@ -67,9 +67,9 @@ class _ClockWidgetState extends State<ClockWidget> {
                   DateFormat(timePattern).format(now),
                   style: theme.textTheme.displayLarge,
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -82,16 +82,17 @@ class _ClockWidgetState extends State<ClockWidget> {
             shadowColor: Colors.black,
             borderRadius: BorderRadius.circular(20),
             clipBehavior: Clip.hardEdge,
-            child: ClockContent(now: now, theme: theme, homeCubit: homeCubit)));*/
+            child: ClockContent(now: now, theme: theme, homeCubit: homeCubit)));
+    */
   }
 }
 
 class ClockContent extends StatelessWidget {
   const ClockContent({
-    super.key,
     required this.now,
     required this.theme,
     required this.homeCubit,
+    super.key,
   });
 
   final DateTime now;
@@ -100,7 +101,7 @@ class ClockContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
+    final timePattern = homeCubit.state.clockType.isMilitary ? 'Hms' : 'jms';
 
     return Center(
       child: Column(
@@ -108,7 +109,7 @@ class ClockContent extends StatelessWidget {
         children: <Widget>[
           Column(
             children: [
-              const Text("Today is"),
+              const Text('Today is'),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
@@ -125,9 +126,9 @@ class ClockContent extends StatelessWidget {
                   DateFormat(timePattern).format(now),
                   style: theme.textTheme.displayLarge,
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

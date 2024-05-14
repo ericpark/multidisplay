@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 typedef MyBuilder = void Function(
-    BuildContext context, void Function(String?) run);
+    BuildContext context, void Function(String?) run,);
 
 class FadeInOutMessage extends StatefulWidget with Confetti {
   FadeInOutMessage({
-    super.key,
-    required this.show,
-    required this.builder,
+    required this.show, required this.builder, super.key,
   });
 
   final bool show;
@@ -25,7 +23,7 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
   late ConfettiController controllerCenter;
 
   bool notCompleted = true;
-  String message = "Congrats!";
+  String message = 'Congrats!';
 
   @override
   void initState() {
@@ -36,7 +34,7 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
         duration: const Duration(seconds: 1),
         reverseDuration: const Duration(seconds: 15),
       );
-      _fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
+      _fadeInFadeOut = Tween<double>(begin: 0, end: 1).animate(animation);
       controllerCenter = widget.defaultConfettiController();
 
       animation.addStatusListener((status) {
@@ -74,11 +72,9 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
           child: ConfettiWidget(
             confettiController: controllerCenter,
             blastDirectionality: BlastDirectionality.explosive,
-            shouldLoop: false,
             minBlastForce: 20,
             maxBlastForce: 50,
             gravity: 0.01,
-            particleDrag: 0.05,
             colors: widget.confettiColors,
             createParticlePath: widget.drawStar,
           ),

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:multidisplay/tracking/tracking.dart';
 import 'package:custom_components/custom_components.dart';
+import 'package:flutter/material.dart';
+import 'package:multidisplay/tracking/tracking.dart';
 
 class ExperimentalLayoutTablet extends StatelessWidget {
   const ExperimentalLayoutTablet({super.key});
@@ -15,8 +14,10 @@ class ExperimentalLayoutTablet extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(sectionTitle,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            sectionTitle,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           const Divider(),
           SizedBox(
             height: 230,
@@ -26,7 +27,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
                 for (int index = 0; index < widgets.length; index += 1)
                   Padding(
                     key: Key('$index'),
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8),
                     child: SizedBox(height: 200, child: widgets[index]),
                   ),
               ],
@@ -35,7 +36,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
         ],
       ),
       subtitle: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Text(description),
       ),
     );
@@ -43,128 +44,136 @@ class ExperimentalLayoutTablet extends StatelessWidget {
 
   List<Widget> simpleWidgets() {
     final simpleWidget = SimpleTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingName: "Simple",
-        mainMetric: const {"display_name": "Main Metric", "value": "1"},
-        leftMetric: const {"display_name": "Left Metric", "value": "1"},
-        rightMetric: const {"display_name": "Right Metric", "value": "1"},
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingName: 'Simple',
+      mainMetric: const {'display_name': 'Main Metric', 'value': '1'},
+      leftMetric: const {'display_name': 'Left Metric', 'value': '1'},
+      rightMetric: const {'display_name': 'Right Metric', 'value': '1'},
+      onDoubleTap: () => {},
+    );
 
     final outlineWidget = OutlinedTrackingWidgetNonModular(
-        id: 0,
-        section: "Meeko",
-        trackingName: "Outlined",
-        mainMetric: const {"display_name": "Main Metric", "value": "1"},
-        leftMetric: const {"display_name": "Left Metric", "value": "1"},
-        rightMetric: const {"display_name": "Right Metric", "value": "1"},
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingName: 'Outlined',
+      mainMetric: const {'display_name': 'Main Metric', 'value': '1'},
+      leftMetric: const {'display_name': 'Left Metric', 'value': '1'},
+      rightMetric: const {'display_name': 'Right Metric', 'value': '1'},
+      onDoubleTap: () => {},
+    );
 
     final outlineRoundedWidget = OutlinedTrackingWidgetNonModular(
-        id: 0,
-        section: "Meeko",
-        trackingName: "Outlined Rounded",
-        mainMetric: const {"display_name": "Main Metric", "value": "1"},
-        leftMetric: const {"display_name": "Left Metric", "value": "1"},
-        rightMetric: const {"display_name": "Right Metric", "value": "1"},
-        onDoubleTap: () => {},
-        clipBehavior: Clip.hardEdge);
+      id: 0,
+      section: 'Meeko',
+      trackingName: 'Outlined Rounded',
+      mainMetric: const {'display_name': 'Main Metric', 'value': '1'},
+      leftMetric: const {'display_name': 'Left Metric', 'value': '1'},
+      rightMetric: const {'display_name': 'Right Metric', 'value': '1'},
+      onDoubleTap: () => {},
+      clipBehavior: Clip.hardEdge,
+    );
 
     final horizontalWidget = HorizontalTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingName: "Horizontal",
-        mainMetric: const {"display_name": "Main Metric", "value": "1"},
-        leftMetric: const {"display_name": "Left Metric", "value": "1"},
-        rightMetric: const {"display_name": "Right Metric", "value": "1"},
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingName: 'Horizontal',
+      mainMetric: const {'display_name': 'Main Metric', 'value': '1'},
+      leftMetric: const {'display_name': 'Left Metric', 'value': '1'},
+      rightMetric: const {'display_name': 'Right Metric', 'value': '1'},
+      onDoubleTap: () => {},
+    );
 
     final horizontalRoundedWidget = HorizontalTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingName: "Horizontal Rounded",
-        mainMetric: const {"display_name": "Main Metric", "value": "1"},
-        leftMetric: const {"display_name": "Left Metric", "value": "1"},
-        rightMetric: const {"display_name": "Right Metric", "value": "1"},
-        clipBehavior: Clip.hardEdge,
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingName: 'Horizontal Rounded',
+      mainMetric: const {'display_name': 'Main Metric', 'value': '1'},
+      leftMetric: const {'display_name': 'Left Metric', 'value': '1'},
+      rightMetric: const {'display_name': 'Right Metric', 'value': '1'},
+      clipBehavior: Clip.hardEdge,
+      onDoubleTap: () => {},
+    );
 
     return [
       simpleWidget,
       outlineWidget,
       outlineRoundedWidget,
       horizontalWidget,
-      horizontalRoundedWidget
+      horizontalRoundedWidget,
     ];
   }
 
   List<Widget> consecutiveWidgets() {
-    TrackingSummary trackingSummary = TrackingSummary(
-      id: "test",
-      name: "Good",
+    final trackingSummary = TrackingSummary(
+      id: 'test',
+      name: 'Good',
       records: [TrackingRecord(date: DateTime.now())],
-      mainMetric: "main",
-      leftMetric: "left",
-      rightMetric: "right",
+      mainMetric: 'main',
+      leftMetric: 'left',
+      rightMetric: 'right',
       metrics: {
-        "main": {"display_name": "Main Metric", "value": "1"},
-        "left": {"display_name": "Left Metric", "value": "1"},
-        "right": {"display_name": "Right Metric", "value": "1"},
+        'main': {'display_name': 'Main Metric', 'value': '1'},
+        'left': {'display_name': 'Left Metric', 'value': '1'},
+        'right': {'display_name': 'Right Metric', 'value': '1'},
       },
       section: '',
       ownerId: '',
     );
 
-    TrackingSummary trackingSummaryWarning = TrackingSummary(
-      id: "test",
-      name: "Warn",
+    final trackingSummaryWarning = TrackingSummary(
+      id: 'test',
+      name: 'Warn',
       records: [
-        TrackingRecord(date: DateTime.now().subtract(const Duration(days: 1)))
+        TrackingRecord(date: DateTime.now().subtract(const Duration(days: 1))),
       ],
-      mainMetric: "main",
-      leftMetric: "left",
-      rightMetric: "right",
+      mainMetric: 'main',
+      leftMetric: 'left',
+      rightMetric: 'right',
       metrics: {
-        "main": {"display_name": "Main Metric", "value": "1"},
-        "left": {"display_name": "Left Metric", "value": "1"},
-        "right": {"display_name": "Right Metric", "value": "1"},
+        'main': {'display_name': 'Main Metric', 'value': '1'},
+        'left': {'display_name': 'Left Metric', 'value': '1'},
+        'right': {'display_name': 'Right Metric', 'value': '1'},
       },
       section: '',
       ownerId: '',
     );
 
-    TrackingSummary trackingSummaryFailure = TrackingSummary(
-      id: "test",
-      name: "Miss",
+    final trackingSummaryFailure = TrackingSummary(
+      id: 'test',
+      name: 'Miss',
       records: [
-        TrackingRecord(date: DateTime.now().subtract(const Duration(days: 2)))
+        TrackingRecord(date: DateTime.now().subtract(const Duration(days: 2))),
       ],
-      mainMetric: "main",
-      leftMetric: "left",
-      rightMetric: "right",
+      mainMetric: 'main',
+      leftMetric: 'left',
+      rightMetric: 'right',
       metrics: {
-        "main": {"display_name": "Main Metric", "value": "1"},
-        "left": {"display_name": "Left Metric", "value": "1"},
-        "right": {"display_name": "Right Metric", "value": "1"},
+        'main': {'display_name': 'Main Metric', 'value': '1'},
+        'left': {'display_name': 'Left Metric', 'value': '1'},
+        'right': {'display_name': 'Right Metric', 'value': '1'},
       },
       section: '',
       ownerId: '',
     );
     final consecutiveGood = ConsecutiveTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingSummary: trackingSummary,
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingSummary: trackingSummary,
+      onDoubleTap: () => {},
+    );
     final consecutiveWarning = ConsecutiveTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingSummary: trackingSummaryWarning,
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingSummary: trackingSummaryWarning,
+      onDoubleTap: () => {},
+    );
     final consecutiveFail = ConsecutiveTrackingWidget(
-        id: 0,
-        section: "Meeko",
-        trackingSummary: trackingSummaryFailure,
-        onDoubleTap: () => {});
+      id: 0,
+      section: 'Meeko',
+      trackingSummary: trackingSummaryFailure,
+      onDoubleTap: () => {},
+    );
     return [
       consecutiveGood,
       consecutiveWarning,
@@ -182,7 +191,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             lineType: ContentLineType.twoLines,
           ),
         ),
-        Text("Content Placeholder Two Lines")
+        Text('Content Placeholder Two Lines'),
       ],
     );
     const contentThree = Column(
@@ -194,14 +203,14 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             lineType: ContentLineType.threeLines,
           ),
         ),
-        Text("Content Placeholder Three Lines")
+        Text('Content Placeholder Three Lines'),
       ],
     );
 
     const widgetPlaceholder = Column(
       children: [
         SizedBox(height: 190, width: 190, child: WidgetPlaceholder()),
-        Text("Widget Placeholder")
+        Text('Widget Placeholder'),
       ],
     );
     const cardPlaceholder = Column(
@@ -216,7 +225,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             child: Center(child: CenterCardPlaceholder()),
           ),
         ),
-        Text("Card Placeholder")
+        Text('Card Placeholder'),
       ],
     );
 
@@ -236,7 +245,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             child: Center(child: CenterCardPlaceholder()),
           ),
         ),
-        Text("Card Placeholder")
+        Text('Card Placeholder'),
       ],
     );
 
@@ -249,7 +258,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             child: Center(child: CenterCardPlaceholder()),
           ),
         ),
-        Text("Basic Placeholder")
+        Text('Basic Placeholder'),
       ],
     );
     final pullToRefreshCard = Column(
@@ -262,7 +271,7 @@ class ExperimentalLayoutTablet extends StatelessWidget {
             child: const Center(child: CenterCardPlaceholder()),
           ),
         ),
-        const Text("Pull To Refresh Card")
+        const Text('Pull To Refresh Card'),
       ],
     );
 
@@ -275,29 +284,34 @@ class ExperimentalLayoutTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
-
-    widgets.add(sectionLayout(
-        sectionTitle: "Simple Widgets",
-        description: "Simple widgets",
-        widgets: simpleWidgets()));
-    widgets.add(sectionLayout(
-        sectionTitle: "Consecutive Widgets",
-        description: "The different states that a consecutive widget may take",
-        widgets: consecutiveWidgets()));
-    widgets.add(sectionLayout(
-        sectionTitle: "Placeholder Widgets",
-        description: "Placeholders used while loading",
-        widgets: placeholderWidgets(context)));
-    widgets.add(sectionLayout(
-        sectionTitle: "Card Widgets",
-        description: "Card Widgets",
-        widgets: cardWidgets(context)));
+    final widgets = <Widget>[
+      sectionLayout(
+        sectionTitle: 'Simple Widgets',
+        description: 'Simple widgets',
+        widgets: simpleWidgets(),
+      ),
+      sectionLayout(
+        sectionTitle: 'Consecutive Widgets',
+        description: 'The different states that a consecutive widget may take',
+        widgets: consecutiveWidgets(),
+      ),
+      sectionLayout(
+        sectionTitle: 'Placeholder Widgets',
+        description: 'Placeholders used while loading',
+        widgets: placeholderWidgets(context),
+      ),
+      sectionLayout(
+        sectionTitle: 'Card Widgets',
+        description: 'Card Widgets',
+        widgets: cardWidgets(context),
+      ),
+    ];
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Widget Library"),
-        ),
-        body: ListView(children: widgets));
+      appBar: AppBar(
+        title: const Text('Widget Library'),
+      ),
+      body: ListView(children: widgets),
+    );
   }
 }

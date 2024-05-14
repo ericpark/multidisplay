@@ -11,7 +11,7 @@ class CalendarSchedule extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarCubit, CalendarState>(
       builder: (context, state) {
-        CalendarCubit calendarCubit = context.read<CalendarCubit>();
+        final calendarCubit = context.read<CalendarCubit>();
         switch (state.status) {
           case CalendarStatus.initial:
             return const CalendarEmpty();
@@ -22,25 +22,31 @@ class CalendarSchedule extends StatelessWidget {
               view: CalendarView.schedule,
               headerHeight: 0,
               scheduleViewSettings: ScheduleViewSettings(
-                  hideEmptyScheduleWeek: true,
-                  monthHeaderSettings: MonthHeaderSettings(
-                      height: 70,
-                      backgroundColor: Theme.of(context).colorScheme.primary),
-                  weekHeaderSettings: const WeekHeaderSettings(height: 10)),
+                hideEmptyScheduleWeek: true,
+                monthHeaderSettings: MonthHeaderSettings(
+                  height: 70,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                weekHeaderSettings: const WeekHeaderSettings(height: 10),
+              ),
               dataSource: CalendarEventDataSource(calendarCubit.state.events),
               initialSelectedDate: calendarCubit.state.selectedDate,
               initialDisplayDate: calendarCubit.state.selectedDate,
               onTap: (calendarTapDetails) async {
-                CalendarEvent event = calendarTapDetails.appointments?.first;
-                Widget container = CalendarEditEventView(event: event);
-                calendarCubit.startLoading();
+                final event =
+                    calendarTapDetails.appointments?.first as CalendarEvent;
+                final Widget container = CalendarEditEventView(event: event);
+                await calendarCubit.startLoading();
 
-                // Changed to navigator for now because two scaffolds cause an issue
-                await Navigator.of(context).push(CupertinoModalPopupRoute(
-                    barrierDismissible: true,
-                    builder: ((context) => container)));
+                if (!context.mounted) return;
+                // Changed to navigator because two scaffolds cause an issue
+                await Navigator.of(context).push(
+                  CupertinoModalPopupRoute<dynamic>(
+                    builder: (context) => container,
+                  ),
+                );
                 //await showDismissableModal(context, container);
-                calendarCubit.refreshCalendarUI();
+                await calendarCubit.refreshCalendarUI();
               },
             );
           case CalendarStatus.failure:

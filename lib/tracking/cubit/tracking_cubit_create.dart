@@ -1,4 +1,5 @@
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_protected_member,
+// ignore_for_file: invalid_use_of_visible_for_testing_member
 
 part of 'tracking_cubit.dart';
 
@@ -10,18 +11,21 @@ extension TrackingCubitCreate on TrackingCubit {
   Future<void> addNewTrackingSummary({
     required TrackingSummary trackingSummaryData,
   }) async {
-    TrackingSummary createdSummary = await addNewTrackingSummaryInRepository(
+    final createdSummary = await addNewTrackingSummaryInRepository(
       trackingSummaryData: trackingSummaryData,
     );
 
     // Add the new tracking summary to the tracking group
-    Map<String, TrackingGroup> updatedTrackingGroups =
-        addTrackingSummaryToTrackingGroups(
+    final updatedTrackingGroups = addTrackingSummaryToTrackingGroups(
       trackingSummary: createdSummary,
       trackingGroups: state.trackingGroups,
     );
     // Update the state with the new tracking summary
-    emit(state.copyWith(
-        status: TrackingStatus.success, trackingGroups: updatedTrackingGroups));
+    emit(
+      state.copyWith(
+        status: TrackingStatus.success,
+        trackingGroups: updatedTrackingGroups,
+      ),
+    );
   }
 }

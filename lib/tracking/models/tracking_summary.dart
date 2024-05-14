@@ -8,8 +8,6 @@ part 'generated/tracking_summary.g.dart';
 
 @freezed
 abstract class TrackingSummary with _$TrackingSummary {
-  const TrackingSummary._();
-
   const factory TrackingSummary({
     required String name,
     required String section,
@@ -25,23 +23,26 @@ abstract class TrackingSummary with _$TrackingSummary {
     @Default({}) Map<String, Map<String, Map<String, double>>> thresholds,
     @Default(false) bool autoUpdate,
     @Default([]) List<TrackingRecord> records,
+    // 'days_ago', 'consecutive', 'last_seven', 'fixed_week', 'time'
     @Default('') String trackingType,
     @Default('') String mainThreshold,
     @DateTimeNullableConverter() DateTime? createdAt,
     @DateTimeNullableConverter() DateTime? fetchedAt,
   }) = _TrackingSummary;
+  const TrackingSummary._();
 
   factory TrackingSummary.fromJson(Map<String, dynamic> json) =>
       _$TrackingSummaryFromJson(json);
 
   factory TrackingSummary.fromRepository(
-      tracking_repository.TrackingSummary repositoryTrackingSummary) {
-    var json = repositoryTrackingSummary.toJson();
+    tracking_repository.TrackingSummary repositoryTrackingSummary,
+  ) {
+    final json = repositoryTrackingSummary.toJson();
     return TrackingSummary.fromJson(json);
   }
 
   tracking_repository.TrackingSummary toRepository() {
-    var json = toJson();
+    final json = toJson();
     return tracking_repository.TrackingSummary.fromJson(json);
   }
 }

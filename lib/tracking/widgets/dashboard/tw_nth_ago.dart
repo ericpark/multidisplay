@@ -1,20 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:flutter/material.dart';
 // Packages
 import 'package:multidisplay/app/widgets/dismissable_modal.dart';
-
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
 
 class NthAgoTrackingWidget extends StatefulWidget
     with TrackingWidget, TrackingDialog, Confetti, ThresholdColor {
   NthAgoTrackingWidget({
-    super.key,
-    id,
-    section,
-    trackingSummary,
     required this.onDoubleTap,
+    required int id,
+    required String section,
+    required TrackingSummary trackingSummary,
+    super.key,
     this.color,
   }) {
     // Confetti Mixin
@@ -45,12 +43,15 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
     super.dispose();
   }
 
-  void onDoubleTap({double? compareMetric, double? compareThreshold}) async {
+  Future<void> onDoubleTap({
+    double? compareMetric,
+    double? compareThreshold,
+  }) async {
     // Do nothing if no double tap function is provided
     if (widget.onDoubleTap == null) return;
 
     // Check confirmation and stop if not confirmed
-    bool? confirmTracking = await widget.showDefaultDialog(
+    final confirmTracking = await widget.showDefaultDialog(
       context,
       onDoubleTap: widget.onDoubleTap,
     );
@@ -62,23 +63,24 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
     final celebrationThreshold = compareThreshold ?? 0;
 
     // Check if confetti should be displayed
-    bool showConfetti = widget.showConfetti(
+    final showConfetti = widget.showConfetti(
       useCelebrationThreshold: useCelebration,
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
-      useMultipleToday: false,
       records: widget.trackingSummary.records,
-      useRandom: true,
+      debug: true,
     );
 
-    if (confirmTracking == true && showConfetti) {
+    if ((confirmTracking ?? false) && showConfetti) {
       controllerCenter.play();
     }
   }
 
-  void displayDetailsPage() async {
+  Future<void> displayDetailsPage() async {
     await showDismissableModal(
-        context, TrackingDetailsView(id: widget.id, section: widget.section));
+      context,
+      TrackingDetailsView(id: widget.id, section: widget.section),
+    );
   }
 
   @override
@@ -95,23 +97,23 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
             widget.emptyMetric;
     final thresholdMetric = widget.trackingSummary.mainMetric;
 
-    Color? color = widget.color;
+    var color = widget.color;
 
     double? compareMetric;
     double? compareThreshold;
 
     // Set Threshold based color
-    if (thresholdMetric != "" &&
+    if (thresholdMetric != '' &&
         widget.trackingSummary.thresholds.isNotEmpty &&
         widget.trackingSummary.records.isNotEmpty) {
-      Map<String, Map<String, double>> thresholds =
+      final thresholds =
           widget.trackingSummary.thresholds[thresholdMetric] ?? {};
       compareThreshold ??=
-          widget.trackingSummary.thresholds[thresholdMetric]?["good"]?["start"];
+          widget.trackingSummary.thresholds[thresholdMetric]?['good']?['start'];
 
       compareMetric = double.tryParse(
-              widget.trackingSummary.metrics[thresholdMetric]?["value"] ??
-                  "0.0") ??
+            widget.trackingSummary.metrics[thresholdMetric]?['value'] ?? '0.0',
+          ) ??
           0.0;
 
       color = widget.getThresholdColor(
@@ -129,7 +131,7 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
           onLongPress: () async => displayDetailsPage(),
           onTap: () async => displayDetailsPage(),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
               width: constraints.maxHeight,
               height: constraints.maxHeight,
@@ -149,7 +151,6 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
                     child: ConfettiWidget(
                       confettiController: controllerCenter,
                       blastDirectionality: BlastDirectionality.explosive,
-                      shouldLoop: false,
                       minBlastForce: 20,
                       maxBlastForce: 50,
                       gravity: 0.01,

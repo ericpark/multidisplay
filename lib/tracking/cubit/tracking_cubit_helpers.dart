@@ -8,25 +8,25 @@ List<String> getNewSectionOrder({
   required int oldIndex,
   required int newIndex,
 }) {
-  List<String> newOrder = [];
+  var newOrder = <String>[];
 
   // Moved item down the list
   if (oldIndex < newIndex) {
-    for (int before = 0; before < oldIndex; before++) {
+    for (var before = 0; before < oldIndex; before++) {
       newOrder.add(previousOrder[before]);
     }
     if (newIndex == previousOrder.length) {
       newOrder = [
         ...newOrder,
         ...previousOrder.sublist(oldIndex + 1),
-        previousOrder[oldIndex]
+        previousOrder[oldIndex],
       ];
     } else {
-      for (int after = oldIndex + 1; after < newIndex; after++) {
+      for (var after = oldIndex + 1; after < newIndex; after++) {
         newOrder.add(previousOrder[after]);
       }
       newOrder.add(previousOrder[oldIndex]);
-      for (int after = newIndex; after < previousOrder.length; after++) {
+      for (var after = newIndex; after < previousOrder.length; after++) {
         newOrder.add(previousOrder[after]);
       }
     }
@@ -40,14 +40,14 @@ List<String> getNewSectionOrder({
         ...previousOrder.sublist(oldIndex + 1),
       ];
     } else {
-      for (int before = 0; before < newIndex; before++) {
+      for (var before = 0; before < newIndex; before++) {
         newOrder.add(previousOrder[before]);
       }
       newOrder.add(previousOrder[oldIndex]);
-      for (int after = newIndex; after < oldIndex; after++) {
+      for (var after = newIndex; after < oldIndex; after++) {
         newOrder.add(previousOrder[after]);
       }
-      for (int after = oldIndex + 1; after < previousOrder.length; after++) {
+      for (var after = oldIndex + 1; after < previousOrder.length; after++) {
         newOrder.add(previousOrder[after]);
       }
     }
@@ -55,12 +55,12 @@ List<String> getNewSectionOrder({
   return newOrder;
 }
 
-/// Get the tracking summary from the tracking groups based on section and index.
+/// Get the tracking summary from the tracking groups based on section and index
 TrackingSummary indexToTrackingSummary({
   required String section,
   required int index,
   required Map<String, TrackingGroup> trackingGroups,
 }) {
-  TrackingGroup trackingGroup = trackingGroups[section]!;
+  final trackingGroup = trackingGroups[section]!;
   return trackingGroup.data[index];
 }

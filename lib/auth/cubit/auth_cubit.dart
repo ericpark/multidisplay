@@ -1,6 +1,6 @@
+import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:auth_repository/auth_repository.dart';
 import 'package:multidisplay/auth/auth.dart';
 
 part 'auth_state.dart';
@@ -8,8 +8,7 @@ part 'generated/auth_cubit.freezed.dart';
 part 'generated/auth_cubit.g.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._authRepository)
-      : super(const AuthState(status: AuthStatus.initial));
+  AuthCubit(this._authRepository) : super(const AuthState());
 
   final AuthRepository _authRepository;
 
@@ -18,9 +17,12 @@ class AuthCubit extends Cubit<AuthState> {
     // checks if user was previously logged in
     if (_authRepository.isLoggedIn) {
       // if get the user info from firebase and then emit user
-      final user = User.fromJson((await _authRepository.getUserById(
-              id: _authRepository.currentUser.id))!
-          .toJson());
+      final user = User.fromJson(
+        (await _authRepository.getUserById(
+          id: _authRepository.currentUser.id,
+        ))!
+            .toJson(),
+      );
       emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } else {
       emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
@@ -36,10 +38,14 @@ class AuthCubit extends Cubit<AuthState> {
       password: password,
     );
     if (user == null) {
-      return "Incorrect email or password";
+      return 'Incorrect email or password';
     }
-    emit(state.copyWith(
-        status: AuthStatus.authenticated, user: User.fromJson(user.toJson())));
+    emit(
+      state.copyWith(
+        status: AuthStatus.authenticated,
+        user: User.fromJson(user.toJson()),
+      ),
+    );
     return null;
   }
 

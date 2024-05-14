@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class OutlinedTrackingWidgetAuto extends StatelessWidget {
   const OutlinedTrackingWidgetAuto({
-    super.key,
     required this.id,
     required this.section,
     required this.trackingName,
     required this.mainMetric,
+    super.key,
     Map<String, String>? leftMetric,
     Map<String, String>? rightMetric,
     this.color,
-  })  : leftMetric = leftMetric ?? const {"display_name": "", "value": ""},
-        rightMetric = rightMetric ?? const {"display_name": "", "value": ""};
+  })  : leftMetric = leftMetric ?? const {'display_name': '', 'value': ''},
+        rightMetric = rightMetric ?? const {'display_name': '', 'value': ''};
 
   final int id;
   final String section;
@@ -25,59 +25,58 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
   Widget build(BuildContext context) {
     final widgetColor = color ?? Theme.of(context).colorScheme.primary;
 
-    final TextStyle centerStyle = Theme.of(context)
+    final centerStyle = Theme.of(context)
         .primaryTextTheme
         .displayLarge!
         .copyWith(color: widgetColor);
-    final TextStyle primaryTextStyle = Theme.of(context)
+    final primaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .headlineSmall!
         .copyWith(color: Colors.black);
-    final TextStyle centerLabelStyle = Theme.of(context)
+    final centerLabelStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
         .copyWith(color: Colors.black);
-    final TextStyle secondaryTextStyle = Theme.of(context)
+    final secondaryTextStyle = Theme.of(context)
         .primaryTextTheme
         .labelLarge!
         .copyWith(fontWeight: FontWeight.bold, color: widgetColor);
-    final TextStyle tertiaryStyle = Theme.of(context)
+    final tertiaryStyle = Theme.of(context)
         .primaryTextTheme
         .labelSmall!
         .copyWith(color: Colors.black);
 
     // Set Metrics
-    final String mainMetricName = mainMetric["display_name"] ?? "Not Found";
-    final String mainValue = mainMetric["value"] ?? "-";
+    final mainMetricName = mainMetric['display_name'] ?? 'Not Found';
+    final mainValue = mainMetric['value'] ?? '-';
 
-    String leftMetricName = leftMetric["display_name"] ?? "";
-    String leftValue = leftMetric["value"] ?? "-";
+    var leftMetricName = leftMetric['display_name'] ?? '';
+    var leftValue = leftMetric['value'] ?? '-';
 
-    String rightMetricName = rightMetric["display_name"] ?? "";
-    String rightValue = rightMetric["value"] ?? "-";
+    var rightMetricName = rightMetric['display_name'] ?? '';
+    var rightValue = rightMetric['value'] ?? '-';
 
     // Must set with a space if empty to avoid scaling issues
-    if (leftMetricName == "") {
-      leftMetricName = " ";
-      leftValue = " ";
+    if (leftMetricName == '') {
+      leftMetricName = ' ';
+      leftValue = ' ';
     }
-    if (rightMetricName == "") {
-      rightMetricName = " ";
-      rightValue = " ";
+    if (rightMetricName == '') {
+      rightMetricName = ' ';
+      rightValue = ' ';
     }
     return Card(
       color: Colors.white,
       elevation: 5,
       shadowColor: widgetColor,
       child: SizedBox.expand(
-        child: Container(
+        child: ColoredBox(
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(5),
             child: Flex(
               direction: Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
               children: [
                 Flexible(
                   flex: 2,
@@ -86,7 +85,7 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Text(
                           trackingName,
                           style: primaryTextStyle,
@@ -111,7 +110,6 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  fit: FlexFit.loose,
                   flex: 2,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -119,12 +117,10 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                     children: [
                       Flex(
                         direction: Axis.horizontal,
-                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Left Metric
                           Expanded(
-                            flex: 1,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Column(
@@ -137,12 +133,9 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
+                          const Spacer(),
                           // Right Metric
                           Expanded(
-                            flex: 1,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Column(
@@ -157,12 +150,10 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                       ),
                       Flex(
                         direction: Axis.horizontal,
-                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Left Metric
                           Expanded(
-                            flex: 1,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Column(
@@ -173,12 +164,9 @@ class OutlinedTrackingWidgetAuto extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
+                          const Spacer(),
                           // Right Metric
                           Expanded(
-                            flex: 1,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Column(

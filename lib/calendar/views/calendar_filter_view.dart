@@ -10,7 +10,7 @@ class CalendarFilterView extends StatelessWidget {
     required TextStyle? textStyle,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Text(sectionHeader, style: textStyle),
     );
   }
@@ -18,15 +18,15 @@ class CalendarFilterView extends StatelessWidget {
   Widget calendarSection() {
     final newCalendarButton = Center(
       child: ElevatedButton(
-          onPressed: () => {}, child: const Text('New Calendar')),
+          onPressed: () => {}, child: const Text('New Calendar'),),
     );
 
-    List<Widget> calendarFilters = [
+    final calendarFilters = <Widget>[
       const CalendarFilterListTile(),
       const CalendarFilterListTile(),
       const CalendarFilterListTile(),
       const SizedBox(height: 10),
-      newCalendarButton
+      newCalendarButton,
     ];
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
@@ -40,13 +40,13 @@ class CalendarFilterView extends StatelessWidget {
 
   Widget tagsSection() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Autocomplete<String>(
         optionsBuilder: (TextEditingValue textEditingValue) {
           if (textEditingValue.text == '') {
             return const Iterable<String>.empty();
           }
-          return ["dog", "guest", "overnight"].where((String option) {
+          return ['dog', 'guest', 'overnight'].where((String option) {
             return option.contains(textEditingValue.text.toLowerCase());
           });
         },
@@ -76,8 +76,8 @@ class CalendarFilterView extends StatelessWidget {
                   onPressed: () {
                     //calendarCubit.refreshCalendarUI();
                     Navigator.of(context).pop();
-                  }),
-              title: const Text("Filter Events"),
+                  },),
+              title: const Text('Filter Events'),
               actions: [
                 IconButton(
                   key: const Key('filterWidget_save_iconButton'),
@@ -93,19 +93,18 @@ class CalendarFilterView extends StatelessWidget {
             body: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   sectionHeader(
-                    sectionHeader: "Calendars",
+                    sectionHeader: 'Calendars',
                     textStyle: sectionHeaderStyle,
                   ),
                   calendarSection(),
                   sectionHeader(
-                    sectionHeader: "Tags",
+                    sectionHeader: 'Tags',
                     textStyle: sectionHeaderStyle,
                   ),
-                  tagsSection()
+                  tagsSection(),
                 ],
               ),
             ),

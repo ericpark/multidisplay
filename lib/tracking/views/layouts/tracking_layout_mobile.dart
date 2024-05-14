@@ -50,9 +50,7 @@ class TrackingLayoutMobile extends StatelessWidget {
 
           final sections = getSections(state.trackingSections);
 
-          final sectionWidgets = <Widget>[];
-
-          sectionWidgets.addAll([
+          final sectionWidgets = <Widget>[
             for (int index = 0; index < sections.length; index += 1)
               Padding(
                 key: Key('$index'),
@@ -62,7 +60,7 @@ class TrackingLayoutMobile extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-          ]);
+          ];
           return RefreshIndicator(
             onRefresh: () async =>
                 context.read<TrackingCubit>().refreshTrackingGroups(

@@ -58,9 +58,7 @@ class TrackingLayoutTablet extends StatelessWidget {
 
           final sections = getSections(state.trackingSections);
 
-          final sectionWidgets = <Widget>[];
-
-          sectionWidgets.addAll([
+          final sectionWidgets = <Widget>[
             for (int index = 0; index < sections.length; index += 1)
               Padding(
                 key: Key('$index'),
@@ -70,7 +68,7 @@ class TrackingLayoutTablet extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-          ]);
+          ];
           return Stack(
             children: [
               RefreshIndicator(

@@ -139,15 +139,15 @@ extension TrackingCubitWidgets on TrackingCubit {
       trackingRecordId: trackingRecordId,
     );
 
-    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups};
-    updatedTrackingGroups.update(
-      section,
-      (trackingGroup) => trackingGroup.copyWith(
-        data: trackingGroup.data
-            .where((record) => record.id != trackingRecordId)
-            .toList(),
-      ),
-    );
+    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups}
+      ..update(
+        section,
+        (trackingGroup) => trackingGroup.copyWith(
+          data: trackingGroup.data
+              .where((record) => record.id != trackingRecordId)
+              .toList(),
+        ),
+      );
 
     return updatedTrackingGroups;
   }
@@ -218,17 +218,17 @@ extension TrackingCubitWidgets on TrackingCubit {
     required TrackingSummary updatedTrackingSummary,
     required Map<String, TrackingGroup> trackingGroups,
   }) async {
-    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups};
-    updatedTrackingGroups.update(
-      section,
-      (trackingGroup) => trackingGroup.copyWith(
-        data: [
-          ...trackingGroup.data.sublist(0, index),
-          updatedTrackingSummary,
-          ...trackingGroup.data.sublist(index + 1),
-        ],
-      ),
-    );
+    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups}
+      ..update(
+        section,
+        (trackingGroup) => trackingGroup.copyWith(
+          data: [
+            ...trackingGroup.data.sublist(0, index),
+            updatedTrackingSummary,
+            ...trackingGroup.data.sublist(index + 1),
+          ],
+        ),
+      );
 
     await _trackingRepository.updateTrackingSummary(
       trackingSummaryId: updatedTrackingSummary.id,
@@ -243,12 +243,12 @@ extension TrackingCubitWidgets on TrackingCubit {
     required TrackingSummary trackingSummary,
     required Map<String, TrackingGroup> trackingGroups,
   }) {
-    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups};
-    updatedTrackingGroups.update(
-      trackingSummary.section,
-      (trackingGroup) => trackingGroup
-          .copyWith(data: [...trackingGroup.data, trackingSummary]),
-    );
+    final updatedTrackingGroups = <String, TrackingGroup>{...trackingGroups}
+      ..update(
+        trackingSummary.section,
+        (trackingGroup) => trackingGroup
+            .copyWith(data: [...trackingGroup.data, trackingSummary]),
+      );
 
     // TODO(ericpark): Handle reorder
     // TODO(ericpark): Handle visibility

@@ -73,8 +73,8 @@ class CalendarCubit extends Cubit<CalendarState> {
     final newEvent =
         await _calendarRepository.addNewEvent(eventData: eventData);
 
-    final updatedListOfEvents = state.events;
-    updatedListOfEvents.add(CalendarEvent.fromRepository(newEvent));
+    final updatedListOfEvents = state.events
+      ..add(CalendarEvent.fromRepository(newEvent));
 
     emit(
       state.copyWith(
@@ -103,9 +103,10 @@ class CalendarCubit extends Cubit<CalendarState> {
       updatedFields: originalEvent.toRepository().toJson(),
     );
 
-    final updatedListOfEvents =
-        state.events.where((event) => event.id != eventId).toList();
-    updatedListOfEvents.add(originalEvent);
+    final updatedListOfEvents = state.events
+        .where((event) => event.id != eventId)
+        .toList()
+      ..add(originalEvent);
 
     emit(
       state.copyWith(

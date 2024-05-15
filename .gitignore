@@ -55,3 +55,5 @@ macos/Runner/GoogleService-Info.plist
 **.g.dart
 **.firestore_converter.dart
 **.freezed.dart
+
+notes.md

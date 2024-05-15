@@ -44,56 +44,59 @@ class App extends StatelessWidget {
     final deviceType = DeviceType.getDeviceFormFactor(context);
 
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(value: _weatherRepository),
+        RepositoryProvider.value(value: _calendarRepository),
+        RepositoryProvider.value(value: _trackingRepository),
+        RepositoryProvider.value(value: _authRepository),
+      ],
+      child: MultiBlocProvider(
+        /// These Blocs are provided early to allow for settings page that
+        /// changes the settings in each bloc. However, many of these could
+        /// be moved down further in the tree.
         providers: [
-          RepositoryProvider.value(value: _weatherRepository),
-          RepositoryProvider.value(value: _calendarRepository),
-          RepositoryProvider.value(value: _trackingRepository),
-          RepositoryProvider.value(value: _authRepository),
+          BlocProvider<AppBloc>(
+            create: (BuildContext context) => AppBloc(deviceType: deviceType),
+          ),
+          BlocProvider<ThemeCubit>(
+            create: (BuildContext context) => ThemeCubit(),
+          ),
+          BlocProvider<CalendarCubit>(
+            create: (BuildContext context) =>
+                CalendarCubit(context.read<CalendarRepository>())
+                  ..init()
+                  ..toggleCalendarView(
+                    view: deviceType == FormFactor.mobile
+                        ? CalendarView.month
+                        : CalendarView.all,
+                  ),
+          ),
+          BlocProvider<TrackingCubit>(
+            create: (BuildContext context) =>
+                TrackingCubit(context.read<TrackingRepository>()),
+          ),
+          BlocProvider<TimerBloc>(
+            create: (BuildContext context) =>
+                TimerBloc(ticker: const TimerTicker()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                WeatherCubit(context.read<WeatherRepository>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                AuthCubit(context.read<AuthRepository>())..init(),
+          ),
+          BlocProvider(
+            create: (context) => HomeCubit(),
+          ),
+          BlocProvider(
+            create: (context) => ExpensesCubit(),
+          ),
         ],
-        child: MultiBlocProvider(
-          /// These Blocs are provided early to allow for settings page that
-          /// changes the settings in each bloc. However, many of these could
-          /// be moved down further in the tree.
-          providers: [
-            BlocProvider<AppBloc>(
-              create: (BuildContext context) => AppBloc(deviceType: deviceType),
-            ),
-            BlocProvider<ThemeCubit>(
-              create: (BuildContext context) => ThemeCubit(),
-            ),
-            BlocProvider<CalendarCubit>(
-                create: (BuildContext context) =>
-                    CalendarCubit(context.read<CalendarRepository>())
-                      ..init()
-                      ..toggleCalendarView(
-                          view: deviceType == FormFactor.mobile
-                              ? CalendarView.month
-                              : CalendarView.all,),),
-            BlocProvider<TrackingCubit>(
-              create: (BuildContext context) =>
-                  TrackingCubit(context.read<TrackingRepository>()),
-            ),
-            BlocProvider<TimerBloc>(
-              create: (BuildContext context) =>
-                  TimerBloc(ticker: const TimerTicker()),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  WeatherCubit(context.read<WeatherRepository>()),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  AuthCubit(context.read<AuthRepository>())..init(),
-            ),
-            BlocProvider(
-              create: (context) => HomeCubit(),
-            ),
-            BlocProvider(
-              create: (context) => ExpensesCubit(),
-            ),
-          ],
-          child: AppView(savedThemeMode: savedThemeMode),
-        ),);
+        child: AppView(savedThemeMode: savedThemeMode),
+      ),
+    );
   }
 }
 
@@ -105,40 +108,42 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      final appState = context.watch<AppBloc>().state;
-      final themeState = context.watch<ThemeCubit>().state;
+    return Builder(
+      builder: (context) {
+        final appState = context.watch<AppBloc>().state;
+        final themeState = context.watch<ThemeCubit>().state;
 
-      // if AdaptiveThemeMode.System then ThemeState should match
-      final initial = savedThemeMode == AdaptiveThemeMode.system
-          ? AdaptiveThemeMode.system
-          // else, match AdaptiveTheme to ThemeState
-          : themeState.selectedTheme == AppTheme.light
-              ? AdaptiveThemeMode.light
-              : AdaptiveThemeMode.dark;
+        // if AdaptiveThemeMode.System then ThemeState should match
+        final initial = savedThemeMode == AdaptiveThemeMode.system
+            ? AdaptiveThemeMode.system
+            // else, match AdaptiveTheme to ThemeState
+            : themeState.selectedTheme == AppTheme.light
+                ? AdaptiveThemeMode.light
+                : AdaptiveThemeMode.dark;
 
-      return AdaptiveTheme(
-        light: themeState.lightThemeData,
-        dark: themeState.darkThemeData,
-        initial: initial,
-        builder: (theme, darkTheme) {
-          return MaterialApp(
-            theme: theme,
-            darkTheme: darkTheme,
-            home: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: pages[appState.page],
-              bottomNavigationBar: BottomNavigationBar(
-                items: bottomTabs,
-                currentIndex: appState.page,
-                showUnselectedLabels: true,
-                onTap: (index) =>
-                    context.read<AppBloc>().add(AppPageChanged(page: index)),
+        return AdaptiveTheme(
+          light: themeState.lightThemeData,
+          dark: themeState.darkThemeData,
+          initial: initial,
+          builder: (theme, darkTheme) {
+            return MaterialApp(
+              theme: theme,
+              darkTheme: darkTheme,
+              home: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: pages[appState.page],
+                bottomNavigationBar: BottomNavigationBar(
+                  items: bottomTabs,
+                  currentIndex: appState.page,
+                  showUnselectedLabels: true,
+                  onTap: (index) =>
+                      context.read<AppBloc>().add(AppPageChanged(page: index)),
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },);
+            );
+          },
+        );
+      },
+    );
   }
 }

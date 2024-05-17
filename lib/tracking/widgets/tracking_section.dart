@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/tracking/tracking.dart';
@@ -25,8 +26,29 @@ class TrackingSectionWidget extends StatelessWidget {
         section: data.section,
         index: index,
       );
+    }
 
-      //if (fadeInCallback != null) fadeInCallback!("");
+    Future<void> onDoubleTapAudioWrapper() async {
+      final remoteConfig = FirebaseRemoteConfig.instance;
+
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: Duration.zero,
+        ),
+      );
+      await remoteConfig.setDefaults(const {
+        'override_congrats': false,
+      });
+      await remoteConfig.fetchAndActivate();
+
+      final override = remoteConfig.getBool('override_congrats');
+      if (override) fadeInCallback?.call('HO YEAH');
+
+      await trackingCubit.addTrackingRecordAndUpdateSummary(
+        section: data.section,
+        index: index,
+      );
     }
 
     switch (data.trackingType) {
@@ -35,7 +57,7 @@ class TrackingSectionWidget extends StatelessWidget {
           id: index,
           section: data.section,
           trackingSummary: data,
-          onDoubleTap: () async => onDoubleTapWrapper(),
+          onDoubleTap: () async => onDoubleTapAudioWrapper(),
         );
       case 'last_seven':
         color = colorScheme.primary;

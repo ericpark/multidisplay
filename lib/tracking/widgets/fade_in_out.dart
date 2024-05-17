@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 typedef MyBuilder = void Function(
-    BuildContext context, void Function(String?) run,);
+  BuildContext context,
+  void Function(String?) run,
+);
 
 class FadeInOutMessage extends StatefulWidget with Confetti {
   FadeInOutMessage({
-    required this.show, required this.builder, super.key,
+    required this.show,
+    required this.builder,
+    super.key,
   });
 
   final bool show;
@@ -21,6 +26,8 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
   late AnimationController animation;
   late Animation<double> _fadeInFadeOut;
   late ConfettiController controllerCenter;
+  late AudioPlayer player;
+  late AudioPlayer secondaryPlayer;
 
   bool notCompleted = true;
   String message = 'Congrats!';
@@ -28,6 +35,15 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
   @override
   void initState() {
     super.initState();
+    // Initialize the audio players
+    player = AudioPlayer();
+    player.setAsset('assets/tracking/congrats_audio.mp3');
+    secondaryPlayer = AudioPlayer();
+    secondaryPlayer
+      ..setAsset('assets/tracking/bbl.mp3')
+      ..seek(const Duration(seconds: 29))
+      ..setVolume(0.75);
+
     if (widget.show) {
       animation = AnimationController(
         vsync: this,
@@ -40,6 +56,8 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
       animation.addStatusListener((status) {
         if (status == AnimationStatus.completed && notCompleted) {
           controllerCenter.play();
+          secondaryPlayer.play();
+          player.play();
 
           animation.reverse();
           notCompleted = false;
@@ -49,7 +67,9 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
   }
 
   void runAnimation(String? message) {
-    this.message = message ?? this.message;
+    setState(() {
+      this.message = message ?? this.message;
+    });
     if (widget.show) {
       animation.forward();
     }
@@ -82,7 +102,7 @@ class _FadeInOutMessageState extends State<FadeInOutMessage>
         Center(
           child: FadeTransition(
             opacity: _fadeInFadeOut,
-            child: Text(message, style: const TextStyle(fontSize: 30)),
+            child: Text(message, style: const TextStyle(fontSize: 40)),
           ),
         ),
       ],

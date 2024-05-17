@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+//import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:multidisplay/app/helpers/helpers.dart';
@@ -32,14 +32,21 @@ class ConsecutiveTrackingWidget extends StatefulWidget
 class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
   late ConfettiController controllerCenter;
   late AudioPlayer player;
-  late FirebaseRemoteConfig remoteConfig;
+  late AudioPlayer secondaryPlayer;
+
+  //late FirebaseRemoteConfig remoteConfig;
 
   @override
   void initState() {
     controllerCenter = widget.defaultConfettiController();
     player = AudioPlayer();
     player.setAsset('assets/tracking/congrats_audio.mp3');
-    remoteConfig = FirebaseRemoteConfig.instance;
+    secondaryPlayer = AudioPlayer();
+    secondaryPlayer
+      ..setAsset('assets/tracking/bbl.mp3')
+      ..seek(const Duration(seconds: 29))
+      ..setVolume(0.8);
+    /*remoteConfig = FirebaseRemoteConfig.instance;
     remoteConfig
       ..setConfigSettings(
         RemoteConfigSettings(
@@ -49,7 +56,7 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
       )
       ..setDefaults(const {
         'override_congrats': false,
-      });
+      });*/
     super.initState();
   }
 
@@ -96,13 +103,17 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
     await remoteConfig.setDefaults(const {
       'override_congrats': false,
     });*/
-    await remoteConfig.fetchAndActivate();
-    final override = remoteConfig.getBool('override_congrats');
-    debugPrint('override: $override');
+    //await remoteConfig.fetchAndActivate();
 
-    if (override || ((confirmTracking ?? false) && showConfetti)) {
+    //final override = remoteConfig.getBool('override_congrats');
+    //debugPrint('override: $override');
+    //await secondaryPlayer.seek(const Duration(seconds: 29));
+
+    if ((confirmTracking ?? false) && showConfetti) {
       controllerCenter.play();
-      await player.play();
+      // Future.delayed(const Duration(seconds: 1), () => player.play());
+      // Future.delayed(const Duration(seconds: 2),
+      //() => secondaryPlayer.play());
     }
   }
 

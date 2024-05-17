@@ -2,9 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:calendar_repository/calendar_repository.dart';
 import 'package:flutter/material.dart';
-// Packages
 import 'package:flutter_bloc/flutter_bloc.dart';
-// Project
 import 'package:multidisplay/app/app.dart';
 import 'package:multidisplay/auth/auth.dart';
 import 'package:multidisplay/calendar/calendar.dart';
@@ -13,7 +11,6 @@ import 'package:multidisplay/home/home.dart';
 import 'package:multidisplay/theme/theme.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 import 'package:multidisplay/weather/weather.dart';
-// Repositories
 import 'package:tracking_repository/tracking_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 

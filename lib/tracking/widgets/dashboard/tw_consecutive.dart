@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-// Packages
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/app/widgets/dismissable_modal.dart';
-
-// Project
 import 'package:multidisplay/tracking/tracking.dart';
 
 class ConsecutiveTrackingWidget extends StatefulWidget
@@ -31,16 +31,33 @@ class ConsecutiveTrackingWidget extends StatefulWidget
 
 class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
   late ConfettiController controllerCenter;
+  late AudioPlayer player;
+  late FirebaseRemoteConfig remoteConfig;
 
   @override
   void initState() {
     controllerCenter = widget.defaultConfettiController();
+    player = AudioPlayer();
+    player.setAsset('assets/tracking/congrats_audio.mp3');
+    remoteConfig = FirebaseRemoteConfig.instance;
+    remoteConfig
+      ..setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: Duration.zero,
+        ),
+      )
+      ..setDefaults(const {
+        'override_congrats': false,
+      });
     super.initState();
   }
 
   @override
   void dispose() {
     controllerCenter.dispose();
+    player.dispose();
+
     super.dispose();
   }
 
@@ -70,9 +87,22 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
       records: widget.trackingSummary.records,
       randomThreshold: 0.50,
     );
+    /* await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ),
+    );
+    await remoteConfig.setDefaults(const {
+      'override_congrats': false,
+    });*/
+    await remoteConfig.fetchAndActivate();
+    final override = remoteConfig.getBool('override_congrats');
+    debugPrint('override: $override');
 
-    if ((confirmTracking ?? false) && showConfetti) {
+    if (override || ((confirmTracking ?? false) && showConfetti)) {
       controllerCenter.play();
+      await player.play();
     }
   }
 

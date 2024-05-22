@@ -87,24 +87,33 @@ class WeatherRepository {
     );
 
     List<Weather> weather_forecast = [];
-    for (var weather in forecast) {
+    for (var i = 0; i < forecast.length; i++) {
+      var weather = forecast[i];
       SoilCondition predictedSoilCondition = SoilCondition.dry;
       if ((weather.precipitation > 0.02) ||
-          (weather.soil_moisture_0_to_1cm > 0.33)) {
+          (weather.soil_moisture_0_to_1cm > 0.33) ||
+          (weather.soil_moisture_1_to_3cm > 0.33)) {
         predictedSoilCondition = SoilCondition.muddy;
       }
 
-      weather_forecast.add(Weather(
-        temperature: weather.temperature_2m,
-        date: weather.time,
-        location: location.name,
-        condition: weather.weather_code.toInt().toCondition,
-        soilMoisture: weather.soil_moisture_0_to_1cm,
-        precipitation: weather.precipitation,
-        soilCondition: predictedSoilCondition,
-        precipitationProbability: weather.precipitation_probability,
-      ));
+      if (i > 0 && forecast[i - 1].precipitation > 0.02) {
+        predictedSoilCondition = SoilCondition.muddy;
+      }
+
+      weather_forecast.add(
+        Weather(
+          temperature: weather.temperature_2m,
+          date: weather.time,
+          location: location.name,
+          condition: weather.weather_code.toInt().toCondition,
+          soilMoisture: weather.soil_moisture_0_to_1cm,
+          precipitation: weather.precipitation,
+          soilCondition: predictedSoilCondition,
+          precipitationProbability: weather.precipitation_probability,
+        ),
+      );
     }
+
     return weather_forecast;
   }
 }

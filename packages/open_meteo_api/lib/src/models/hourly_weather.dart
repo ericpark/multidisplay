@@ -11,6 +11,7 @@ class HourlyWeather {
     required this.precipitation,
     required this.weather_code,
     required this.soil_moisture_0_to_1cm,
+    required this.soil_moisture_1_to_3cm,
     required this.precipitation_probability,
   });
 
@@ -22,6 +23,7 @@ class HourlyWeather {
   final double apparent_temperature;
   final double precipitation;
   final double soil_moisture_0_to_1cm;
+  final double soil_moisture_1_to_3cm;
   final int precipitation_probability;
 
   @JsonKey(name: 'weather_code')

@@ -33,8 +33,25 @@ class CurrentWeatherWidget extends StatelessWidget {
               child: WeatherCurrentLoading(),
             );
           case WeatherStatus.success:
+            final now = DateTime.now();
+            final previousHour = now.subtract(
+              Duration(
+                hours: 1,
+                minutes: now.minute,
+                seconds: now.second,
+                milliseconds: now.millisecond,
+                microseconds: now.microsecond,
+              ),
+            );
+
+            final currentHour = state.hourlyForecast
+                .where((hourly) => hourly.date.isAfter(previousHour))
+                .take(1)
+                .toList()[0];
+
             return CurrentWeatherWidgetPopulated(
-              weather: state.weather,
+              weather: state.weather
+                  .copyWith(soilCondition: currentHour.soilCondition),
               theme: theme,
               units: state.temperatureUnits,
               onRefresh: onRefresh,
@@ -92,7 +109,17 @@ class CurrentWeatherWidgetPopulated extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
     );
-
+    final soilConditionText = Text(
+      weather.soilCondition.name,
+      style: theme.textTheme.bodyMedium?.copyWith(
+        fontWeight: weather.soilCondition.name == 'muddy'
+            ? FontWeight.bold
+            : FontWeight.w300,
+        color: weather.soilCondition.name == 'muddy'
+            ? const Color.fromARGB(255, 193, 110, 2)
+            : theme.textTheme.bodyMedium!.color!.withOpacity(0.5),
+      ),
+    );
     final updatedAtText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -128,6 +155,7 @@ class CurrentWeatherWidgetPopulated extends StatelessWidget {
               weatherIconAndDetail: weatherIconAndDetail,
               temperatureText: temperatureText,
               updatedAtText: updatedAtText,
+              soilConditionText: soilConditionText,
             );
           }
 
@@ -153,12 +181,14 @@ class _CurrentWeatherLargeLayout extends StatelessWidget {
     required this.weatherIconAndDetail,
     required this.temperatureText,
     required this.updatedAtText,
+    required this.soilConditionText,
   });
 
   final Text locationText;
   final Column weatherIconAndDetail;
   final Text temperatureText;
   final Row updatedAtText;
+  final Text soilConditionText; // Declare the optional parameter
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +203,7 @@ class _CurrentWeatherLargeLayout extends StatelessWidget {
               locationText,
               weatherIconAndDetail,
               temperatureText,
+              soilConditionText,
             ],
           ),
         ),

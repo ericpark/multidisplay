@@ -17,6 +17,22 @@ extension TrackingCubitSettings on TrackingCubit {
     emit(state.copyWith(showOnlyPublic: !state.showOnlyPublic));
   }
 
+  /// Toggles the ability to show hidden tracking widgets
+  ///
+  /// This differs from [TrackingState.showOnlyPublic] because
+  /// [TrackingState.showOnlyPublic] is based on the owner Id.
+  Future<void> toggleShowAll() async {
+    emit(state.copyWith(status: TrackingStatus.loading));
+    await Future<void>.delayed(const Duration(milliseconds: 200)).then((_) {
+      emit(
+        state.copyWith(
+          status: TrackingStatus.success,
+          showAll: !state.showAll,
+        ),
+      );
+    });
+  }
+
   /// Moves the selected item at [oldIndex] to [newIndex]
   ///
   /// This should only happen when [TrackingCubit.state.reorderable] is enabled

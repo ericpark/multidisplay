@@ -90,14 +90,16 @@ class TrackingSectionWidget extends StatelessWidget {
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
         );
-      /*case "test":
+
+      case 'days_until':
         color = colorScheme.secondary;
-        return NthAgoTrackingWidget(
+
+        return NthUntilTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
           onDoubleTap: () async => onDoubleTapWrapper(),
-        );*/
+        );
       case 'time':
         color = colorScheme.secondary;
         return TimeTrackingWidget(
@@ -144,13 +146,17 @@ class TrackingSectionWidget extends StatelessWidget {
     required List<TrackingSummary> data,
     required ColorScheme colorScheme,
     required TrackingCubit trackingCubit,
+    required bool showAll,
   }) {
     final trackingWidgets = <Widget>[];
-    for (var i = 0; i < data.length; i++) {
+    final filteredPrivate = data
+        .where((trackingSummary) => !trackingSummary.private || showAll)
+        .toList();
+    for (var i = 0; i < filteredPrivate.length; i++) {
       trackingWidgets.add(
         getTrackingWidget(
           index: i,
-          data: data[i],
+          data: filteredPrivate[i],
           colorScheme: colorScheme,
           trackingCubit: trackingCubit,
         ),
@@ -158,7 +164,7 @@ class TrackingSectionWidget extends StatelessWidget {
     }
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: data.length,
+      itemCount: filteredPrivate.length,
       itemBuilder: (context, index) {
         return trackingWidgets[index];
       },
@@ -201,6 +207,7 @@ class TrackingSectionWidget extends StatelessWidget {
                     data: state.trackingGroups[sectionName]?.data ?? [],
                     colorScheme: Theme.of(context).colorScheme,
                     trackingCubit: trackingCubit,
+                    showAll: state.showAll,
                   ),
                 ),
               ],

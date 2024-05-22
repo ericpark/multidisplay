@@ -59,3 +59,4 @@ macos/Runner/GoogleService-Info.plist
 notes.md
 
 **/assets/tracking/congrats_audio.mp3
+local_constants.dart

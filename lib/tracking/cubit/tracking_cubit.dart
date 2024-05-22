@@ -29,7 +29,8 @@ class TrackingCubit extends HydratedCubit<TrackingState>
         ConsecutiveTrackingCubit<TrackingState>,
         LastSevenTrackingCubit<TrackingState>,
         DaysSinceTrackingCubit<TrackingState>,
-        FixedWeekTrackingCubit<TrackingState> {
+        FixedWeekTrackingCubit<TrackingState>,
+        DaysUntilTrackingCubit<TrackingState> {
   TrackingCubit(this._trackingRepository)
       : super(
           const TrackingState(),
@@ -194,6 +195,10 @@ class TrackingCubit extends HydratedCubit<TrackingState>
         );
       case 'time':
         updatedTrackingSummary = calculateTimeBasedTracker(
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'days_until':
+        updatedTrackingSummary = incrementDaysUntilTracker(
           trackingSummary: trackingSummary.copyWith(records: records),
         );
       default:

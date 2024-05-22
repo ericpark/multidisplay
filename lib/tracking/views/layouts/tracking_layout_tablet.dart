@@ -37,10 +37,33 @@ class TrackingLayoutTablet extends StatelessWidget {
         shadowColor: Colors.black,
         backgroundColor: Theme.of(context).secondaryHeaderColor,
         clipBehavior: Clip.antiAlias,
-        /*leading: IconButton(
-            icon: const Icon(Icons.filter_list, semanticLabel: 'Filter'),
-            onPressed: () async {},
-          ),*/
+        leading: BlocBuilder<TrackingCubit, TrackingState>(
+          builder: (context, state) {
+            return IconButton(
+              icon: state.showAll
+                  ? const Icon(Icons.visibility_sharp, semanticLabel: 'Visible')
+                  : const Icon(
+                      Icons.visibility_off_sharp,
+                      semanticLabel: 'Not Visible',
+                    ),
+              onPressed: state.showAll
+                  ? () async {
+                      await context.read<TrackingCubit>().toggleShowAll();
+                    }
+                  : () async {
+                      final valid = await Navigator.push(
+                        context,
+                        MaterialPageRoute<bool>(
+                          builder: (context) => const TrackingPinPage(),
+                        ),
+                      );
+                      if (valid != true) return;
+                      if (!context.mounted) return;
+                      await context.read<TrackingCubit>().toggleShowAll();
+                    },
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, semanticLabel: 'Refresh events'),
@@ -57,7 +80,6 @@ class TrackingLayoutTablet extends StatelessWidget {
           final trackingCubit = context.read<TrackingCubit>();
 
           final sections = getSections(state.trackingSections);
-
           final sectionWidgets = <Widget>[
             for (int index = 0; index < sections.length; index += 1)
               Padding(

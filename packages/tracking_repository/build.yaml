@@ -18,3 +18,8 @@ targets:
         options:
           field_rename: snake
           checked: true
+
+global_options:
+  freezed:freezed:
+    runs_before:
+      - build_resolvers:transitive_digests

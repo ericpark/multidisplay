@@ -1,14 +1,18 @@
 targets:
   multidisplay:
     sources:
-      - lib/**       
-      - pubspec.*
-      - $package$
+      include:
+        - lib/**       
+        - pubspec.*
+        - $package$
+      exclude:
+        - lib/**/generated/**
+        - packages/**
     dependencies:
-      - multidisplay:tracking_repo
-      - multidisplay:calendar_repo
-      - multidisplay:weather_repo
-      - multidisplay:open_meteo_api
+      - tracking_repository:tracking_repository
+      - calendar_repository:calendar_repository
+      - weather_repository:weather_repository
+      - open_meteo_api:open_meteo_api
     builders:
       source_gen:combining_builder:
         enabled: true
@@ -28,7 +32,7 @@ targets:
           copy_with: true
           build_extensions:
             'lib/{{path}}/{{file}}.dart': 'lib/{{path}}/generated/{{file}}.freezed.dart'
-  multidisplay:open_meteo_api:
+  open_meteo_api:
     sources:
       include:
         - packages/open_meteo_api/lib/src/models/**
@@ -36,6 +40,8 @@ targets:
         - packages/**/*.g.dart
         - packages/**/*.freezed.dart
         - packages/**/*.firestore_converter.dart
+    dependencies:
+      - multidisplay:open_meteo_api
     builders:
       source_gen:combining_builder:
         options:
@@ -46,7 +52,7 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  multidisplay:weather_repo:
+  weather_repository:
     sources:
       include:
         - packages/weather_repository/lib/src/models/**
@@ -66,7 +72,7 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  multidisplay:calendar_repo:
+  calendar_repository:
     sources:
       include:
       - packages/calendar_repository/lib/src/models/**
@@ -84,7 +90,7 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  multidisplay:tracking_repo:
+  tracking_repository:
     sources:
       include:
         - packages/tracking_repository/lib/src/models/**
@@ -111,3 +117,8 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
+
+global_options:
+  freezed:freezed:
+    runs_before:
+      - build_resolvers:transitive_digests

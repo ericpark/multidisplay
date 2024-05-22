@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_core
   flutter_calendar_heatmap
   geolocator_windows
+  smart_auth
   url_launcher_windows
 )
 

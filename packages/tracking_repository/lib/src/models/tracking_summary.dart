@@ -32,6 +32,7 @@ class TrackingSummary with _$TrackingSummary {
     @DateTimeNullableConverter() DateTime? createdAt,
     @Default([]) List<String>? tags,
     @Default({}) Map<String, dynamic> additionalConfigs,
+    @Default(false) bool private,
   }) = _TrackingSummary;
 
   factory TrackingSummary.fromJson(Map<String, dynamic> json) =>

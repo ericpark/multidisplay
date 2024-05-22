@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   dynamic_color
   flutter_calendar_heatmap
+  smart_auth
   url_launcher_linux
 )
 

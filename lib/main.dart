@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:multidisplay/app/app.dart';
 import 'package:multidisplay/firebase_options.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tracking_repository/tracking_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
@@ -28,6 +29,8 @@ void main() async {
   );
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
+  final packageInfo = await PackageInfo.fromPlatform();
+  final appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
 
   runApp(
     App(
@@ -36,6 +39,7 @@ void main() async {
       trackingRepository: TrackingRepository(firebaseDB: db),
       authRepository: AuthRepository(firebaseDB: db),
       savedThemeMode: savedThemeMode,
+      appVersion: appVersion,
     ),
   );
 }

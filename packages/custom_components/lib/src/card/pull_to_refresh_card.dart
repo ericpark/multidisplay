@@ -36,6 +36,7 @@ class PullToRefreshCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
         return RefreshIndicator(
+          displacement: 30.0,
           onRefresh: onRefresh ?? () async => {},
           child: SingleChildScrollView(
               clipBehavior: Clip.none,

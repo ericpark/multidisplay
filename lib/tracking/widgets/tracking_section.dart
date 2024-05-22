@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +45,9 @@ class TrackingSectionWidget extends StatelessWidget {
       await remoteConfig.fetchAndActivate();
 
       final override = remoteConfig.getBool('override_congrats');
-      if (override) fadeInCallback?.call('HO YEAH');
+      final showLargeCelebration = Random().nextDouble() < 0.67;
+
+      if (override || showLargeCelebration) fadeInCallback?.call('HO YEAH');
 
       await trackingCubit.addTrackingRecordAndUpdateSummary(
         section: data.section,

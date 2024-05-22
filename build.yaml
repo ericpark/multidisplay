@@ -11,8 +11,8 @@ targets:
       - multidisplay:open_meteo_api
     builders:
       source_gen:combining_builder:
+        enabled: true
         options:
-          enabled: true
           ignore_for_file:
             - implicit_dynamic_parameter
           build_extensions:
@@ -23,14 +23,19 @@ targets:
           checked: true
           explicit_to_json: true
       freezed:
+        enabled: true
         options:
-          enabled: true
           copy_with: true
           build_extensions:
             'lib/{{path}}/{{file}}.dart': 'lib/{{path}}/generated/{{file}}.freezed.dart'
-  open_meteo_api:
+  multidisplay:open_meteo_api:
     sources:
-      - packages/open_meteo_api/lib/src/models/**
+      include:
+        - packages/open_meteo_api/lib/src/models/**
+      exclude:
+        - packages/**/*.g.dart
+        - packages/**/*.freezed.dart
+        - packages/**/*.firestore_converter.dart
     builders:
       source_gen:combining_builder:
         options:
@@ -41,9 +46,14 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  weather_repo:
+  multidisplay:weather_repo:
     sources:
-      - packages/weather_repository/lib/src/models/**
+      include:
+        - packages/weather_repository/lib/src/models/**
+      exclude:
+        - packages/**/*.g.dart
+        - packages/**/*.freezed.dart
+        - packages/**/*.firestore_converter.dart
     dependencies:
       - open_meteo_api
     builders:
@@ -56,9 +66,14 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  calendar_repo:
+  multidisplay:calendar_repo:
     sources:
+      include:
       - packages/calendar_repository/lib/src/models/**
+      exclude:
+        - packages/**/*.g.dart
+        - packages/**/*.freezed.dart
+        - packages/**/*.firestore_converter.dart
     builders:
       source_gen:combining_builder:
         options:
@@ -69,10 +84,14 @@ targets:
           field_rename: snake
           checked: true
           explicit_to_json: true
-  tracking_repo:
+  multidisplay:tracking_repo:
     sources:
       include:
         - packages/tracking_repository/lib/src/models/**
+      exclude:
+        - packages/**/*.g.dart
+        - packages/**/*.freezed.dart
+        - packages/**/*.firestore_converter.dart
     builders:
       source_gen:combining_builder:
         options:

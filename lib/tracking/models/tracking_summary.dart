@@ -28,6 +28,7 @@ abstract class TrackingSummary with _$TrackingSummary {
     @Default('') String mainThreshold,
     @DateTimeNullableConverter() DateTime? createdAt,
     @DateTimeNullableConverter() DateTime? fetchedAt,
+    @Default({}) Map<String, dynamic> additionalConfigs,
   }) = _TrackingSummary;
   const TrackingSummary._();
 

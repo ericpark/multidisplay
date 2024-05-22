@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multidisplay/app/app.dart';
 import 'package:multidisplay/auth/auth.dart';
 // Project
 import 'package:multidisplay/experimental/experimental.dart';
@@ -334,6 +335,17 @@ class SettingsLayoutTablet extends StatelessWidget {
                 child: Icon(Icons.widgets, semanticLabel: 'Experimental'),
               ),
             ),
+          ),
+          const Divider(),
+          BlocBuilder<AppBloc, AppState>(
+            builder: (context, state) {
+              return ListTile(
+                title: const Text('App Version'),
+                trailing: Text(
+                  state.appVersion,
+                ),
+              );
+            },
           ),
         ],
       ),

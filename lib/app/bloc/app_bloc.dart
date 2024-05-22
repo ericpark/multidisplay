@@ -6,8 +6,11 @@ part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required FormFactor deviceType})
-      : super(AppState.started(deviceType: deviceType)) {
+  AppBloc({required FormFactor deviceType, String appVersion = '0.0.0'})
+      : super(AppState.started(
+          deviceType: deviceType,
+          appVersion: appVersion,
+        )) {
     on<AppStarted>(onAppStarted);
     on<AppLoaded>(onAppLoaded);
     on<AppPageChanged>(onAppPageChanged);

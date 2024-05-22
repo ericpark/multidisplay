@@ -30,6 +30,102 @@ mixin Confetti {
   ConfettiController defaultConfettiController() =>
       ConfettiController(duration: const Duration(seconds: 15));
 
+  /// Determine if the confetti should be shown.
+  ///
+  /// Default will only use random. Random will only affect the confetti after
+  /// the celebration threshold is met if enabled. If multipleToday is enabled,
+  /// it will always supersede the random and celebration threshold.
+  bool showConfetti({
+    ConfettiMode mode = ConfettiMode.custom,
+    // Celebration Threshold
+    bool useCelebrationThreshold = false,
+    double celebrationThreshold = 30.0,
+    double? celebrationMetric,
+    bool thresholdHigherIsBetter = true, //Used to calculate direction
+    // Multiple Events in one day
+    bool useMultipleToday = false,
+    List<TrackingRecord> records = const [],
+    // Random Number
+    bool useRandom = true,
+    double randomThreshold = 0.80,
+    double randomMultiplier = 1, // Allows for random probability to be adjusted
+    bool debug = false,
+    void Function(String? widgetName, double? random)? onCompletion,
+    String widgetId = '',
+  }) {
+    // randomMultiplier subtracts a percentage of the random number from itself.
+    // randomMultiplier of 1 will not affect the random number
+    // randomMultiplier of 0 will always return 0
+    // Recommended range is 0.05 to 2.0 (~9% success to ~75% success)
+    final randomNumber = Random().nextDouble() * randomMultiplier;
+
+    if (debug) {
+      debugPrint('widgetId: $widgetId');
+      debugPrint('Mode: $mode');
+      debugPrint('useCelebrationThreshold: $useCelebrationThreshold');
+      debugPrint('celebrationThreshold: $celebrationThreshold');
+      debugPrint('celebrationMetric: $celebrationMetric');
+      debugPrint('useMultipleToday: $useMultipleToday');
+      debugPrint('records: $records');
+      debugPrint('useRandom: $useRandom');
+      debugPrint('randomOriginal: ${randomNumber / randomMultiplier}');
+      debugPrint('randomMultiplier: $randomMultiplier');
+      debugPrint('randomNumber: $randomNumber');
+      debugPrint('randomThreshold: $randomThreshold');
+    }
+
+    if (mode == ConfettiMode.always) return true;
+    if (mode == ConfettiMode.never) return false;
+
+    // If everything is false, do not show confetti
+    if (useCelebrationThreshold == false &&
+        useRandom == false &&
+        useMultipleToday == false) return false;
+
+    /* Original implementation that was simplified below.
+    final celebration = useCelebrationThreshold
+        ? (thresholdHigherIsBetter
+            ? ((celebrationMetric ?? 0) > celebrationThreshold)
+            : ((celebrationMetric ?? 0) < celebrationThreshold))
+        : true;
+    */
+    // If the following is true, it will not affect the confetti result.
+    // If the following is false, it will rely on multipleInOneDay
+    // !useCelebrationThreshold is used so if useCelebrationThreshold is false,
+    // it will not affect the confetti result and purely depend on the random.
+    final celebration = !useCelebrationThreshold ||
+        (thresholdHigherIsBetter
+            ? ((celebrationMetric ?? 0) > celebrationThreshold)
+            : ((celebrationMetric ?? 0) < celebrationThreshold));
+
+    /* Original implementation that was simplified below.
+    final random = useRandom ? randomNumber >= randomThreshold : true;
+    */
+    // If useRandom is false, it will not affect the confetti result
+    final random = !useRandom || (randomNumber >= randomThreshold);
+
+    // If multipleToday is false/unset, it will not affect the confetti result
+    // If multipleToday is true, it will rely on the records.
+    final multipleInOneDay = useMultipleToday &&
+        (records.where((record) => record.date.isToday).isNotEmpty);
+
+    if (onCompletion != null) {
+      onCompletion(widgetId, randomNumber);
+    }
+    return (random && celebration) || multipleInOneDay;
+  }
+
+  bool isConfettiEnabled({Map<String, Map<String, double>>? thresholds}) {
+    if (thresholds == null) return false;
+    if (thresholds.isEmpty) return false;
+    if (thresholds.isEmpty) return false;
+    if (thresholds['good'] == null) return false;
+    if (thresholds['warn'] == null) return false;
+    if (thresholds['poor'] == null) return false;
+
+    return true;
+  }
+
   /// A custom Path to paint stars.
   Path drawStar(Size size) {
     // Method to convert degree to radians
@@ -89,96 +185,5 @@ mixin Confetti {
       );
 
     return path;
-  }
-
-  /// Determine if the confetti should be shown.
-  ///
-  /// Default will only use random. Random will only affect the confetti after
-  /// the celebration threshold is met if enabled. If multipleToday is enabled,
-  /// it will always supersede the random and celebration threshold.
-  bool showConfetti({
-    ConfettiMode mode = ConfettiMode.custom,
-    // Celebration Threshold
-    bool useCelebrationThreshold = false,
-    double celebrationThreshold = 30.0,
-    double? celebrationMetric,
-    bool thresholdHigherIsBetter = true, //Used to calculate direction
-    // Multiple Events in one day
-    bool useMultipleToday = false,
-    List<TrackingRecord> records = const [],
-    // Random Number
-    bool useRandom = true,
-    double randomThreshold = 0.80,
-    double randomMultiplier = 1, // Allows for random probability to be adjusted
-    bool debug = false,
-  }) {
-    // randomMultiplier subtracts a percentage of the random number from itself.
-    // randomMultiplier of 1 will not affect the random number
-    // randomMultiplier of 0 will always return 0
-    // Recommended range is 0.05 to 2.0 (~9% success to ~75% success)
-    final randomNumber = Random().nextDouble() * randomMultiplier;
-
-    if (debug) {
-      debugPrint('Mode: $mode');
-      debugPrint('useCelebrationThreshold: $useCelebrationThreshold');
-      debugPrint('celebrationThreshold: $celebrationThreshold');
-      debugPrint('celebrationMetric: $celebrationMetric');
-      debugPrint('useMultipleToday: $useMultipleToday');
-      debugPrint('records: $records');
-      debugPrint('useRandom: $useRandom');
-      debugPrint('randomOriginal: ${randomNumber / randomMultiplier}');
-      debugPrint('randomMultiplier: $randomMultiplier');
-      debugPrint('randomNumber: $randomNumber');
-      debugPrint('randomThreshold: $randomThreshold');
-    }
-
-    if (mode == ConfettiMode.always) return true;
-    if (mode == ConfettiMode.never) return false;
-
-    // If everything is false, do not show confetti
-    if (useCelebrationThreshold == false &&
-        useRandom == false &&
-        useMultipleToday == false) return false;
-
-    /* Original implementation that was simplified below.
-    final celebration = useCelebrationThreshold
-        ? (thresholdHigherIsBetter
-            ? ((celebrationMetric ?? 0) > celebrationThreshold)
-            : ((celebrationMetric ?? 0) < celebrationThreshold))
-        : true;
-    */
-    // If the following is true, it will not affect the confetti result.
-    // If the following is false, it will rely on multipleInOneDay
-    // !useCelebrationThreshold is used so if useCelebrationThreshold is false,
-    // it will not affect the confetti result and purely depend on the random.
-    final celebration = !useCelebrationThreshold ||
-        (thresholdHigherIsBetter
-            ? ((celebrationMetric ?? 0) > celebrationThreshold)
-            : ((celebrationMetric ?? 0) < celebrationThreshold));
-
-    /* Original implementation that was simplified below.
-    final random = useRandom ? randomNumber >= randomThreshold : true;
-    */
-    // If useRandom is false, it will not affect the confetti result
-    final random = !useRandom || (randomNumber >= randomThreshold);
-
-    // If multipleToday is false/unset, it will not affect the confetti result
-    // If multipleToday is true, it will rely on the records.
-    final multipleInOneDay = useMultipleToday &&
-        (records.where((record) => record.date.isToday).isNotEmpty);
-
-    //
-    return (random && celebration) || multipleInOneDay;
-  }
-
-  bool isConfettiEnabled({Map<String, Map<String, double>>? thresholds}) {
-    if (thresholds == null) return false;
-    if (thresholds.isEmpty) return false;
-    if (thresholds.isEmpty) return false;
-    if (thresholds['good'] == null) return false;
-    if (thresholds['warn'] == null) return false;
-    if (thresholds['poor'] == null) return false;
-
-    return true;
   }
 }

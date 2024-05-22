@@ -24,17 +24,20 @@ class App extends StatelessWidget {
     required AuthRepository authRepository,
     super.key,
     AdaptiveThemeMode? savedThemeMode,
+    String? appVersion,
   })  : _weatherRepository = weatherRepository,
         _calendarRepository = calendarRepository,
         _trackingRepository = trackingRepository,
         _authRepository = authRepository,
-        savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system;
+        savedThemeMode = savedThemeMode ?? AdaptiveThemeMode.system,
+        appVersion = appVersion ?? '0.0.0';
 
   final WeatherRepository _weatherRepository;
   final CalendarRepository _calendarRepository;
   final TrackingRepository _trackingRepository;
   final AuthRepository _authRepository;
   final AdaptiveThemeMode? savedThemeMode;
+  final String? appVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,10 @@ class App extends StatelessWidget {
         /// be moved down further in the tree.
         providers: [
           BlocProvider<AppBloc>(
-            create: (BuildContext context) => AppBloc(deviceType: deviceType),
+            create: (BuildContext context) => AppBloc(
+              deviceType: deviceType,
+              appVersion: appVersion ?? '0.0.0',
+            ),
           ),
           BlocProvider<ThemeCubit>(
             create: (BuildContext context) => ThemeCubit(),

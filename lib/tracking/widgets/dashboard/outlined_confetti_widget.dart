@@ -21,7 +21,7 @@ class OutlinedConfettiTrackingWidget extends StatefulWidget
     this.thresholdMetric,
     this.compareThresholdType, // good, warn, or poor. Defaults to good.
     this.getCompareMetric,
-    this.randomSuccessPercentage = 0.5,
+    this.randomSuccessPercentage = 0.2,
     this.randomMultiplier = 1,
     this.useMultipleToday = false,
     this.isRestricted, // toggle on/off based on password

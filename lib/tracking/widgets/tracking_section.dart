@@ -79,7 +79,7 @@ class TrackingSectionWidget extends StatelessWidget {
           trackingSummary: data,
           defaultColor: color,
           thresholdMetric: data.mainThreshold,
-          useCelebrationThreshold: true,
+          useMultipleToday: true,
           compareThresholdType: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
           getCompareMetric: () =>

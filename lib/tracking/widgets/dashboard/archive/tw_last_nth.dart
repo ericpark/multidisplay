@@ -5,24 +5,24 @@ import 'package:multidisplay/app/widgets/dismissable_modal.dart';
 // Project
 import 'package:multidisplay/tracking/tracking.dart';
 
-class LastNthTrackingWidget extends StatefulWidget
+class LastNthTrackingWidget extends DefaultTrackingWidget
     with TrackingWidget, TrackingDialog, Confetti, ThresholdColor {
   LastNthTrackingWidget({
-    required this.onDoubleTap,
-    required int id,
-    required String section,
-    required TrackingSummary trackingSummary,
+    required super.onDoubleTap,
+    required super.id,
+    required super.section,
+    required super.trackingSummary,
     super.key,
-    this.color,
+    super.color,
   }) {
     // Confetti Mixin
-    this.id = id;
-    this.section = section;
-    this.trackingSummary = trackingSummary;
+    //this.id = id;
+    //this.section = section;
+    //this.trackingSummary = trackingSummary;
   }
 
-  final void Function()? onDoubleTap;
-  final Color? color;
+  //final void Function()? onDoubleTap;
+  //final Color? color;
 
   @override
   State<LastNthTrackingWidget> createState() => _LastNthTrackingWidgetState();
@@ -35,7 +35,7 @@ class _LastNthTrackingWidgetState extends State<LastNthTrackingWidget> {
   // static const useCelebration = false;
   // static const useMultipleToday = false;
   // static const useRandom = true;
-  static const randomThreshold = 0.10;
+  static const randomThreshold = 0.90;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _LastNthTrackingWidgetState extends State<LastNthTrackingWidget> {
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
       records: widget.trackingSummary.records,
-      randomThreshold: randomThreshold,
+      randomSuccessPercentage: randomThreshold,
     );
 
     if ((confirmTracking ?? false) && showConfetti) {
@@ -101,6 +101,9 @@ class _LastNthTrackingWidgetState extends State<LastNthTrackingWidget> {
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
     const thresholdMetric = 'average';
+
+    final isRestricted = widget.trackingSummary.restricted;
+    final isPrivate = widget.trackingSummary.private;
 
     var color = widget.color;
     double? compareMetric;
@@ -149,6 +152,8 @@ class _LastNthTrackingWidgetState extends State<LastNthTrackingWidget> {
                     leftMetric: leftMetric,
                     rightMetric: rightMetric,
                     color: color,
+                    isRestricted: isRestricted,
+                    isPrivate: isPrivate,
                   ),
                   // CONFETTI
                   Center(

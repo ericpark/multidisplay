@@ -45,7 +45,7 @@ class TrackingSectionWidget extends StatelessWidget {
       await remoteConfig.fetchAndActivate();
 
       final override = remoteConfig.getBool('override_congrats');
-      final showLargeCelebration = Random().nextDouble() < 0.67;
+      final showLargeCelebration = Random().nextDouble() > 0.67;
 
       if (override || showLargeCelebration) fadeInCallback?.call('HO YEAH');
 
@@ -57,48 +57,79 @@ class TrackingSectionWidget extends StatelessWidget {
 
     switch (data.trackingType) {
       case 'consecutive':
-        return ConsecutiveTrackingWidget(
+        return OutlinedConfettiTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
+          thresholdMetric: data.mainThreshold,
+          useCelebrationThreshold: true,
+          useMultipleToday: true,
+          compareThresholdType: 'warn',
           onDoubleTap: () async => onDoubleTapAudioWrapper(),
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricConsecutive(trackingSummary: data),
+          randomSuccessPercentage: 0.65,
         );
       case 'last_seven':
         color = colorScheme.primary;
 
-        return LastNthTrackingWidget(
+        return OutlinedConfettiTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
+          defaultColor: color,
+          thresholdMetric: data.mainThreshold,
+          useCelebrationThreshold: true,
+          compareThresholdType: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
-          color: color,
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricDefault(trackingSummary: data),
         );
+
       case 'fixed_week':
-        color = colorScheme.secondary;
-        return FixedNthTrackingWidget(
+        color = colorScheme.primary;
+        return OutlinedConfettiTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
+          defaultColor: color,
+          thresholdMetric: data.mainThreshold,
+          randomSuccessPercentage: 0,
+          compareThresholdType: 'good',
           onDoubleTap: () async => onDoubleTapWrapper(),
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricDefault(trackingSummary: data),
         );
       case 'days_ago':
-        color = colorScheme.secondary;
+        color = colorScheme.primary;
 
-        return NthAgoTrackingWidget(
+        return OutlinedConfettiTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
+          defaultColor: color,
+          thresholdMetric: data.mainThreshold,
+          useCelebrationThreshold: true,
+          compareThresholdType: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricDefault(trackingSummary: data),
         );
 
       case 'days_until':
-        color = colorScheme.secondary;
+        color = colorScheme.primary;
 
-        return NthUntilTrackingWidget(
+        return OutlinedConfettiTrackingWidget(
           id: index,
           section: data.section,
           trackingSummary: data,
+          defaultColor: color,
+          thresholdMetric: data.mainThreshold,
+          //useCelebrationThreshold: true,
+          compareThresholdType: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricDefault(trackingSummary: data),
         );
       case 'time':
         color = colorScheme.secondary;

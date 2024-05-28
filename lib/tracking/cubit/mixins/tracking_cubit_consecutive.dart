@@ -3,6 +3,18 @@ import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 mixin ConsecutiveTrackingCubit<TrackingState> {
+  double getCompareMetricConsecutive({
+    required TrackingSummary trackingSummary,
+  }) {
+    final lastDate = trackingSummary.records.last.date;
+
+    final minutesUntilNextDay = lastDate.midnight
+        .add(const Duration(days: 2))
+        .difference(DateTime.now())
+        .inMinutes;
+    return minutesUntilNextDay / 60;
+  }
+
   TrackingSummary incrementConsecutiveTracker({
     required TrackingSummary trackingSummary,
   }) {

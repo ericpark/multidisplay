@@ -96,7 +96,7 @@ class _TimeTrackingWidgetState extends State<TimeTrackingWidget> {
       useCelebrationThreshold: true,
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
-      thresholdHigherIsBetter: false,
+      positiveIsHigherThanThreshold: false,
       records: widget.trackingSummary.records,
       useRandom: false,
     );

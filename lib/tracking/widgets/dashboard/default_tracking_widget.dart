@@ -25,12 +25,11 @@ class DefaultTrackingWidget extends StatefulWidget
   final void Function()? onDoubleTap;
   final Color? color;
   @override
-  State<DefaultTrackingWidget> createState() => _DefaultTrackingWidgetState();
+  State<DefaultTrackingWidget> createState() => DefaultTrackingWidgetState();
 }
 
-class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
-  late ConfettiController controllerCenter;
-
+class DefaultTrackingWidgetState<T extends DefaultTrackingWidget>
+    extends State<T> {
   @override
   void initState() {
     super.initState();
@@ -73,6 +72,9 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
 
+    final isRestricted = widget.trackingSummary.restricted;
+    final isPrivate = widget.trackingSummary.private;
+
     final color = widget.color;
 
     return LayoutBuilder(
@@ -96,6 +98,8 @@ class _DefaultTrackingWidgetState extends State<DefaultTrackingWidget> {
                     leftMetric: leftMetric,
                     rightMetric: rightMetric,
                     color: color,
+                    isRestricted: isRestricted,
+                    isPrivate: isPrivate,
                   ),
                 ],
               ),

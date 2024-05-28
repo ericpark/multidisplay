@@ -202,8 +202,9 @@ class _CurrentWeatherLargeLayout extends StatelessWidget {
             children: [
               locationText,
               weatherIconAndDetail,
-              temperatureText,
               soilConditionText,
+              const SizedBox(height: 5),
+              temperatureText,
             ],
           ),
         ),

@@ -1,10 +1,41 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multidisplay/auth/auth.dart';
+import 'package:multidisplay/constants.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
-class TrackingPage extends StatelessWidget {
+class TrackingPage extends StatefulWidget {
   const TrackingPage({super.key});
+
+  @override
+  State<TrackingPage> createState() => _TrackingPageState();
+}
+
+class _TrackingPageState extends State<TrackingPage> {
+  late Timer timer;
+  late DateTime now = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+        const Duration(seconds: LONG_TICKER_DURATION_IN_SECONDS * 2), (timer) {
+      if (mounted) {
+        setState(() {
+          now = DateTime.now();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

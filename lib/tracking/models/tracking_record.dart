@@ -8,12 +8,12 @@ part 'generated/tracking_record.freezed.dart';
 
 @freezed
 class TrackingRecord with _$TrackingRecord {
-
   factory TrackingRecord({
     @DateTimeConverter() required DateTime date,
     @Default('') String id,
     @TimestampNullableConverter() DateTime? createdAt,
     String? description,
+    @Default({}) Map<String, dynamic>? meta,
   }) = _TrackingRecord;
   const TrackingRecord._();
 

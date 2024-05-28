@@ -2,9 +2,11 @@ import 'dart:async';
 
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:multidisplay/app/helpers/helpers.dart';
 import 'package:multidisplay/app/widgets/dismissable_modal.dart';
+//import 'package:multidisplay/auth/auth.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 class ConsecutiveTrackingWidget extends StatefulWidget
@@ -69,6 +71,7 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
   }
 
   Future<void> onDoubleTap({
+    required BuildContext context,
     double? compareMetric,
     double? compareThreshold,
   }) async {
@@ -92,7 +95,8 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
       celebrationThreshold: celebrationThreshold,
       useMultipleToday: true,
       records: widget.trackingSummary.records,
-      randomThreshold: 0.50,
+      randomSuccessPercentage: 0.4,
+      randomMultiplier: 1.25,
     );
     /* await remoteConfig.setConfigSettings(
       RemoteConfigSettings(
@@ -126,6 +130,8 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    //final userId = context.read<AuthCubit>().state.user?.id;
+
     final trackingName = widget.trackingSummary.name;
     final mainMetric =
         widget.trackingSummary.metrics[widget.trackingSummary.mainMetric] ??
@@ -168,6 +174,7 @@ class _ConsecutiveTrackingWidgetState extends State<ConsecutiveTrackingWidget> {
       builder: (BuildContext context, BoxConstraints constraints) {
         return GestureDetector(
           onDoubleTap: () async => onDoubleTap(
+            context: context,
             compareMetric: compareMetric,
             compareThreshold: compareThreshold,
           ),

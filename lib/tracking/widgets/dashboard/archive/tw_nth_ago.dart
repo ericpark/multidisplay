@@ -68,7 +68,6 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
       celebrationMetric: celebrationMetric,
       celebrationThreshold: celebrationThreshold,
       records: widget.trackingSummary.records,
-      debug: true,
     );
 
     if ((confirmTracking ?? false) && showConfetti) {
@@ -96,6 +95,9 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
         widget.trackingSummary.metrics[widget.trackingSummary.rightMetric] ??
             widget.emptyMetric;
     final thresholdMetric = widget.trackingSummary.mainMetric;
+
+    final isRestricted = widget.trackingSummary.restricted;
+    final isPrivate = widget.trackingSummary.private;
 
     var color = widget.color;
 
@@ -145,6 +147,8 @@ class _NthAgoTrackingWidgetState extends State<NthAgoTrackingWidget> {
                     leftMetric: leftMetric,
                     rightMetric: rightMetric,
                     color: color,
+                    isRestricted: isRestricted,
+                    isPrivate: isPrivate,
                   ),
                   // CONFETTI
                   Center(

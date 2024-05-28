@@ -41,13 +41,15 @@ mixin Confetti {
     bool useCelebrationThreshold = false,
     double celebrationThreshold = 30.0,
     double? celebrationMetric,
-    bool thresholdHigherIsBetter = true, //Used to calculate direction
+    // Used to calculate direction,
+    // true = above the threshold is good, false = below the threshold is good
+    bool positiveIsHigherThanThreshold = true,
     // Multiple Events in one day
     bool useMultipleToday = false,
     List<TrackingRecord> records = const [],
     // Random Number
     bool useRandom = true,
-    double randomThreshold = 0.80,
+    double randomSuccessPercentage = 0.20,
     double randomMultiplier = 1, // Allows for random probability to be adjusted
     bool debug = false,
     void Function(String? widgetName, double? random)? onCompletion,
@@ -57,6 +59,7 @@ mixin Confetti {
     // randomMultiplier of 1 will not affect the random number
     // randomMultiplier of 0 will always return 0
     // Recommended range is 0.05 to 2.0 (~9% success to ~75% success)
+    final randomThreshold = 1 - randomSuccessPercentage;
     final randomNumber = Random().nextDouble() * randomMultiplier;
 
     if (debug) {
@@ -94,10 +97,9 @@ mixin Confetti {
     // !useCelebrationThreshold is used so if useCelebrationThreshold is false,
     // it will not affect the confetti result and purely depend on the random.
     final celebration = !useCelebrationThreshold ||
-        (thresholdHigherIsBetter
+        (positiveIsHigherThanThreshold
             ? ((celebrationMetric ?? 0) > celebrationThreshold)
             : ((celebrationMetric ?? 0) < celebrationThreshold));
-
     /* Original implementation that was simplified below.
     final random = useRandom ? randomNumber >= randomThreshold : true;
     */

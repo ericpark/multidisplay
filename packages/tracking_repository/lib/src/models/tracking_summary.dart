@@ -33,6 +33,7 @@ class TrackingSummary with _$TrackingSummary {
     @Default([]) List<String>? tags,
     @Default({}) Map<String, dynamic> additionalConfigs,
     @Default(false) bool private,
+    @Default(false) bool restricted,
   }) = _TrackingSummary;
 
   factory TrackingSummary.fromJson(Map<String, dynamic> json) =>

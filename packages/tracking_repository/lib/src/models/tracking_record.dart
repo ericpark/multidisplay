@@ -23,6 +23,7 @@ class TrackingRecord with _$TrackingRecord {
     @DateTimeNullableConverter() DateTime? createdAt,
     //String? id,
     //@Default([]) List<String>? tags,
+    @Default({}) Map<String, dynamic>? meta,
   }) = _TrackingRecord;
 
   factory TrackingRecord.fromJson(Map<String, dynamic> json) =>

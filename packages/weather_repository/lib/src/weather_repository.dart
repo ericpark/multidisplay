@@ -91,13 +91,18 @@ class WeatherRepository {
       var weather = forecast[i];
       SoilCondition predictedSoilCondition = SoilCondition.dry;
       if ((weather.precipitation > 0.02) ||
-          (weather.soil_moisture_0_to_1cm > 0.33) ||
+          (weather.soil_moisture_0_to_1cm > 0.32) ||
           (weather.soil_moisture_1_to_3cm > 0.33)) {
         predictedSoilCondition = SoilCondition.muddy;
       }
 
-      if (i > 0 && forecast[i - 1].precipitation > 0.02) {
-        predictedSoilCondition = SoilCondition.muddy;
+      if (i > 0) {
+        final previous = forecast[i - 1];
+        if ((previous.precipitation > 0.01) ||
+            (previous.soil_moisture_0_to_1cm > 0.32) ||
+            (previous.soil_moisture_1_to_3cm > 0.33)) {
+          predictedSoilCondition = SoilCondition.muddy;
+        }
       }
 
       weather_forecast.add(

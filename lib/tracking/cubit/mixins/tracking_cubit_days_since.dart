@@ -1,6 +1,16 @@
 import 'package:multidisplay/tracking/tracking.dart';
 
 mixin DaysSinceTrackingCubit<TrackingState> {
+  double getCompareMetricDefault({
+    required TrackingSummary trackingSummary,
+  }) {
+    return double.tryParse(
+          trackingSummary.metrics[trackingSummary.mainThreshold]?['value'] ??
+              '0.0',
+        ) ??
+        0.0;
+  }
+
   TrackingSummary incrementDaysSince({
     required TrackingSummary trackingSummary,
   }) {

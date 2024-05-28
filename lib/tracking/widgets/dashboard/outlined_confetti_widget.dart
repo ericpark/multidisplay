@@ -104,7 +104,7 @@ class OutlinedConfettiTrackingWidgetState
       records: widget.trackingSummary.records,
       randomSuccessPercentage: widget.randomSuccessPercentage,
       randomMultiplier: widget.randomMultiplier,
-      debug: true,
+      //debug: true,
     );
 
     if ((confirmTracking ?? false) && showConfetti) {

@@ -8,7 +8,6 @@ mixin LastSevenTrackingCubit<TrackingState> {
     final records = trackingSummary.records;
     final lastSevenDayTotal =
         BasicTrackingCubit<dynamic>().getLastSevenDayCount(records: records);
-
     for (final key in trackingSummary.metrics.keys) {
       final currentMetric =
           trackingSummary.metrics[key] ?? {'display_name': '', 'value': ''};
@@ -24,6 +23,11 @@ mixin LastSevenTrackingCubit<TrackingState> {
               BasicTrackingCubit<dynamic>().getDaysSinceLast(records: records);
         case 'last_seven_days':
           updatedMetric['value'] = '$lastSevenDayTotal';
+
+        case 'last_one_day':
+          final totalToday = BasicTrackingCubit<dynamic>()
+              .getLastNthDayCount(records: records, numberOfDays: 1);
+          updatedMetric['value'] = '$totalToday';
         default:
           updatedMetric['value'] = currentMetric['value'] ?? '-';
       }

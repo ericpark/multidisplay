@@ -174,7 +174,7 @@ class TrackingCubit extends HydratedCubit<TrackingState>
             .toList();
 
     // There are no records so nothing to update.
-    if (records.isEmpty) return trackingSummary;
+    //if (records.isEmpty) return trackingSummary;
 
     switch (trackingSummary.trackingType) {
       case 'consecutive':
@@ -182,6 +182,10 @@ class TrackingCubit extends HydratedCubit<TrackingState>
           trackingSummary: trackingSummary.copyWith(records: records),
         );
       case 'last_seven':
+        updatedTrackingSummary = incrementLastSevenTracker(
+          trackingSummary: trackingSummary.copyWith(records: records),
+        );
+      case 'last_one':
         updatedTrackingSummary = incrementLastSevenTracker(
           trackingSummary: trackingSummary.copyWith(records: records),
         );

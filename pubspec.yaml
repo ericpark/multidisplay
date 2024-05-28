@@ -1,7 +1,7 @@
 name: multidisplay
 description: Personal Home Super app.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: '>=3.1.5 <4.0.0'

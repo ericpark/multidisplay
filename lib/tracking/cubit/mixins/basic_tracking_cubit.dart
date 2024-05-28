@@ -43,6 +43,20 @@ class BasicTrackingCubit<TrackingState> {
         .length;
   }
 
+  int getLastNthDayCount({
+    required List<TrackingRecord> records,
+    required int numberOfDays,
+  }) {
+    final now = DateTime.now();
+    final compareDate = DateTime(now.year, now.month, now.day)
+        .midnight
+        .subtract(Duration(days: numberOfDays));
+    return records
+        .where((record) => record.date.midnight.isAfter(compareDate))
+        .toList()
+        .length;
+  }
+
   String getDaysSinceLast({required List<TrackingRecord> records}) =>
       '''${(DateTime.now().difference(records.last.date.midnight).inHours / 24).floor()}''';
 

@@ -66,8 +66,10 @@ mixin Confetti {
       debugPrint('widgetId: $widgetId');
       debugPrint('Mode: $mode');
       debugPrint('useCelebrationThreshold: $useCelebrationThreshold');
+
       debugPrint('celebrationThreshold: $celebrationThreshold');
       debugPrint('celebrationMetric: $celebrationMetric');
+      debugPrint('positiveIsHigher: $positiveIsHigherThanThreshold');
       debugPrint('useMultipleToday: $useMultipleToday');
       debugPrint('records: $records');
       debugPrint('useRandom: $useRandom');
@@ -98,8 +100,8 @@ mixin Confetti {
     // it will not affect the confetti result and purely depend on the random.
     final celebration = !useCelebrationThreshold ||
         (positiveIsHigherThanThreshold
-            ? ((celebrationMetric ?? 0) > celebrationThreshold)
-            : ((celebrationMetric ?? 0) < celebrationThreshold));
+            ? ((celebrationMetric ?? 0) >= celebrationThreshold)
+            : ((celebrationMetric ?? 0) <= celebrationThreshold));
     /* Original implementation that was simplified below.
     final random = useRandom ? randomNumber >= randomThreshold : true;
     */

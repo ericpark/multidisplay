@@ -64,7 +64,7 @@ class TrackingSectionWidget extends StatelessWidget {
           thresholdMetric: data.mainThreshold,
           useCelebrationThreshold: true,
           useMultipleToday: true,
-          compareThresholdType: 'warn',
+          compareThresholdToUse: 'warn',
           onDoubleTap: () async => onDoubleTapAudioWrapper(),
           getCompareMetric: () =>
               trackingCubit.getCompareMetricConsecutive(trackingSummary: data),
@@ -80,7 +80,24 @@ class TrackingSectionWidget extends StatelessWidget {
           defaultColor: color,
           thresholdMetric: data.mainThreshold,
           useMultipleToday: true,
-          compareThresholdType: 'warn',
+          compareThresholdToUse: 'warn',
+          onDoubleTap: () async => onDoubleTapWrapper(),
+          getCompareMetric: () =>
+              trackingCubit.getCompareMetricDefault(trackingSummary: data),
+        );
+      case 'last_one':
+        color = colorScheme.primary;
+
+        return OutlinedConfettiTrackingWidget(
+          id: index,
+          section: data.section,
+          trackingSummary: data,
+          defaultColor: color,
+          thresholdMetric: data.mainThreshold,
+          compareThresholdToUse: 'warn',
+          compareThresholdType: 'start',
+          useCelebrationThreshold: true,
+          randomSuccessPercentage: 0.8,
           onDoubleTap: () async => onDoubleTapWrapper(),
           getCompareMetric: () =>
               trackingCubit.getCompareMetricDefault(trackingSummary: data),
@@ -95,7 +112,7 @@ class TrackingSectionWidget extends StatelessWidget {
           defaultColor: color,
           thresholdMetric: data.mainThreshold,
           randomSuccessPercentage: 0,
-          compareThresholdType: 'good',
+          compareThresholdToUse: 'good',
           onDoubleTap: () async => onDoubleTapWrapper(),
           getCompareMetric: () =>
               trackingCubit.getCompareMetricDefault(trackingSummary: data),
@@ -110,7 +127,7 @@ class TrackingSectionWidget extends StatelessWidget {
           defaultColor: color,
           thresholdMetric: data.mainThreshold,
           useCelebrationThreshold: true,
-          compareThresholdType: 'warn',
+          compareThresholdToUse: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
           getCompareMetric: () =>
               trackingCubit.getCompareMetricDefault(trackingSummary: data),
@@ -126,7 +143,7 @@ class TrackingSectionWidget extends StatelessWidget {
           defaultColor: color,
           thresholdMetric: data.mainThreshold,
           //useCelebrationThreshold: true,
-          compareThresholdType: 'warn',
+          compareThresholdToUse: 'warn',
           onDoubleTap: () async => onDoubleTapWrapper(),
           getCompareMetric: () =>
               trackingCubit.getCompareMetricDefault(trackingSummary: data),

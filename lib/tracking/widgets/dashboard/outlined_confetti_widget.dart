@@ -19,7 +19,8 @@ class OutlinedConfettiTrackingWidget extends StatefulWidget
     this.useCelebrationThreshold = false,
     this.celebrationType = 'stars',
     this.thresholdMetric,
-    this.compareThresholdType, // good, warn, or poor. Defaults to good.
+    this.compareThresholdToUse, // good, warn, or poor. Defaults to good.
+    this.compareThresholdType = 'end',
     this.getCompareMetric,
     this.randomSuccessPercentage = 0.2,
     this.randomMultiplier = 1,
@@ -39,7 +40,8 @@ class OutlinedConfettiTrackingWidget extends StatefulWidget
   final Future<void> Function()? displayDetailsPage;
   final bool useCelebrationThreshold;
   final String? thresholdMetric;
-  final String? compareThresholdType;
+  final String? compareThresholdToUse;
+  final String compareThresholdType;
   final String celebrationType;
   final double Function()? getCompareMetric;
   final double randomSuccessPercentage;
@@ -102,6 +104,7 @@ class OutlinedConfettiTrackingWidgetState
       records: widget.trackingSummary.records,
       randomSuccessPercentage: widget.randomSuccessPercentage,
       randomMultiplier: widget.randomMultiplier,
+      debug: true,
     );
 
     if ((confirmTracking ?? false) && showConfetti) {
@@ -133,7 +136,7 @@ class OutlinedConfettiTrackingWidgetState
         widget.trackingSummary.records.isEmpty) return null;
 
     return widget.trackingSummary.thresholds[widget.thresholdMetric]![
-        widget.compareThresholdType ?? 'good']!['end'];
+        widget.compareThresholdToUse ?? 'good']![widget.compareThresholdType];
   }
 
   bool _higherIsPositive() {

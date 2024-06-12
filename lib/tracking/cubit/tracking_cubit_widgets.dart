@@ -186,10 +186,14 @@ extension TrackingCubitWidgets on TrackingCubit {
     updatedTrackingSummary =
         updatedTrackingSummary.copyWith(records: updatedTrackingRecords);
 
-    final updatedTrackingSummaries = updatedTrackingGroup.data
-        .where((summary) => summary.id != trackingSummary.id)
-        .toList()
-      ..add(updatedTrackingSummary);
+    final updatedTrackingSummaries = updatedTrackingGroup.data.map((summary) {
+      if (summary.id == trackingSummary.id) {
+        return updatedTrackingSummary;
+      } else {
+        return summary;
+      }
+    }).toList();
+
     updatedTrackingGroups.update(
       trackingSummary.section,
       (trackingGroup) =>

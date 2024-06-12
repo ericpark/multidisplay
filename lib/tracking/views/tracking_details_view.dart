@@ -6,7 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_heatmap/flutter_calendar_heatmap.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:multidisplay/auth/cubit/auth_cubit.dart';
 import 'package:multidisplay/tracking/tracking.dart';
 
 class TrackingDetailsView extends StatelessWidget {
@@ -82,7 +84,7 @@ class TrackingDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isKeyboardShowing = MediaQuery.of(context).viewInsets.vertical > 0;
-    var trackingCubit = context.read<TrackingCubit>();
+    //var trackingCubit = context.read<TrackingCubit>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -102,7 +104,7 @@ class TrackingDetailsView extends StatelessWidget {
           },
         ),
         title: Text(
-          '${trackingCubit.state.trackingGroups[section]!.data[id].name}',
+          '''${context.read<TrackingCubit>().state.trackingGroups[section]!.data[id].name}''',
         ),
       ),
       body: Flex(
@@ -113,13 +115,14 @@ class TrackingDetailsView extends StatelessWidget {
             child: BlocBuilder<TrackingCubit, TrackingState>(
               buildWhen: (previous, current) =>
                   previous.status == TrackingStatus.transitioning &&
-                  current.status == TrackingStatus.success,
+                      current.status == TrackingStatus.success ||
+                  previous.trackingGroups != current.trackingGroups,
               builder: (context, state) {
                 final trackingSummary = state.trackingGroups[section]!.data[id];
                 final records = state
                     .trackingGroups[section]!.data[id].records.reversed
                     .toList();
-                trackingCubit = context.read<TrackingCubit>();
+                final trackingCubit = context.read<TrackingCubit>();
                 final heatmap = <DateTime, int>{};
                 for (final record in records) {
                   final cleanDate = DateUtils.dateOnly(record.date);
@@ -196,32 +199,77 @@ class TrackingDetailsView extends StatelessWidget {
                                         DateUtils.dateOnly(item),
                                   )
                                   .map(
-                                    (record) => Dismissible(
-                                      direction: DismissDirection.endToStart,
-                                      key: Key(record.id),
-                                      confirmDismiss: (direction) async {
-                                        return _showDefaultDialog(
-                                          context,
-                                        );
-                                      },
-                                      background: Container(
-                                        color: Colors.red,
-                                        alignment: Alignment.centerRight,
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                        ),
-                                        child: const Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        ),
+                                    (record) => Slidable(
+                                      key: ValueKey(record.id),
+                                      startActionPane: ActionPane(
+                                        extentRatio: 0.1,
+                                        motion: const ScrollMotion(),
+                                        /*dismissible:
+                                            DismissiblePane(
+                                            onDismissed: (){}),*/
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (context) async {
+                                              final description =
+                                                  await _showTextInputDialog(
+                                                context,
+                                                description: record.description,
+                                              );
+                                              if (description != null) {
+                                                await trackingCubit
+                                                    .updateTrackingRecord(
+                                                  trackingSummary:
+                                                      trackingSummary,
+                                                  trackingRecord: record,
+                                                  data: {
+                                                    'description': description,
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            backgroundColor:
+                                                const Color(0xFF0392CF),
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.save,
+                                            label: 'Edit',
+                                          ),
+                                        ],
                                       ),
-                                      onDismissed: (direction) {
-                                        trackingCubit.deleteTrackingRecord(
-                                          trackingSummaryId: trackingSummary.id,
-                                          trackingRecordId: record.id,
-                                          section: trackingSummary.section,
-                                        );
-                                      },
+                                      endActionPane: ActionPane(
+                                        extentRatio: 0.1,
+                                        motion: const ScrollMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (context) async {
+                                              final userId = context
+                                                  .read<AuthCubit>()
+                                                  .state
+                                                  .user
+                                                  ?.id;
+                                              final confirm =
+                                                  await _showDefaultDialog(
+                                                context,
+                                              );
+                                              if (!confirm) return;
+
+                                              await trackingCubit
+                                                  .deleteTrackingRecord(
+                                                trackingSummaryId:
+                                                    trackingSummary.id,
+                                                trackingRecordId: record.id,
+                                                section:
+                                                    trackingSummary.section,
+                                                userId: userId,
+                                              );
+                                            },
+                                            backgroundColor:
+                                                const Color(0xFFFE4A49),
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.delete,
+                                            label: 'Delete',
+                                          ),
+                                        ],
+                                      ),
                                       child: ListTile(
                                         onTap: () async {
                                           final description =
@@ -286,115 +334,6 @@ class TrackingDetailsView extends StatelessWidget {
                           ),
                         ),
                       ],
-
-                      /*  ListView.builder(
-                    itemCount: heatmap.keys.length + 1,
-                    itemBuilder: (context, index) {
-                      print(index);
-                      if (index == 0) {
-                        return HeatMap(
-                          aspectRatio: 5,
-                          data: heatmap,
-                          colors: [
-                            Colors.white,
-                            Colors.green.shade400,
-                            Colors.green.shade800,
-                          ],
-                          strokeColor: Colors.blue,
-                          itemSize: 20,
-                          itemPadding: 5,
-                        );
-                      }
-
-                      final item = heatmap.keys.toList()[index - 1];
-                      final expanded = records
-                          .where((record) =>
-                              DateUtils.dateOnly(record.date) ==
-                              DateUtils.dateOnly(item))
-                          .map((record) => Dismissible(
-                                direction: DismissDirection.endToStart,
-                                key: Key(record.id),
-                                confirmDismiss: (direction) async {
-                                  return await _showDefaultDialog(context);
-                                },
-                                background: Container(
-                                  color: Colors.red,
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: const Icon(Icons.delete,
-                                      color: Colors.white),
-                                ),
-                                onDismissed: (direction) {
-                                  trackingCubit.deleteTrackingRecord(
-                                    trackingSummaryId: trackingSummary.id,
-                                    trackingRecordId: record.id,
-                                    section: trackingSummary.section,
-                                  );
-                                },
-                                child: ListTile(
-                                  onTap: () async {
-                                    String? description =
-                                        await _showTextInputDialog(context,
-                                            description: record.description);
-                                    if (description != null) {
-                                      await trackingCubit.updateTrackingRecord(
-                                        trackingSummary: trackingSummary,
-                                        trackingRecord: record,
-                                        data: {"description": description},
-                                      );
-                                    }
-                                  },
-                                  title: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                        "${record.description != "" && 
-                                        record.description != null ? 
-                                        record.description : 
-                                        "${trackingSummary.name} at 
-                                        ${DateFormat("jms").format(item)}"}"),
-                                  ),
-                                ),
-                              ))
-                          .toList();
-                      print(state.status);
-                      return Expandable(
-                        initiallyExpanded:
-                            state.status == TrackingStatus.success
-                                ? true
-                                : false,
-                        animationDuration:
-                            state.status == TrackingStatus.success
-                                ? const Duration(milliseconds: 800)
-                                : Duration.zero,
-                        firstChild: Expanded(
-                          child: ListTile(
-                            title: Text(
-                              "${DateFormat("EEE - MMM dd").format(item)}",
-                              textWidthBasis: TextWidthBasis.longestLine,
-                              style: const TextStyle(
-                                fontFeatures: [FontFeature.tabularFigures()],
-                              ),
-                            ),
-                            trailing: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  "${trackingSummary.name}:
-                                   ${heatmap[
-                                    DateTime(item.year, item.month, item.day)
-                                    ]}"),
-                            ),
-                          ),
-                        ),
-                        secondChild: Column(
-                          children: expanded,
-                        ),
-                        showArrowWidget: true,
-                        //onPressed: () => debugPrint('done!'),
-                        clickable: Clickable.everywhere,
-                      );
-                    },
-                  );*/
                     );
                   case TrackingStatus.failure:
                     return const TrackingError();

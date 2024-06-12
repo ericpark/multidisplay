@@ -12,23 +12,24 @@ extension TrackingCubitDetails on TrackingCubit {
     required String trackingSummaryId,
     required String trackingRecordId,
     required String section,
+    String? userId,
   }) async {
     if (trackingSummaryId == '') return;
     if (trackingRecordId == '') return;
-
+    emit(state.copyWith(status: TrackingStatus.loading));
     final updatedTrackingGroups = deleteTrackingRecordFromRepository(
       trackingSummaryId: trackingSummaryId,
       trackingRecordId: trackingRecordId,
       trackingGroups: state.trackingGroups,
       section: section,
     );
-
     emit(
       state.copyWith(
         status: TrackingStatus.success,
         trackingGroups: updatedTrackingGroups,
       ),
     );
+    await refreshTrackingGroups(userId: userId);
   }
 
   /// Handles Updating a Tracking Record in the UI
